@@ -14,14 +14,14 @@ INSERT INTO subscription_plans(name, price_per_month)
 VALUES
     ('FREE', 0.0),
     ('PREMIUM', 9.99),
-    ('PREMIUM++', 19.99);
+    ('PREMIUM_PLUS', 19.99);
 
 INSERT INTO subscriptions (user_id, subscription_plan_id, expires_date)
 VALUES
     ((SELECT id FROM users WHERE username = 'user1'), (SELECT id FROM subscription_plans WHERE name = 'FREE'), NULL),
     ((SELECT id FROM users WHERE username = 'user2'), (SELECT id FROM subscription_plans WHERE name = 'PREMIUM'), now() + INTERVAL '1 month');
 
-INSERT INTO tags (tag_name)
+INSERT INTO tags (name)
 VALUES
     ('Innovative'),
     ('Tutorial'),
@@ -45,7 +45,7 @@ VALUES
     ((SELECT id FROM users WHERE username = 'user1'), 'How to Start Programming', 'This post explains the basics of programming.', NULL, (SELECT id FROM subscription_plans WHERE name = 'FREE')),
     ((SELECT id FROM users WHERE username = 'user1'), 'How to Play Guitar', 'This beginner guitar lesson takes you from tuning the guitar and strumming your first chords through to playing your very first guitar solos', now(), (SELECT id FROM subscription_plans WHERE name = 'PREMIUM')),
     ((SELECT id FROM users WHERE username = 'user2'), 'Top 5 AI Trends in 2024', 'This post discusses the top AI trends to watch.', NULL, (SELECT id FROM subscription_plans WHERE name = 'FREE')),
-    ((SELECT id FROM users WHERE username = 'user2'), 'Some words about PostgreSQL', 'PostgreSQL is a powerful, open source object-relational database system with over 35 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.', now(), (SELECT id FROM subscription_plans WHERE name = 'PREMIUM++'));
+    ((SELECT id FROM users WHERE username = 'user2'), 'Some words about PostgreSQL', 'PostgreSQL is a powerful, open source object-relational database system with over 35 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.', now(), (SELECT id FROM subscription_plans WHERE name = 'PREMIUM_PLUS'));
 
 INSERT INTO publication_statuses (post_id, status_name, scheduled_date)
 VALUES
@@ -63,14 +63,14 @@ VALUES
 
 INSERT INTO post_tags (post_id, tag_id)
 VALUES
-    ((SELECT id FROM posts WHERE title = 'How to Start Programming'), (SELECT id FROM tags WHERE tag_name = 'Beginner-friendly')),
-    ((SELECT id FROM posts WHERE title = 'How to Start Programming'), (SELECT id FROM tags WHERE tag_name = 'Tutorial')),
-    ((SELECT id FROM posts WHERE title = 'How to Play Guitar'), (SELECT id FROM tags WHERE tag_name = 'Tutorial')),
-    ((SELECT id FROM posts WHERE title = 'How to Play Guitar'), (SELECT id FROM tags WHERE tag_name = 'Beginner-friendly')),
-    ((SELECT id FROM posts WHERE title = 'How to Play Guitar'), (SELECT id FROM tags WHERE tag_name = 'Music')),
-    ((SELECT id FROM posts WHERE title = 'Top 5 AI Trends in 2024'), (SELECT id FROM tags WHERE tag_name = 'Innovative')),
-    ((SELECT id FROM posts WHERE title = 'Some words about PostgreSQL'), (SELECT id FROM tags WHERE tag_name = 'PostgreSQL')),
-    ((SELECT id FROM posts WHERE title = 'Some words about PostgreSQL'), (SELECT id FROM tags WHERE tag_name = 'Beginner-friendly'));
+    ((SELECT id FROM posts WHERE title = 'How to Start Programming'), (SELECT id FROM tags WHERE name = 'Beginner-friendly')),
+    ((SELECT id FROM posts WHERE title = 'How to Start Programming'), (SELECT id FROM tags WHERE name = 'Tutorial')),
+    ((SELECT id FROM posts WHERE title = 'How to Play Guitar'), (SELECT id FROM tags WHERE name = 'Tutorial')),
+    ((SELECT id FROM posts WHERE title = 'How to Play Guitar'), (SELECT id FROM tags WHERE name = 'Beginner-friendly')),
+    ((SELECT id FROM posts WHERE title = 'How to Play Guitar'), (SELECT id FROM tags WHERE name = 'Music')),
+    ((SELECT id FROM posts WHERE title = 'Top 5 AI Trends in 2024'), (SELECT id FROM tags WHERE name = 'Innovative')),
+    ((SELECT id FROM posts WHERE title = 'Some words about PostgreSQL'), (SELECT id FROM tags WHERE name = 'PostgreSQL')),
+    ((SELECT id FROM posts WHERE title = 'Some words about PostgreSQL'), (SELECT id FROM tags WHERE name = 'Beginner-friendly'));
 
 INSERT INTO comments (post_id, author_id, content, created_date, updated_date, parent_id)
 VALUES
@@ -96,12 +96,12 @@ VALUES
     ((SELECT id FROM polls WHERE description = 'Are you satisfied with the quality of the platform?'), 'Yes'),
     ((SELECT id FROM polls WHERE description = 'Are you satisfied with the quality of the platform?'), 'No');
 
-INSERT INTO votes (poll_option_id, user_id, vote_date)
+INSERT INTO votes (poll_option_id, user_id)
 VALUES
-    ((SELECT id FROM poll_options WHERE description = 'Generative AI'), (SELECT id FROM users WHERE username = 'user1'), now()),
-    ((SELECT id FROM poll_options WHERE description = 'Ethical AI'), (SELECT id FROM users WHERE username = 'user2'), now()),
-    ((SELECT id FROM poll_options WHERE description = 'Rock music'), (SELECT id FROM users WHERE username = 'user1'), now()),
-    ((SELECT id FROM poll_options WHERE description = 'Pop music'), (SELECT id FROM users WHERE username = 'user2'), now()),
-    ((SELECT id FROM poll_options WHERE description = 'Folk music'), (SELECT id FROM users WHERE username = 'admin'), now()),
-    ((SELECT id FROM poll_options WHERE description = 'Yes'), (SELECT id FROM users WHERE username = 'user1'), now()),
-    ((SELECT id FROM poll_options WHERE description = 'No'), (SELECT id FROM users WHERE username = 'user2'), now());
+    ((SELECT id FROM poll_options WHERE description = 'Generative AI'), (SELECT id FROM users WHERE username = 'user1')),
+    ((SELECT id FROM poll_options WHERE description = 'Ethical AI'), (SELECT id FROM users WHERE username = 'user2')),
+    ((SELECT id FROM poll_options WHERE description = 'Rock music'), (SELECT id FROM users WHERE username = 'user1')),
+    ((SELECT id FROM poll_options WHERE description = 'Pop music'), (SELECT id FROM users WHERE username = 'user2')),
+    ((SELECT id FROM poll_options WHERE description = 'Folk music'), (SELECT id FROM users WHERE username = 'admin')),
+    ((SELECT id FROM poll_options WHERE description = 'Yes'), (SELECT id FROM users WHERE username = 'user1')),
+    ((SELECT id FROM poll_options WHERE description = 'No'), (SELECT id FROM users WHERE username = 'user2'));

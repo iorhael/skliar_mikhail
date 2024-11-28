@@ -8,16 +8,16 @@ CREATE TABLE users(
     created_date TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TYPE role_name AS ENUM ('Reader', 'Author', 'Admin');
+CREATE TYPE role_name AS ENUM ('READER', 'AUTHOR', 'ADMIN');
 
 CREATE TABLE roles(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users ON DELETE CASCADE,
-    name role_name NOT NULL DEFAULT 'Reader',
+    name role_name NOT NULL DEFAULT 'READER',
     UNIQUE(user_id, name)
 );
 
-CREATE TYPE subscription_type AS ENUM ('FREE', 'PREMIUM', 'PREMIUM++');
+CREATE TYPE subscription_type AS ENUM ('FREE', 'PREMIUM', 'PREMIUM_PLUS');
 
 CREATE TABLE subscription_plans(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -35,7 +35,7 @@ CREATE TABLE subscriptions(
 
 CREATE TABLE tags(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tag_name VARCHAR(30) NOT NULL
+    name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE categories(
@@ -104,6 +104,6 @@ CREATE TABLE poll_options(
 CREATE TABLE votes(
     poll_option_id UUID NOT NULL REFERENCES poll_options ON DELETE CASCADE,
     user_id UUID REFERENCES users ON DELETE SET NULL,
-    vote_date TIMESTAMP NOT NULL,
+    vote_date TIMESTAMP NOT NULL DEFAULT now(),
     PRIMARY KEY (user_id, poll_option_id)
 );
