@@ -21,6 +21,10 @@ public class Tag {
         return name;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private UUID id;
         private String name;

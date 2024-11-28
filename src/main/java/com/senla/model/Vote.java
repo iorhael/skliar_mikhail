@@ -28,6 +28,10 @@ public class Vote {
         return voteDate;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private UUID pollOptionId;
         private UUID userId;

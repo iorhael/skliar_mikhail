@@ -40,6 +40,10 @@ public class User {
         return createdDate;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private UUID id;
         private String username;

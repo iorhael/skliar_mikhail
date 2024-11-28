@@ -64,6 +64,10 @@ public class Post {
         return publicationDate;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private UUID id;
         private UUID authorId;

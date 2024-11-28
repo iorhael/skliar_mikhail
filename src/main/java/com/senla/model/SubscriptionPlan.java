@@ -28,6 +28,10 @@ public class SubscriptionPlan {
         return pricePerMonth;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private UUID id;
         private SubscriptionType name;

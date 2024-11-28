@@ -12,6 +12,14 @@ public class Subscription {
     private final LocalDateTime startedDate;
     private final LocalDateTime expiresDate;
 
+    Subscription(Builder builder) {
+        this.id = builder.id;
+        this.userId = ValidationUtil.validateNotNull(builder.userId);
+        this.subscriptionPlanId = ValidationUtil.validateNotNull(builder.subscriptionPlanId);
+        this.startedDate = builder.startedDate;
+        this.expiresDate = builder.expiresDate;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -32,12 +40,8 @@ public class Subscription {
         return expiresDate;
     }
 
-    Subscription(Builder builder) {
-        this.id = builder.id;
-        this.userId = ValidationUtil.validateNotNull(builder.userId);
-        this.subscriptionPlanId = ValidationUtil.validateNotNull(builder.subscriptionPlanId);
-        this.startedDate = builder.startedDate;
-        this.expiresDate = builder.expiresDate;
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
