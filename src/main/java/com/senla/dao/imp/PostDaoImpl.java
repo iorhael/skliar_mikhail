@@ -21,7 +21,7 @@ import java.util.UUID;
 public class PostDaoImpl implements PostDao {
     @Override
     public Optional<Post> create(Post post) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PostQueries.CREATE_POST)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PostQueries.CREATE_POST)) {
             preparedStatement.setObject(1, post.getAuthorId());
             preparedStatement.setString(2, post.getTitle());
             preparedStatement.setString(3, post.getContent());
@@ -29,14 +29,14 @@ public class PostDaoImpl implements PostDao {
             preparedStatement.setTimestamp(5, Timestamp.valueOf(post.getPublicationDate()));
             preparedStatement.setObject(6, post.getSubscriptionPlanId());
             return Optional.ofNullable(getPost(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<Post> getById(UUID postId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PostQueries.SELECT_POST_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PostQueries.SELECT_POST_BY_ID)) {
             preparedStatement.setObject(1, postId);
             return Optional.ofNullable(getPost(preparedStatement));
         } catch (SQLException e) {
@@ -46,10 +46,10 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PostQueries.SELECT_ALL_POSTS)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PostQueries.SELECT_ALL_POSTS)) {
             List<Post> posts = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 UUID authorId = resultSet.getObject("author_id", UUID.class);
                 UUID subscriptionPlanId = resultSet.getObject("subscription_plan_id", UUID.class);
@@ -107,7 +107,7 @@ public class PostDaoImpl implements PostDao {
 
     private Post getPost(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             UUID authorId = resultSet.getObject("author_id", UUID.class);
             UUID subscriptionPlanId = resultSet.getObject("subscription_plan_id", UUID.class);

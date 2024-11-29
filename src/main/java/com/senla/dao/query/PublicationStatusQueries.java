@@ -7,5 +7,6 @@ public final class PublicationStatusQueries {
     public static final String UPDATE_PUBLICATION_STATUS_BY_ID = "UPDATE publication_statuses SET status_name = ?, scheduled_date = ? WHERE id = ? RETURNING *";
     public static final String DELETE_PUBLICATION_STATUS_BY_ID = "DELETE FROM publication_statuses WHERE id = ? RETURNING *";
 
-    private PublicationStatusQueries() {}
+    private PublicationStatusQueries() {
+    }
 }

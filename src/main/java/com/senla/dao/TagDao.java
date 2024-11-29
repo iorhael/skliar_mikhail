@@ -2,4 +2,7 @@ package com.senla.dao;
 
 import com.senla.model.Tag;
 
-public interface TagDao extends ParentDao<Tag> {}
+import java.util.UUID;
+
+public interface TagDao extends ParentDao<Tag, UUID> {
+}

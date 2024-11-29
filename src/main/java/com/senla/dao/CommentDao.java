@@ -2,4 +2,7 @@ package com.senla.dao;
 
 import com.senla.model.Comment;
 
-public interface CommentDao extends ParentDao<Comment> {}
+import java.util.UUID;
+
+public interface CommentDao extends ParentDao<Comment, UUID> {
+}

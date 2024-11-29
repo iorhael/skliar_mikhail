@@ -7,5 +7,6 @@ public final class CommentQueries {
     public static final String UPDATE_COMMENT_BY_ID = "UPDATE comments SET content = ?, updated_date = ? WHERE id = ? RETURNING *";
     public static final String DELETE_COMMENT_BY_ID = "DELETE FROM comments WHERE id = ? RETURNING *";
 
-    private CommentQueries() {}
+    private CommentQueries() {
+    }
 }

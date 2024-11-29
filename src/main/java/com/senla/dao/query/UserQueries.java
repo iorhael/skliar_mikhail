@@ -7,5 +7,6 @@ public final class UserQueries {
     public static final String UPDATE_USER_BY_ID = "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ? RETURNING *";
     public static final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ? RETURNING *";
 
-    private UserQueries() {}
+    private UserQueries() {
+    }
 }

@@ -9,7 +9,7 @@ public class PollOption {
     private final UUID pollId;
     private final String description;
 
-    PollOption(Builder builder){
+    PollOption(Builder builder) {
         this.id = builder.id;
         this.pollId = ValidationUtil.validateNotNull(builder.pollId);
         this.description = ValidationUtil.validateNotNullOrEmpty(builder.description);
@@ -31,27 +31,27 @@ public class PollOption {
         return new Builder();
     }
 
-    public static class Builder{
+    public static class Builder {
         private UUID id;
         private UUID pollId;
         private String description;
 
-        public Builder id(UUID id){
+        public Builder id(UUID id) {
             this.id = id;
             return this;
         }
 
-        public Builder pollId(UUID pollId){
+        public Builder pollId(UUID pollId) {
             this.pollId = pollId;
             return this;
         }
 
-        public Builder description(String description){
+        public Builder description(String description) {
             this.description = description;
             return this;
         }
 
-        public PollOption build(){
+        public PollOption build() {
             return new PollOption(this);
         }
     }

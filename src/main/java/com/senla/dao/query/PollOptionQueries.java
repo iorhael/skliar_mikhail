@@ -7,5 +7,6 @@ public final class PollOptionQueries {
     public static final String UPDATE_POLL_OPTION_BY_ID = "UPDATE poll_options SET description = ? WHERE id = ? RETURNING *";
     public static final String DELETE_POLL_OPTION_BY_ID = "DELETE FROM poll_options WHERE id = ? RETURNING *";
 
-    private PollOptionQueries() {}
+    private PollOptionQueries() {
+    }
 }

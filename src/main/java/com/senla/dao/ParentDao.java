@@ -2,16 +2,15 @@ package com.senla.dao;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public interface ParentDao<T> {
+public interface ParentDao<T, U> {
     Optional<T> create(T entity);
 
-    Optional<T> getById(UUID entityId);
+    Optional<T> getById(U entityId);
 
     List<T> getAll();
 
-    Optional<T> update(T entity, UUID entityId);
+    Optional<T> update(T entity, U entityId);
 
-    Optional<T> delete(UUID entityId);
+    Optional<T> delete(U entityId);
 }

@@ -5,7 +5,6 @@ import com.senla.dao.exception.NoSubscriptionsFoundException;
 import com.senla.dao.exception.SubscriptionNotFoundException;
 import com.senla.dao.query.SubscriptionQueries;
 import com.senla.model.Subscription;
-import com.senla.model.SubscriptionPlan;
 import com.senla.util.ConnectionManager;
 
 import java.sql.Connection;
@@ -22,19 +21,19 @@ import java.util.UUID;
 public class SubscriptionDaoImpl implements SubscriptionDao {
     @Override
     public Optional<Subscription> create(Subscription subscription) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionQueries.CREATE_SUBSCRIPTION)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionQueries.CREATE_SUBSCRIPTION)) {
             preparedStatement.setObject(1, subscription.getUserId());
             preparedStatement.setObject(2, subscription.getSubscriptionPlanId());
             preparedStatement.setTimestamp(3, Timestamp.valueOf(subscription.getExpiresDate()));
             return Optional.ofNullable(getSubscription(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<Subscription> getById(UUID subscriptionId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionQueries.SELECT_SUBSCRIPTION_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionQueries.SELECT_SUBSCRIPTION_BY_ID)) {
             preparedStatement.setObject(1, subscriptionId);
             return Optional.ofNullable(getSubscription(preparedStatement));
         } catch (SQLException e) {
@@ -44,10 +43,10 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 
     @Override
     public List<Subscription> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionQueries.SELECT_ALL_SUBSCRIPTIONS)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionQueries.SELECT_ALL_SUBSCRIPTIONS)) {
             List<Subscription> subscriptions = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 UUID userId = resultSet.getObject("user_id", UUID.class);
                 UUID subscriptionPlanId = resultSet.getObject("subscription_plan_id", UUID.class);
@@ -93,7 +92,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 
     private Subscription getSubscription(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             UUID userId = resultSet.getObject("user_id", UUID.class);
             UUID subscriptionPlanId = resultSet.getObject("subscription_plan_id", UUID.class);

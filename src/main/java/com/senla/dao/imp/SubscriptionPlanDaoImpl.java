@@ -22,18 +22,18 @@ import java.util.UUID;
 public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
     @Override
     public Optional<SubscriptionPlan> create(SubscriptionPlan subscriptionPlan) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.CREATE_SUBSCRIPTION_PLAN)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.CREATE_SUBSCRIPTION_PLAN)) {
             preparedStatement.setObject(1, subscriptionPlan.getName(), Types.OTHER);
             preparedStatement.setBigDecimal(2, subscriptionPlan.getPricePerMonth());
             return Optional.ofNullable(getSubscriptionPlan(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<SubscriptionPlan> getById(UUID subscriptionPlanId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.SELECT_SUBSCRIPTION_PLAN_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.SELECT_SUBSCRIPTION_PLAN_BY_ID)) {
             preparedStatement.setObject(1, subscriptionPlanId);
             return Optional.ofNullable(getSubscriptionPlan(preparedStatement));
         } catch (SQLException e) {
@@ -43,10 +43,10 @@ public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
 
     @Override
     public List<SubscriptionPlan> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.SELECT_ALL_SUBSCRIPTION_PLANS)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.SELECT_ALL_SUBSCRIPTION_PLANS)) {
             List<SubscriptionPlan> subscriptionPlans = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 SubscriptionType name = SubscriptionType.valueOf(resultSet.getString("name"));
                 BigDecimal pricePerMonth = resultSet.getBigDecimal("price_per_month");
@@ -88,7 +88,7 @@ public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
 
     private SubscriptionPlan getSubscriptionPlan(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             SubscriptionType name = SubscriptionType.valueOf(resultSet.getString("name"));
             BigDecimal pricePerMonth = resultSet.getBigDecimal("price_per_month");

@@ -10,7 +10,7 @@ public class Poll {
     private final UUID authorId;
     private final String description;
 
-    Poll(Builder builder){
+    Poll(Builder builder) {
         this.id = builder.id;
         this.postId = builder.postId;
         this.authorId = ValidationUtil.validateNotNull(builder.authorId);

@@ -7,5 +7,6 @@ public final class SubscriptionPlanQueries {
     public static final String UPDATE_SUBSCRIPTION_PLAN_BY_ID = "UPDATE subscription_plans SET name = ?, price_per_month = ? WHERE id = ? RETURNING *";
     public static final String DELETE_SUBSCRIPTION_PLAN_BY_ID = "DELETE FROM subscription_plans WHERE id = ? RETURNING *";
 
-    private SubscriptionPlanQueries() {}
+    private SubscriptionPlanQueries() {
+    }
 }

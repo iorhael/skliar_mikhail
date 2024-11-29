@@ -10,7 +10,7 @@ public class Vote {
     private final UUID userId;
     private final LocalDateTime voteDate;
 
-    Vote(Builder builder){
+    Vote(Builder builder) {
         this.pollOptionId = ValidationUtil.validateNotNull(builder.pollOptionId);
         this.userId = ValidationUtil.validateNotNull(builder.userId);
         this.voteDate = builder.voteDate;
@@ -52,7 +52,7 @@ public class Vote {
             return this;
         }
 
-        public Vote build(){
+        public Vote build() {
             return new Vote(this);
         }
     }

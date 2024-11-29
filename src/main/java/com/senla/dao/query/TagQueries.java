@@ -7,5 +7,6 @@ public final class TagQueries {
     public static final String UPDATE_TAG_BY_ID = "UPDATE tags SET name = ? WHERE id = ? RETURNING *";
     public static final String DELETE_TAG_BY_ID = "DELETE FROM tags WHERE id = ? RETURNING *";
 
-    private TagQueries() {}
+    private TagQueries() {
+    }
 }

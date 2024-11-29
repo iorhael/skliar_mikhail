@@ -58,10 +58,10 @@ public class Category {
             return this;
         }
 
-       public Builder parentId(UUID parentId) {
+        public Builder parentId(UUID parentId) {
             this.parentId = parentId;
             return this;
-       }
+        }
 
         public Category build() {
             return new Category(this);

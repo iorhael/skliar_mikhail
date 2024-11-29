@@ -23,19 +23,19 @@ import java.util.UUID;
 public class PublicationStatusDaoImpl implements PublicationStatusDao {
     @Override
     public Optional<PublicationStatus> create(PublicationStatus publicationStatus) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PublicationStatusQueries.CREATE_PUBLICATION_STATUS)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PublicationStatusQueries.CREATE_PUBLICATION_STATUS)) {
             preparedStatement.setObject(1, publicationStatus.getPostId());
             preparedStatement.setObject(2, publicationStatus.getStatusName(), Types.OTHER);
             preparedStatement.setTimestamp(3, Timestamp.valueOf(publicationStatus.getScheduledDate()));
             return Optional.ofNullable(getPublicationStatus(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<PublicationStatus> getById(UUID publicationStatusId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PublicationStatusQueries.SELECT_PUBLICATION_STATUS_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PublicationStatusQueries.SELECT_PUBLICATION_STATUS_BY_ID)) {
             preparedStatement.setObject(1, publicationStatusId);
             return Optional.ofNullable(getPublicationStatus(preparedStatement));
         } catch (SQLException e) {
@@ -45,10 +45,10 @@ public class PublicationStatusDaoImpl implements PublicationStatusDao {
 
     @Override
     public List<PublicationStatus> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PublicationStatusQueries.SELECT_ALL_PUBLICATION_STATUSES)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PublicationStatusQueries.SELECT_ALL_PUBLICATION_STATUSES)) {
             List<PublicationStatus> publicationStatuses = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 UUID postId = resultSet.getObject("post_id", UUID.class);
                 PostStatus statusName = PostStatus.valueOf(resultSet.getString("status_name"));
@@ -93,7 +93,7 @@ public class PublicationStatusDaoImpl implements PublicationStatusDao {
 
     private PublicationStatus getPublicationStatus(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             UUID postId = resultSet.getObject("post_id", UUID.class);
             PostStatus statusName = PostStatus.valueOf(resultSet.getString("status_name"));

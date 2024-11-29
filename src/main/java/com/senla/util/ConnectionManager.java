@@ -21,5 +21,6 @@ public final class ConnectionManager {
         }
     }
 
-    private ConnectionManager() {}
+    private ConnectionManager() {
+    }
 }

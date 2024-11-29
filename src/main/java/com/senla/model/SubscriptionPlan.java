@@ -66,10 +66,10 @@ public class SubscriptionPlan {
                 '}';
     }
 
-   private BigDecimal validatePricePerMonth(BigDecimal pricePerMonth) {
+    private BigDecimal validatePricePerMonth(BigDecimal pricePerMonth) {
         if (pricePerMonth == null || pricePerMonth.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Price per month must be equal or greater than zero");
         }
         return pricePerMonth;
-   }
+    }
 }

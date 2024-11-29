@@ -21,20 +21,20 @@ import java.util.UUID;
 public class CommentDaoImpl implements CommentDao {
     @Override
     public Optional<Comment> create(Comment comment) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CommentQueries.CREATE_COMMENT)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CommentQueries.CREATE_COMMENT)) {
             preparedStatement.setObject(1, comment.getPostId());
             preparedStatement.setObject(2, comment.getAuthorId());
             preparedStatement.setString(3, comment.getContent());
             preparedStatement.setObject(4, comment.getParentId());
             return Optional.ofNullable(getComment(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<Comment> getById(UUID commentId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CommentQueries.SELECT_COMMENT_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CommentQueries.SELECT_COMMENT_BY_ID)) {
             preparedStatement.setObject(1, commentId);
             return Optional.ofNullable(getComment(preparedStatement));
         } catch (SQLException e) {
@@ -44,10 +44,10 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public List<Comment> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CommentQueries.SELECT_ALL_COMMENTS)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CommentQueries.SELECT_ALL_COMMENTS)) {
             List<Comment> comments = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 UUID postId = resultSet.getObject("post_id", UUID.class);
                 UUID authorId = resultSet.getObject("author_id", UUID.class);
@@ -97,7 +97,7 @@ public class CommentDaoImpl implements CommentDao {
 
     private Comment getComment(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             UUID postId = resultSet.getObject("post_id", UUID.class);
             UUID authorId = resultSet.getObject("author_id", UUID.class);

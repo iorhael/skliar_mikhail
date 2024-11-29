@@ -2,4 +2,7 @@ package com.senla.dao;
 
 import com.senla.model.PollOption;
 
-public interface PollOptionDao extends ParentDao<PollOption> {}
+import java.util.UUID;
+
+public interface PollOptionDao extends ParentDao<PollOption, UUID> {
+}

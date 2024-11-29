@@ -14,7 +14,7 @@ public final class PropertyUtil {
         return PROPERTIES.getProperty(key);
     }
 
-    private static void loadFile(){
+    private static void loadFile() {
         try (var stream = PropertyUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
             PROPERTIES.load(stream);
         } catch (IOException e) {
@@ -22,5 +22,6 @@ public final class PropertyUtil {
         }
     }
 
-    private PropertyUtil() {}
+    private PropertyUtil() {
+    }
 }

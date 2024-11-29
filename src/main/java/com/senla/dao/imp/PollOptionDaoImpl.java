@@ -19,18 +19,18 @@ import java.util.UUID;
 public class PollOptionDaoImpl implements PollOptionDao {
     @Override
     public Optional<PollOption> create(PollOption pollOption) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollOptionQueries.CREATE_POLL_OPTION)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollOptionQueries.CREATE_POLL_OPTION)) {
             preparedStatement.setObject(1, pollOption.getPollId());
             preparedStatement.setString(2, pollOption.getDescription());
             return Optional.ofNullable(getPollOption(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<PollOption> getById(UUID pollOption) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollOptionQueries.SELECT_POLL_OPTION_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollOptionQueries.SELECT_POLL_OPTION_BY_ID)) {
             preparedStatement.setObject(1, pollOption);
             return Optional.ofNullable(getPollOption(preparedStatement));
         } catch (SQLException e) {
@@ -40,10 +40,10 @@ public class PollOptionDaoImpl implements PollOptionDao {
 
     @Override
     public List<PollOption> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollOptionQueries.SELECT_ALL_POLL_OPTIONS)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollOptionQueries.SELECT_ALL_POLL_OPTIONS)) {
             List<PollOption> pollOptions = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 UUID pollId = resultSet.getObject("poll_id", UUID.class);
                 String description = resultSet.getString("description");
@@ -84,7 +84,7 @@ public class PollOptionDaoImpl implements PollOptionDao {
 
     private PollOption getPollOption(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             UUID pollId = resultSet.getObject("poll_id", UUID.class);
             String description = resultSet.getString("description");

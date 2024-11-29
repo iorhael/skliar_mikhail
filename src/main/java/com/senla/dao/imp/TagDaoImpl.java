@@ -19,17 +19,17 @@ import java.util.UUID;
 public class TagDaoImpl implements TagDao {
     @Override
     public Optional<Tag> create(Tag tag) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.CREATE_TAG)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.CREATE_TAG)) {
             preparedStatement.setString(1, tag.getName());
             return Optional.ofNullable(getTag(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<Tag> getById(UUID tagId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.SELECT_TAG_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.SELECT_TAG_BY_ID)) {
             preparedStatement.setObject(1, tagId);
             return Optional.ofNullable(getTag(preparedStatement));
         } catch (SQLException e) {
@@ -39,10 +39,10 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.SELECT_ALL_TAGS)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.SELECT_ALL_TAGS)) {
             List<Tag> tags = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 String name = resultSet.getString("name");
 
@@ -81,7 +81,7 @@ public class TagDaoImpl implements TagDao {
 
     private Tag getTag(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             String name = resultSet.getString("name");
 

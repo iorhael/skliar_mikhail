@@ -7,5 +7,6 @@ public final class PostQueries {
     public static final String UPDATE_POST_BY_ID = "UPDATE posts SET title = ?, content = ?, updated_date = ?, publication_date = ?, subscription_plan_id = ?, views_total = ? WHERE id = ? RETURNING *";
     public static final String DELETE_POST_BY_ID = "DELETE FROM posts WHERE id = ? RETURNING *";
 
-    private PostQueries() {}
+    private PostQueries() {
+    }
 }

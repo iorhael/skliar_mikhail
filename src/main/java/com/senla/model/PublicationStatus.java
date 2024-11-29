@@ -11,7 +11,7 @@ public class PublicationStatus {
     private final PostStatus statusName;
     private final LocalDateTime scheduledDate;
 
-    PublicationStatus(Builder builder){
+    PublicationStatus(Builder builder) {
         this.id = builder.id;
         this.postId = ValidationUtil.validateNotNull(builder.postId);
         this.statusName = ValidationUtil.validateNotNull(builder.statusName);

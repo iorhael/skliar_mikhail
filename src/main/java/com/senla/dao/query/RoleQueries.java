@@ -7,5 +7,6 @@ public final class RoleQueries {
     public static final String UPDATE_ROLE_BY_ID = "UPDATE roles SET name = ? WHERE id = ? RETURNING *";
     public static final String DELETE_ROLE_BY_ID = "DELETE FROM roles WHERE id = ? RETURNING *";
 
-    private RoleQueries() {}
+    private RoleQueries() {
+    }
 }

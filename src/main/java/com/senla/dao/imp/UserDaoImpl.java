@@ -20,19 +20,19 @@ import java.util.UUID;
 public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> create(User user) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.CREATE_USER)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.CREATE_USER)) {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
             return Optional.ofNullable(getUser(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<User> getById(UUID userId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.SELECT_USER_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.SELECT_USER_BY_ID)) {
             preparedStatement.setObject(1, userId);
             return Optional.ofNullable(getUser(preparedStatement));
         } catch (SQLException e) {
@@ -43,9 +43,9 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.SELECT_ALL_USERS)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.SELECT_ALL_USERS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 String username = resultSet.getString("username");
                 String email = resultSet.getString("email");
@@ -83,8 +83,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> delete(UUID userId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.DELETE_USER_BY_ID)) {
-           preparedStatement.setObject(1, userId);
-           return Optional.ofNullable(getUser(preparedStatement));
+            preparedStatement.setObject(1, userId);
+            return Optional.ofNullable(getUser(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -92,7 +92,7 @@ public class UserDaoImpl implements UserDao {
 
     private User getUser(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             String username = resultSet.getString("username");
             String email = resultSet.getString("email");

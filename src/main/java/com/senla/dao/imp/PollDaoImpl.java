@@ -19,19 +19,19 @@ import java.util.UUID;
 public class PollDaoImpl implements PollDao {
     @Override
     public Optional<Poll> create(Poll poll) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.CREATE_POLL)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.CREATE_POLL)) {
             preparedStatement.setObject(1, poll.getPostId());
             preparedStatement.setObject(2, poll.getAuthorId());
             preparedStatement.setString(3, poll.getDescription());
             return Optional.ofNullable(getPoll(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<Poll> getById(UUID pollId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.SELECT_POLL_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.SELECT_POLL_BY_ID)) {
             preparedStatement.setObject(1, pollId);
             return Optional.ofNullable(getPoll(preparedStatement));
         } catch (SQLException e) {
@@ -41,10 +41,10 @@ public class PollDaoImpl implements PollDao {
 
     @Override
     public List<Poll> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.SELECT_ALL_POLLS)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.SELECT_ALL_POLLS)) {
             List<Poll> polls = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 UUID postId = resultSet.getObject("post_id", UUID.class);
                 UUID authorId = resultSet.getObject("author_id", UUID.class);
@@ -87,7 +87,7 @@ public class PollDaoImpl implements PollDao {
 
     private Poll getPoll(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             UUID postId = resultSet.getObject("post_id", UUID.class);
             UUID authorId = resultSet.getObject("author_id", UUID.class);

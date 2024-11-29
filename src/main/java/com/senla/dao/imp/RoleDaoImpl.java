@@ -21,18 +21,18 @@ import java.util.UUID;
 public class RoleDaoImpl implements RoleDao {
     @Override
     public Optional<Role> create(Role role) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.CREATE_ROLE)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.CREATE_ROLE)) {
             preparedStatement.setObject(1, role.getUserId());
             preparedStatement.setObject(2, role.getName(), Types.OTHER);
             return Optional.ofNullable(getRole(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<Role> getById(UUID roleId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.SELECT_ROLE_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.SELECT_ROLE_BY_ID)) {
             preparedStatement.setObject(1, roleId);
             return Optional.ofNullable(getRole(preparedStatement));
         } catch (SQLException e) {
@@ -42,10 +42,10 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public List<Role> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.SELECT_ALL_ROLES)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.SELECT_ALL_ROLES)) {
             List<Role> roles = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 UUID userId = resultSet.getObject("user_id", UUID.class);
                 RoleName name = RoleName.valueOf(resultSet.getString("name"));
@@ -86,7 +86,7 @@ public class RoleDaoImpl implements RoleDao {
 
     private Role getRole(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             UUID userId = resultSet.getObject("user_id", UUID.class);
             RoleName name = RoleName.valueOf(resultSet.getString("name"));

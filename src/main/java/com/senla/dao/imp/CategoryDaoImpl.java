@@ -20,19 +20,19 @@ import java.util.UUID;
 public class CategoryDaoImpl implements CategoryDao {
     @Override
     public Optional<Category> create(Category category) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CategoryQueries.CREATE_CATEGORY)) {
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CategoryQueries.CREATE_CATEGORY)) {
             preparedStatement.setString(1, category.getName());
             preparedStatement.setString(2, category.getDescription());
             preparedStatement.setObject(3, category.getParentId(), Types.OTHER);
             return Optional.ofNullable(getCategory(preparedStatement));
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<Category> getById(UUID categoryId) {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CategoryQueries.SELECT_CATEGORY_BY_ID)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CategoryQueries.SELECT_CATEGORY_BY_ID)) {
             preparedStatement.setObject(1, categoryId);
             return Optional.ofNullable(getCategory(preparedStatement));
         } catch (SQLException e) {
@@ -42,10 +42,10 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public List<Category> getAll() {
-        try(Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CategoryQueries.SELECT_ALL_CATEGORIES)){
+        try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CategoryQueries.SELECT_ALL_CATEGORIES)) {
             List<Category> categories = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 UUID id = resultSet.getObject("id", UUID.class);
                 String name = resultSet.getString("name");
                 String description = resultSet.getString("description");
@@ -90,7 +90,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
     private Category getCategory(PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             UUID id = resultSet.getObject("id", UUID.class);
             String name = resultSet.getString("name");
             String description = resultSet.getString("description");

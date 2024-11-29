@@ -7,5 +7,6 @@ public final class VoteQueries {
     public static final String UPDATE_VOTE_BY_ID = "UPDATE votes SET vote_date = ? WHERE poll_option_id = ? AND user_id = ? RETURNING *";
     public static final String DELETE_VOTE_BY_ID = "DELETE FROM votes WHERE poll_option_id = ? AND user_id = ? RETURNING *";
 
-    private VoteQueries() {}
+    private VoteQueries() {
+    }
 }

@@ -1,7 +1,5 @@
 package com.senla.util;
 
-import java.time.LocalDateTime;
-
 public final class ValidationUtil {
     public static String validateNotNullOrEmpty(String value) {
         if (value == null || value.trim().isEmpty()) {
@@ -17,5 +15,6 @@ public final class ValidationUtil {
         return value;
     }
 
-    private ValidationUtil() {}
+    private ValidationUtil() {
+    }
 }
