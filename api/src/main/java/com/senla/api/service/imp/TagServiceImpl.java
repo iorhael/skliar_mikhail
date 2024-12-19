@@ -12,12 +12,8 @@ import java.util.UUID;
 
 @Component
 public class TagServiceImpl implements TagService {
-    private TagDao tagDao;
-
     @Autowired
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
-    }
+    private TagDao tagDao;
 
     @Override
     public Optional<Tag> createTag(Tag tag) {

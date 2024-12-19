@@ -15,6 +15,10 @@ public class Role {
         this.name = ValidationUtil.validateNotNull(builder.name);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -27,8 +31,13 @@ public class Role {
         return name;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", name=" + name +
+                '}';
     }
 
     public static class Builder {
@@ -54,14 +63,5 @@ public class Role {
         public Role build() {
             return new Role(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", name=" + name +
-                '}';
     }
 }

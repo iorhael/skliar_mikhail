@@ -20,6 +20,10 @@ public class Subscription {
         this.expiresDate = builder.expiresDate;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -40,8 +44,15 @@ public class Subscription {
         return expiresDate;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "Subscription{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", subscriptionPlanId=" + subscriptionPlanId +
+                ", startedDate=" + startedDate +
+                ", expiresDate=" + expiresDate +
+                '}';
     }
 
     public static class Builder {
@@ -79,16 +90,5 @@ public class Subscription {
         public Subscription build() {
             return new Subscription(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Subscription{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", subscriptionPlanId=" + subscriptionPlanId +
-                ", startedDate=" + startedDate +
-                ", expiresDate=" + expiresDate +
-                '}';
     }
 }

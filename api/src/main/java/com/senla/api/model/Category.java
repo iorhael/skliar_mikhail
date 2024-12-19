@@ -17,6 +17,10 @@ public class Category {
         this.parentId = builder.parentId;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -33,8 +37,14 @@ public class Category {
         return parentId;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", parentId=" + parentId +
+                '}';
     }
 
     public static class Builder {
@@ -66,15 +76,5 @@ public class Category {
         public Category build() {
             return new Category(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", parentId=" + parentId +
-                '}';
     }
 }

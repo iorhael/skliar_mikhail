@@ -12,14 +12,9 @@ import java.util.UUID;
 
 @Component
 public class RoleServiceImpl implements RoleService {
+    @Autowired
     private RoleDao roleDao;
 
-    @Autowired
-    public void setRoleDao(RoleDao roleDao) {
-        this.roleDao = roleDao;
-    }
-
-    @Override
     public Optional<Role> createRole(Role role) {
         return roleDao.create(role);
     }

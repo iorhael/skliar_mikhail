@@ -16,6 +16,10 @@ public class Vote {
         this.voteDate = builder.voteDate;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getPollOptionId() {
         return pollOptionId;
     }
@@ -28,8 +32,13 @@ public class Vote {
         return voteDate;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "pollOptionId=" + pollOptionId +
+                ", userId=" + userId +
+                ", voteDate=" + voteDate +
+                '}';
     }
 
     public static class Builder {
@@ -55,14 +64,5 @@ public class Vote {
         public Vote build() {
             return new Vote(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Vote{" +
-                "pollOptionId=" + pollOptionId +
-                ", userId=" + userId +
-                ", voteDate=" + voteDate +
-                '}';
     }
 }

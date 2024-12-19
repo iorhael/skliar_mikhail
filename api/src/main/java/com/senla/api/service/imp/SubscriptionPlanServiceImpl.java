@@ -12,12 +12,8 @@ import java.util.UUID;
 
 @Component
 public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
-    private SubscriptionPlanDao subscriptionPlanDao;
-
     @Autowired
-    public void setSubscriptionPlanDao(SubscriptionPlanDao subscriptionPlanDao) {
-        this.subscriptionPlanDao = subscriptionPlanDao;
-    }
+    private SubscriptionPlanDao subscriptionPlanDao;
 
     @Override
     public Optional<SubscriptionPlan> createSubscriptionPlan(SubscriptionPlan subscriptionPlan) {

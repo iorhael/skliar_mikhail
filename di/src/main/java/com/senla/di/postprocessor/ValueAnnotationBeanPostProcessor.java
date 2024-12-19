@@ -14,7 +14,7 @@ public class ValueAnnotationBeanPostProcessor implements BeanPostProcessor {
 
     public ValueAnnotationBeanPostProcessor() {
         properties = new Properties();
-        try (var stream = ClassLoader.getSystemClassLoader().getResourceAsStream("application.properties")) {
+        try (var stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties")) {
             properties.load(stream);
         } catch (IOException e) {
             throw new RuntimeException(e);

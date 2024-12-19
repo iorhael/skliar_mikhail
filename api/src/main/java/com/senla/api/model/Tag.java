@@ -13,6 +13,10 @@ public class Tag {
         this.name = ValidationUtil.validateNotNullOrEmpty(builder.name);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -21,8 +25,12 @@ public class Tag {
         return name;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public static class Builder {
@@ -42,13 +50,5 @@ public class Tag {
         public Tag build() {
             return new Tag(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

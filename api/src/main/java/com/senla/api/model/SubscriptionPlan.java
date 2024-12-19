@@ -16,6 +16,10 @@ public class SubscriptionPlan {
         this.pricePerMonth = validatePricePerMonth(builder.pricePerMonth);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -28,8 +32,20 @@ public class SubscriptionPlan {
         return pricePerMonth;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "SubscriptionPlan{" +
+                "id=" + id +
+                ", name=" + name +
+                ", pricePerMonth=" + pricePerMonth +
+                '}';
+    }
+
+    private BigDecimal validatePricePerMonth(BigDecimal pricePerMonth) {
+        if (pricePerMonth == null || pricePerMonth.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price per month must be equal or greater than zero");
+        }
+        return pricePerMonth;
     }
 
     public static class Builder {
@@ -55,21 +71,5 @@ public class SubscriptionPlan {
         public SubscriptionPlan build() {
             return new SubscriptionPlan(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "SubscriptionPlan{" +
-                "id=" + id +
-                ", name=" + name +
-                ", pricePerMonth=" + pricePerMonth +
-                '}';
-    }
-
-    private BigDecimal validatePricePerMonth(BigDecimal pricePerMonth) {
-        if (pricePerMonth == null || pricePerMonth.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Price per month must be equal or greater than zero");
-        }
-        return pricePerMonth;
     }
 }

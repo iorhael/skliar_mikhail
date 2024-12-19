@@ -17,6 +17,10 @@ public class Poll {
         this.description = ValidationUtil.validateNotNullOrEmpty(builder.description);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -33,8 +37,14 @@ public class Poll {
         return description;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "Poll{" +
+                "id=" + id +
+                ", postId=" + postId +
+                ", authorId=" + authorId +
+                ", description='" + description + '\'' +
+                '}';
     }
 
     public static class Builder {
@@ -66,15 +76,5 @@ public class Poll {
         public Poll build() {
             return new Poll(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Poll{" +
-                "id=" + id +
-                ", postId=" + postId +
-                ", authorId=" + authorId +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

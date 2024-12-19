@@ -24,6 +24,10 @@ public class Comment {
         this.parentId = builder.parentId;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -52,8 +56,17 @@ public class Comment {
         return parentId;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", postId=" + postId +
+                ", authorId=" + authorId +
+                ", content='" + content + '\'' +
+                ", createdDate=" + createdDate +
+                ", updatedDate=" + updatedDate +
+                ", parentId=" + parentId +
+                '}';
     }
 
     public static class Builder {
@@ -103,18 +116,5 @@ public class Comment {
         public Comment build() {
             return new Comment(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", postId=" + postId +
-                ", authorId=" + authorId +
-                ", content='" + content + '\'' +
-                ", createdDate=" + createdDate +
-                ", updatedDate=" + updatedDate +
-                ", parentId=" + parentId +
-                '}';
     }
 }

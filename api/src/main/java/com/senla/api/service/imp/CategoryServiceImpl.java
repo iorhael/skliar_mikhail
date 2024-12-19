@@ -5,7 +5,6 @@ import com.senla.api.model.Category;
 import com.senla.api.service.CategoryService;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
-import com.senla.di.annotation.Value;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +14,6 @@ import java.util.UUID;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryDao categoryDao;
-
-    @Value("very_useful_service_value")
-    private String veryUsefulServiceValue;
 
     @Override
     public Optional<Category> createCategory(Category category) {

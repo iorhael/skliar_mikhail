@@ -18,6 +18,10 @@ public class PublicationStatus {
         this.scheduledDate = builder.scheduledDate;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -32,10 +36,6 @@ public class PublicationStatus {
 
     public LocalDateTime getScheduledDate() {
         return scheduledDate;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {

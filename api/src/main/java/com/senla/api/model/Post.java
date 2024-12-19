@@ -28,6 +28,10 @@ public class Post {
         this.publicationDate = builder.publicationDate;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -64,8 +68,19 @@ public class Post {
         return publicationDate;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", authorId=" + authorId +
+                ", subscriptionPlanId=" + subscriptionPlanId +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", viewsTotal=" + viewsTotal +
+                ", createdDate=" + createdDate +
+                ", updatedDate=" + updatedDate +
+                ", publicationDate=" + publicationDate +
+                '}';
     }
 
     public static class Builder {
@@ -127,20 +142,5 @@ public class Post {
         public Post build() {
             return new Post(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", authorId=" + authorId +
-                ", subscriptionPlanId=" + subscriptionPlanId +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", viewsTotal=" + viewsTotal +
-                ", createdDate=" + createdDate +
-                ", updatedDate=" + updatedDate +
-                ", publicationDate=" + publicationDate +
-                '}';
     }
 }

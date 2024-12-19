@@ -15,6 +15,10 @@ public class PollOption {
         this.description = ValidationUtil.validateNotNullOrEmpty(builder.description);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getId() {
         return id;
     }
@@ -27,8 +31,13 @@ public class PollOption {
         return description;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String toString() {
+        return "PollOption{" +
+                "id=" + id +
+                ", pollId=" + pollId +
+                ", description='" + description + '\'' +
+                '}';
     }
 
     public static class Builder {
@@ -54,14 +63,5 @@ public class PollOption {
         public PollOption build() {
             return new PollOption(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "PollOption{" +
-                "id=" + id +
-                ", pollId=" + pollId +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

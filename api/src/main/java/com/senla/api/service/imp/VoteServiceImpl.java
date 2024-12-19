@@ -6,22 +6,14 @@ import com.senla.api.model.VoteId;
 import com.senla.api.service.VoteService;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
-import com.senla.di.annotation.Value;
 
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class VoteServiceImpl implements VoteService {
-    private VoteDao voteDao;
-
-    @Value("another_very_useful_service_value")
-    private String anotherVeryUsefulServiceValue;
-
     @Autowired
-    public void setVoteDao(VoteDao voteDao) {
-        this.voteDao = voteDao;
-    }
+    private VoteDao voteDao;
 
     @Override
     public Optional<Vote> createVote(Vote vote) {
