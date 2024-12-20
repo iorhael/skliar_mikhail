@@ -16,5 +16,7 @@
 <a href="post">Posts Page</a>
 <br/>
 <a href="poll">Polls Page</a>
+<br/>
+<a href="comment">Comments Page</a>
 </body>
 </html>
