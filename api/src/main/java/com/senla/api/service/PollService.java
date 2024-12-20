@@ -1,19 +1,20 @@
 package com.senla.api.service;
 
-import com.senla.api.model.Poll;
+import com.senla.api.dto.poll.PollCreateDto;
+import com.senla.api.dto.poll.PollGetDto;
+import com.senla.api.dto.poll.PollUpdateDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface PollService {
-    Optional<Poll> createPoll(Poll poll);
+    PollGetDto createPoll(PollCreateDto poll);
 
-    Optional<Poll> getPollById(UUID id);
+    PollGetDto getPollById(UUID id);
 
-    List<Poll> getAllPolls();
+    List<PollGetDto> getAllPolls();
 
-    Optional<Poll> updatePoll(Poll poll, UUID id);
+    PollGetDto updatePoll(PollUpdateDto poll, UUID id);
 
-    Optional<Poll> deletePoll(UUID id);
+    PollGetDto deletePoll(UUID id);
 }

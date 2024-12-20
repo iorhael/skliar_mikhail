@@ -14,5 +14,7 @@
 <a href="category">Categories Page</a>
 <br/>
 <a href="post">Posts Page</a>
+<br/>
+<a href="poll">Polls Page</a>
 </body>
 </html>
