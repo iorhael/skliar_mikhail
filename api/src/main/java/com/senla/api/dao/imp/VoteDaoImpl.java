@@ -28,7 +28,7 @@ public class VoteDaoImpl implements VoteDao {
             preparedStatement.setObject(1, vote.getPollOptionId());
             preparedStatement.setObject(2, vote.getUserId());
             preparedStatement.setTimestamp(3, Timestamp.valueOf(vote.getVoteDate()));
-            return Optional.ofNullable(getVote(preparedStatement));
+            return Optional.of(getVote(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -39,7 +39,7 @@ public class VoteDaoImpl implements VoteDao {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(VoteQueries.SELECT_VOTE_BY_ID)) {
             preparedStatement.setObject(1, voteId.pollOptionId());
             preparedStatement.setObject(2, voteId.userId());
-            return Optional.ofNullable(getVote(preparedStatement));
+            return Optional.of(getVote(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -55,12 +55,10 @@ public class VoteDaoImpl implements VoteDao {
                 UUID userId = resultSet.getObject("user_id", UUID.class);
                 LocalDateTime voteDate = resultSet.getTimestamp("vote_date").toLocalDateTime();
 
-                votes.add(Vote.builder()
-                        .pollOptionId(pollOptionId)
-                        .userId(userId)
-                        .voteDate(voteDate)
-                        .build()
-                );
+                Vote vote = new Vote(pollOptionId, userId);
+                vote.setVoteDate(voteDate);
+
+                votes.add(vote);
             }
             return votes;
         } catch (SQLException e) {
@@ -74,7 +72,7 @@ public class VoteDaoImpl implements VoteDao {
             preparedStatement.setTimestamp(1, Timestamp.valueOf(vote.getVoteDate()));
             preparedStatement.setObject(2, voteId.pollOptionId());
             preparedStatement.setObject(3, vote.getUserId());
-            return Optional.ofNullable(getVote(preparedStatement));
+            return Optional.of(getVote(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -85,7 +83,7 @@ public class VoteDaoImpl implements VoteDao {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(VoteQueries.DELETE_VOTE_BY_ID)) {
             preparedStatement.setObject(1, voteId.pollOptionId());
             preparedStatement.setObject(2, voteId.userId());
-            return Optional.ofNullable(getVote(preparedStatement));
+            return Optional.of(getVote(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -98,12 +96,10 @@ public class VoteDaoImpl implements VoteDao {
             UUID userId = resultSet.getObject("user_id", UUID.class);
             LocalDateTime voteDate = resultSet.getTimestamp("vote_date").toLocalDateTime();
 
-            return Vote.builder()
-                    .pollOptionId(pollOptionId)
-                    .userId(userId)
-                    .voteDate(voteDate)
-                    .build();
+            Vote vote = new Vote(pollOptionId, userId);
+            vote.setVoteDate(voteDate);
 
+            return vote;
         } else {
             throw new VoteNotFoundException("Vote not found");
         }

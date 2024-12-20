@@ -2,13 +2,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Blog Platform</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
+<h1>Welcome to Blog Platform!</h1>
 <br/>
-<a href="user">User Servlet</a>
-<a href="vote">Vote Servlet</a>
+<a href="user">Users Page</a>
+<br/>
+<a href="subscription">Subscriptions Page</a>
+<br/>
+<a href="category">Categories Page</a>
+<br/>
+<a href="post">Posts Page</a>
 </body>
 </html>

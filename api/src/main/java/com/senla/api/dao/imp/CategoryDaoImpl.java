@@ -26,7 +26,7 @@ public class CategoryDaoImpl implements CategoryDao {
             preparedStatement.setString(1, category.getName());
             preparedStatement.setString(2, category.getDescription());
             preparedStatement.setObject(3, category.getParentId(), Types.OTHER);
-            return Optional.ofNullable(getCategory(preparedStatement));
+            return Optional.of(getCategory(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -36,7 +36,7 @@ public class CategoryDaoImpl implements CategoryDao {
     public Optional<Category> getById(UUID categoryId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CategoryQueries.SELECT_CATEGORY_BY_ID)) {
             preparedStatement.setObject(1, categoryId);
-            return Optional.ofNullable(getCategory(preparedStatement));
+            return Optional.of(getCategory(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -53,13 +53,12 @@ public class CategoryDaoImpl implements CategoryDao {
                 String description = resultSet.getString("description");
                 UUID parentId = resultSet.getObject("parent_id", UUID.class);
 
-                categories.add(Category.builder()
-                        .id(id)
-                        .name(name)
-                        .description(description)
-                        .parentId(parentId)
-                        .build()
-                );
+                Category category = new Category(name);
+                category.setId(id);
+                category.setDescription(description);
+                category.setParentId(parentId);
+
+                categories.add(category);
             }
             return categories;
         } catch (SQLException e) {
@@ -74,7 +73,7 @@ public class CategoryDaoImpl implements CategoryDao {
             preparedStatement.setString(2, category.getDescription());
             preparedStatement.setObject(3, category.getParentId(), Types.OTHER);
             preparedStatement.setObject(4, categoryId);
-            return Optional.ofNullable(getCategory(preparedStatement));
+            return Optional.of(getCategory(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -84,7 +83,7 @@ public class CategoryDaoImpl implements CategoryDao {
     public Optional<Category> delete(UUID categoryId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CategoryQueries.DELETE_CATEGORY_BY_ID)) {
             preparedStatement.setObject(1, categoryId);
-            return Optional.ofNullable(getCategory(preparedStatement));
+            return Optional.of(getCategory(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -98,12 +97,12 @@ public class CategoryDaoImpl implements CategoryDao {
             String description = resultSet.getString("description");
             UUID parentId = resultSet.getObject("parent_id", UUID.class);
 
-            return Category.builder()
-                    .id(id)
-                    .name(name)
-                    .description(description)
-                    .parentId(parentId)
-                    .build();
+            Category category = new Category(name);
+            category.setId(id);
+            category.setDescription(description);
+            category.setParentId(parentId);
+
+            return category;
         } else {
             throw new CategoryNotFoundException("Category not found");
         }

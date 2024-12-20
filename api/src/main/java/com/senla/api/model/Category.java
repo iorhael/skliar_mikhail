@@ -5,36 +5,48 @@ import com.senla.api.util.ValidationUtil;
 import java.util.UUID;
 
 public class Category {
-    private final UUID id;
-    private final String name;
-    private final String description;
-    private final UUID parentId;
+    private UUID id;
+    private String name;
+    private String description;
+    private UUID parentId;
 
-    Category(Builder builder) {
-        this.id = builder.id;
-        this.name = ValidationUtil.validateNotNullOrEmpty(builder.name);
-        this.description = builder.description;
-        this.parentId = builder.parentId;
+    public Category() {
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public Category(String name) {
+        this.name = ValidationUtil.validateNotNullOrEmpty(name);
     }
 
     public UUID getId() {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public UUID getParentId() {
         return parentId;
+    }
+
+    public void setParentId(UUID parentId) {
+        this.parentId = parentId;
     }
 
     @Override
@@ -45,36 +57,5 @@ public class Category {
                 ", description='" + description + '\'' +
                 ", parentId=" + parentId +
                 '}';
-    }
-
-    public static class Builder {
-        private UUID id;
-        private String name;
-        private String description;
-        private UUID parentId;
-
-        public Builder id(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder parentId(UUID parentId) {
-            this.parentId = parentId;
-            return this;
-        }
-
-        public Category build() {
-            return new Category(this);
-        }
     }
 }

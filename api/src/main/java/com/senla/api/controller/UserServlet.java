@@ -79,7 +79,7 @@ public class UserServlet extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UUID id = validateId(request.getParameter("id"));
+        UUID id = UUID.fromString(request.getParameter("id"));
 
         UserGetDto user = userService.getUserById(id);
 
@@ -101,7 +101,7 @@ public class UserServlet extends HttpServlet {
 
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        UUID id = validateId(request.getParameter("id"));
+        UUID id = UUID.fromString(request.getParameter("id"));
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -114,15 +114,9 @@ public class UserServlet extends HttpServlet {
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        UUID id = validateId(request.getParameter("id"));
+        UUID id = UUID.fromString(request.getParameter("id"));
 
         userService.deleteUser(id);
         response.sendRedirect(request.getContextPath() + "/user");
-    }
-
-    private UUID validateId(String id) {
-        if (id == null || id.isEmpty()) throw new IllegalArgumentException("id is null or empty");
-
-        return UUID.fromString(id);
     }
 }

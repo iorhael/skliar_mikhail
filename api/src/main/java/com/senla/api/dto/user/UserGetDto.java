@@ -1,7 +1,5 @@
 package com.senla.api.dto.user;
 
-import com.senla.api.util.ValidationUtil;
-
 import java.util.UUID;
 
 public class UserGetDto {
@@ -13,9 +11,9 @@ public class UserGetDto {
     }
 
     public UserGetDto(UUID id, String username, String email) {
-        this.id = ValidationUtil.validateNotNull(id);
-        this.username = ValidationUtil.validateNotNullOrEmpty(username);
-        this.email = ValidationUtil.validateNotNullOrEmpty(email);
+        this.id = id;
+        this.username = username;
+        this.email = email;
     }
 
     public UUID getId() {

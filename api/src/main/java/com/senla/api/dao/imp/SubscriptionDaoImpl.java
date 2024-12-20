@@ -27,7 +27,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
             preparedStatement.setObject(1, subscription.getUserId());
             preparedStatement.setObject(2, subscription.getSubscriptionPlanId());
             preparedStatement.setTimestamp(3, Timestamp.valueOf(subscription.getExpiresDate()));
-            return Optional.ofNullable(getSubscription(preparedStatement));
+            return Optional.of(getSubscription(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -37,7 +37,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
     public Optional<Subscription> getById(UUID subscriptionId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionQueries.SELECT_SUBSCRIPTION_BY_ID)) {
             preparedStatement.setObject(1, subscriptionId);
-            return Optional.ofNullable(getSubscription(preparedStatement));
+            return Optional.of(getSubscription(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -55,14 +55,12 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
                 LocalDateTime startedDate = resultSet.getTimestamp("started_date").toLocalDateTime();
                 LocalDateTime expiresDate = resultSet.getTimestamp("expires_date").toLocalDateTime();
 
-                subscriptions.add(Subscription.builder()
-                        .id(id)
-                        .userId(userId)
-                        .subscriptionPlanId(subscriptionPlanId)
-                        .startedDate(startedDate)
-                        .expiresDate(expiresDate)
-                        .build()
-                );
+                Subscription subscription = new Subscription(userId, subscriptionPlanId);
+                subscription.setId(id);
+                subscription.setStartedDate(startedDate);
+                subscription.setExpiresDate(expiresDate);
+
+                subscriptions.add(subscription);
             }
             return subscriptions;
         } catch (SQLException e) {
@@ -76,7 +74,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
             preparedStatement.setObject(1, subscription.getSubscriptionPlanId());
             preparedStatement.setTimestamp(2, Timestamp.valueOf(subscription.getExpiresDate()));
             preparedStatement.setObject(3, subscriptionId);
-            return Optional.ofNullable(getSubscription(preparedStatement));
+            return Optional.of(getSubscription(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -86,7 +84,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
     public Optional<Subscription> delete(UUID subscriptionId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionQueries.DELETE_SUBSCRIPTION_BY_ID)) {
             preparedStatement.setObject(1, subscriptionId);
-            return Optional.ofNullable(getSubscription(preparedStatement));
+            return Optional.of(getSubscription(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -101,13 +99,12 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
             LocalDateTime startedDate = resultSet.getTimestamp("started_date").toLocalDateTime();
             LocalDateTime expiresDate = resultSet.getTimestamp("expires_date").toLocalDateTime();
 
-            return Subscription.builder()
-                    .id(id)
-                    .userId(userId)
-                    .subscriptionPlanId(subscriptionPlanId)
-                    .startedDate(startedDate)
-                    .expiresDate(expiresDate)
-                    .build();
+            Subscription subscription = new Subscription(userId, subscriptionPlanId);
+            subscription.setId(id);
+            subscription.setStartedDate(startedDate);
+            subscription.setExpiresDate(expiresDate);
+
+            return subscription;
         } else {
             throw new SubscriptionNotFoundException("Subscription not found");
         }

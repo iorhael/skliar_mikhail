@@ -27,10 +27,9 @@ public class PostDaoImpl implements PostDao {
             preparedStatement.setObject(1, post.getAuthorId());
             preparedStatement.setString(2, post.getTitle());
             preparedStatement.setString(3, post.getContent());
-            preparedStatement.setString(4, post.getContent());
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(post.getPublicationDate()));
-            preparedStatement.setObject(6, post.getSubscriptionPlanId());
-            return Optional.ofNullable(getPost(preparedStatement));
+            preparedStatement.setTimestamp(4, Timestamp.valueOf(post.getPublicationDate()));
+            preparedStatement.setObject(5, post.getSubscriptionPlanId());
+            return Optional.of(getPost(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -40,7 +39,7 @@ public class PostDaoImpl implements PostDao {
     public Optional<Post> getById(UUID postId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PostQueries.SELECT_POST_BY_ID)) {
             preparedStatement.setObject(1, postId);
-            return Optional.ofNullable(getPost(preparedStatement));
+            return Optional.of(getPost(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -62,18 +61,14 @@ public class PostDaoImpl implements PostDao {
                 LocalDateTime updatedDate = resultSet.getTimestamp("updated_date").toLocalDateTime();
                 LocalDateTime publicationDate = resultSet.getTimestamp("publication_date").toLocalDateTime();
 
-                posts.add(Post.builder()
-                        .id(id)
-                        .authorId(authorId)
-                        .subscriptionPlanId(subscriptionPlanId)
-                        .title(title)
-                        .content(content)
-                        .viewsTotal(viewsTotal)
-                        .createdDate(createdDate)
-                        .updatedDate(updatedDate)
-                        .publicationDate(publicationDate)
-                        .build()
-                );
+                Post post = new Post(authorId, subscriptionPlanId, title, content);
+                post.setId(id);
+                post.setViewsTotal(viewsTotal);
+                post.setCreatedDate(createdDate);
+                post.setUpdatedDate(updatedDate);
+                post.setPublicationDate(publicationDate);
+
+                posts.add(post);
             }
             return posts;
         } catch (SQLException e) {
@@ -91,7 +86,7 @@ public class PostDaoImpl implements PostDao {
             preparedStatement.setObject(5, post.getSubscriptionPlanId());
             preparedStatement.setLong(6, post.getViewsTotal());
             preparedStatement.setObject(7, postId);
-            return Optional.ofNullable(getPost(preparedStatement));
+            return Optional.of(getPost(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -101,7 +96,7 @@ public class PostDaoImpl implements PostDao {
     public Optional<Post> delete(UUID postId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PostQueries.DELETE_POST_BY_ID)) {
             preparedStatement.setObject(1, postId);
-            return Optional.ofNullable(getPost(preparedStatement));
+            return Optional.of(getPost(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -120,17 +115,14 @@ public class PostDaoImpl implements PostDao {
             LocalDateTime updatedDate = resultSet.getTimestamp("updated_date").toLocalDateTime();
             LocalDateTime publicationDate = resultSet.getTimestamp("publication_date").toLocalDateTime();
 
-            return Post.builder()
-                    .id(id)
-                    .authorId(authorId)
-                    .subscriptionPlanId(subscriptionPlanId)
-                    .title(title)
-                    .content(content)
-                    .viewsTotal(viewsTotal)
-                    .createdDate(createdDate)
-                    .updatedDate(updatedDate)
-                    .publicationDate(publicationDate)
-                    .build();
+            Post post = new Post(authorId, subscriptionPlanId, title, content);
+            post.setId(id);
+            post.setViewsTotal(viewsTotal);
+            post.setCreatedDate(createdDate);
+            post.setUpdatedDate(updatedDate);
+            post.setPublicationDate(publicationDate);
+
+            return post;
         } else {
             throw new PostNotFoundException("Post not found");
         }

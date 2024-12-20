@@ -6,42 +6,58 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Subscription {
-    private final UUID id;
-    private final UUID userId;
-    private final UUID subscriptionPlanId;
-    private final LocalDateTime startedDate;
-    private final LocalDateTime expiresDate;
+    private UUID id;
+    private UUID userId;
+    private UUID subscriptionPlanId;
+    private LocalDateTime startedDate;
+    private LocalDateTime expiresDate;
 
-    Subscription(Builder builder) {
-        this.id = builder.id;
-        this.userId = ValidationUtil.validateNotNull(builder.userId);
-        this.subscriptionPlanId = ValidationUtil.validateNotNull(builder.subscriptionPlanId);
-        this.startedDate = builder.startedDate;
-        this.expiresDate = builder.expiresDate;
+    public Subscription() {
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public Subscription(UUID userId, UUID subscriptionPlanId) {
+        this.userId = ValidationUtil.validateNotNull(userId);
+        this.subscriptionPlanId = ValidationUtil.validateNotNull(subscriptionPlanId);
     }
 
     public UUID getId() {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public UUID getUserId() {
         return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public UUID getSubscriptionPlanId() {
         return subscriptionPlanId;
     }
 
+    public void setSubscriptionPlanId(UUID subscriptionPlanId) {
+        this.subscriptionPlanId = subscriptionPlanId;
+    }
+
     public LocalDateTime getStartedDate() {
         return startedDate;
     }
 
+    public void setStartedDate(LocalDateTime startedDate) {
+        this.startedDate = startedDate;
+    }
+
     public LocalDateTime getExpiresDate() {
         return expiresDate;
+    }
+
+    public void setExpiresDate(LocalDateTime expiresDate) {
+        this.expiresDate = expiresDate;
     }
 
     @Override
@@ -53,42 +69,5 @@ public class Subscription {
                 ", startedDate=" + startedDate +
                 ", expiresDate=" + expiresDate +
                 '}';
-    }
-
-    public static class Builder {
-        private UUID id;
-        private UUID userId;
-        private UUID subscriptionPlanId;
-        private LocalDateTime startedDate;
-        private LocalDateTime expiresDate;
-
-        public Builder id(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder userId(UUID userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public Builder subscriptionPlanId(UUID subscriptionPlanId) {
-            this.subscriptionPlanId = subscriptionPlanId;
-            return this;
-        }
-
-        public Builder startedDate(LocalDateTime startedDate) {
-            this.startedDate = startedDate;
-            return this;
-        }
-
-        public Builder expiresDate(LocalDateTime expiresDate) {
-            this.expiresDate = expiresDate;
-            return this;
-        }
-
-        public Subscription build() {
-            return new Subscription(this);
-        }
     }
 }

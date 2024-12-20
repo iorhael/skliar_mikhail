@@ -103,7 +103,6 @@ public class UserDaoImpl implements UserDao {
             user.setCreatedDate(createdDate);
 
             return user;
-
         } else {
             throw new UserNotFoundException("User not found");
         }

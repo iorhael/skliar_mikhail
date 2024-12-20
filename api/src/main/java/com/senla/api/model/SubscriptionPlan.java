@@ -6,30 +6,40 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class SubscriptionPlan {
-    private final UUID id;
-    private final SubscriptionType name;
-    private final BigDecimal pricePerMonth;
+    private UUID id;
+    private SubscriptionType name;
+    private BigDecimal pricePerMonth;
 
-    SubscriptionPlan(Builder builder) {
-        this.id = builder.id;
-        this.name = ValidationUtil.validateNotNull(builder.name);
-        this.pricePerMonth = validatePricePerMonth(builder.pricePerMonth);
+    public SubscriptionPlan() {
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public SubscriptionPlan(SubscriptionType name, BigDecimal pricePerMonth) {
+        this.name = ValidationUtil.validateNotNull(name);
+        this.pricePerMonth = validatePricePerMonth(pricePerMonth);
     }
 
     public UUID getId() {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public SubscriptionType getName() {
         return name;
     }
 
+    public void setName(SubscriptionType name) {
+        this.name = name;
+    }
+
     public BigDecimal getPricePerMonth() {
         return pricePerMonth;
+    }
+
+    public void setPricePerMonth(BigDecimal pricePerMonth) {
+        this.pricePerMonth = pricePerMonth;
     }
 
     @Override
@@ -46,30 +56,5 @@ public class SubscriptionPlan {
             throw new IllegalArgumentException("Price per month must be equal or greater than zero");
         }
         return pricePerMonth;
-    }
-
-    public static class Builder {
-        private UUID id;
-        private SubscriptionType name;
-        private BigDecimal pricePerMonth;
-
-        public Builder id(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder name(SubscriptionType name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder pricePerMonth(BigDecimal pricePerMonth) {
-            this.pricePerMonth = pricePerMonth;
-            return this;
-        }
-
-        public SubscriptionPlan build() {
-            return new SubscriptionPlan(this);
-        }
     }
 }

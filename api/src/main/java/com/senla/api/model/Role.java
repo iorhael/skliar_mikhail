@@ -5,30 +5,40 @@ import com.senla.api.util.ValidationUtil;
 import java.util.UUID;
 
 public class Role {
-    private final UUID id;
-    private final UUID userId;
-    private final RoleName name;
+    private UUID id;
+    private UUID userId;
+    private RoleName name;
 
-    Role(Builder builder) {
-        this.id = builder.id;
-        this.userId = ValidationUtil.validateNotNull(builder.userId);
-        this.name = ValidationUtil.validateNotNull(builder.name);
+    public Role() {
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public Role(UUID userId, RoleName name) {
+        this.userId = ValidationUtil.validateNotNull(userId);
+        this.name = ValidationUtil.validateNotNull(name);
     }
 
     public UUID getId() {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public UUID getUserId() {
         return userId;
     }
 
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
     public RoleName getName() {
         return name;
+    }
+
+    public void setName(RoleName name) {
+        this.name = name;
     }
 
     @Override
@@ -38,30 +48,5 @@ public class Role {
                 ", userId=" + userId +
                 ", name=" + name +
                 '}';
-    }
-
-    public static class Builder {
-        private UUID id;
-        private UUID userId;
-        private RoleName name;
-
-        public Builder id(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder userId(UUID userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public Builder name(RoleName name) {
-            this.name = name;
-            return this;
-        }
-
-        public Role build() {
-            return new Role(this);
-        }
     }
 }
