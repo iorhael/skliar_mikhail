@@ -1,14 +1,17 @@
 package com.senla.api.service.imp;
 
 import com.senla.api.dao.VoteDao;
+import com.senla.api.dao.exception.VoteNotFoundException;
 import com.senla.api.model.Vote;
 import com.senla.api.model.VoteId;
 import com.senla.api.service.VoteService;
+import com.senla.api.service.exception.vote.VoteCreateException;
+import com.senla.api.service.exception.vote.VoteDeleteException;
+import com.senla.api.service.exception.vote.VoteUpdateException;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class VoteServiceImpl implements VoteService {
@@ -16,13 +19,13 @@ public class VoteServiceImpl implements VoteService {
     private VoteDao voteDao;
 
     @Override
-    public Optional<Vote> createVote(Vote vote) {
-        return voteDao.create(vote);
+    public Vote createVote(Vote vote) {
+        return voteDao.create(vote).orElseThrow(() -> new VoteCreateException("Can't create vote"));
     }
 
     @Override
-    public Optional<Vote> getVoteById(VoteId id) {
-        return voteDao.getById(id);
+    public Vote getVoteById(VoteId id) {
+        return voteDao.getById(id).orElseThrow(() -> new VoteNotFoundException("No vote found"));
     }
 
     @Override
@@ -31,12 +34,12 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Optional<Vote> updateVote(Vote vote, VoteId id) {
-        return voteDao.update(vote, id);
+    public Vote updateVote(Vote vote, VoteId id) {
+        return voteDao.update(vote, id).orElseThrow(() -> new VoteUpdateException("Can't update vote"));
     }
 
     @Override
-    public Optional<Vote> deleteVote(VoteId id) {
-        return voteDao.delete(id);
+    public Vote deleteVote(VoteId id) {
+        return voteDao.delete(id).orElseThrow(() -> new VoteDeleteException("Can't update vote"));
     }
 }

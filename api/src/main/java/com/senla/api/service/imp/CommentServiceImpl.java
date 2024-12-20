@@ -6,7 +6,6 @@ import com.senla.api.service.CommentService;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,12 +32,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Optional<Comment> updateComment(Comment comment, UUID id) {
-        Comment updatedComment = Comment.builder()
-                .content(comment.getContent())
-                .updatedDate(LocalDateTime.now())
-                .build();
-
-        return commentDao.update(updatedComment, id);
+//        Comment updatedComment = Comment.builder()
+//                .content(comment.getContent())
+//                .updatedDate(LocalDateTime.now())
+//                .build();
+//
+//        return commentDao.update(updatedComment, id);
+        return commentDao.update(comment, id);
     }
 
     @Override

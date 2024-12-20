@@ -1,14 +1,14 @@
 package com.senla.api.service.imp;
 
 import com.senla.api.dao.UserDao;
-import com.senla.api.dao.exception.NoUsersFoundException;
+import com.senla.api.dao.exception.UserNotFoundException;
 import com.senla.api.dto.user.UserCreateDto;
 import com.senla.api.dto.user.UserGetDto;
 import com.senla.api.model.User;
 import com.senla.api.service.UserService;
-import com.senla.api.service.exception.UserCreateException;
-import com.senla.api.service.exception.UserDeleteException;
-import com.senla.api.service.exception.UserUpdateException;
+import com.senla.api.service.exception.user.UserCreateException;
+import com.senla.api.service.exception.user.UserDeleteException;
+import com.senla.api.service.exception.user.UserUpdateException;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 import org.modelmapper.ModelMapper;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public UserGetDto getUserById(UUID id) {
         return userDao.getById(id)
                 .map(user -> modelMapper.map(user, UserGetDto.class))
-                .orElseThrow(() -> new NoUsersFoundException("No user found"));
+                .orElseThrow(() -> new UserNotFoundException("No user found"));
     }
 
     @Override

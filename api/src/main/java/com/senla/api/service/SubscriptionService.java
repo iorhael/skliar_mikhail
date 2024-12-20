@@ -1,19 +1,20 @@
 package com.senla.api.service;
 
-import com.senla.api.model.Subscription;
+import com.senla.api.dto.subscription.SubscriptionCreateDto;
+import com.senla.api.dto.subscription.SubscriptionGetDto;
+import com.senla.api.dto.subscription.SubscriptionUpdateDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface SubscriptionService {
-    Optional<Subscription> createSubscription(Subscription subscription);
+    SubscriptionGetDto createSubscription(SubscriptionCreateDto subscription);
 
-    Optional<Subscription> getSubscriptionById(UUID id);
+    SubscriptionGetDto getSubscriptionById(UUID id);
 
-    List<Subscription> getAllSubscriptions();
+    List<SubscriptionGetDto> getAllSubscriptions();
 
-    Optional<Subscription> updateSubscription(Subscription subscription, UUID id);
+    SubscriptionGetDto updateSubscription(SubscriptionUpdateDto subscription, UUID id);
 
-    Optional<Subscription> deleteSubscription(UUID id);
+    SubscriptionGetDto deleteSubscription(UUID id);
 }
