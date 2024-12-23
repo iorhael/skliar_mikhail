@@ -26,7 +26,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
-            return Optional.ofNullable(getUser(preparedStatement));
+            return Optional.of(getUser(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> getById(UUID userId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.SELECT_USER_BY_ID)) {
             preparedStatement.setObject(1, userId);
-            return Optional.ofNullable(getUser(preparedStatement));
+            return Optional.of(getUser(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -54,14 +54,11 @@ public class UserDaoImpl implements UserDao {
                 String password = resultSet.getString("password");
                 LocalDateTime createdDate = resultSet.getTimestamp("created_date").toLocalDateTime();
 
-                users.add(User.builder()
-                        .id(id)
-                        .username(username)
-                        .email(email)
-                        .password(password)
-                        .createdDate(createdDate)
-                        .build()
-                );
+                User user = new User(username, email, password);
+                user.setId(id);
+                user.setCreatedDate(createdDate);
+
+                users.add(user);
             }
             return users;
         } catch (SQLException e) {
@@ -76,7 +73,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setObject(4, userId);
-            return Optional.ofNullable(getUser(preparedStatement));
+            return Optional.of(getUser(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -86,7 +83,7 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> delete(UUID userId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(UserQueries.DELETE_USER_BY_ID)) {
             preparedStatement.setObject(1, userId);
-            return Optional.ofNullable(getUser(preparedStatement));
+            return Optional.of(getUser(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -101,13 +98,11 @@ public class UserDaoImpl implements UserDao {
             String password = resultSet.getString("password");
             LocalDateTime createdDate = resultSet.getTimestamp("created_date").toLocalDateTime();
 
-            return User.builder()
-                    .id(id)
-                    .username(username)
-                    .email(email)
-                    .password(password)
-                    .createdDate(createdDate)
-                    .build();
+            User user = new User(username, email, password);
+            user.setId(id);
+            user.setCreatedDate(createdDate);
+
+            return user;
         } else {
             throw new UserNotFoundException("User not found");
         }

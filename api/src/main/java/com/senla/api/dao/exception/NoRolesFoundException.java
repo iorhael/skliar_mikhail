@@ -1,6 +1,6 @@
 package com.senla.api.dao.exception;
 
-public class NoRolesFoundException extends RuntimeException {
+public class NoRolesFoundException extends EntityNotFoundException {
     public NoRolesFoundException(String message) {
         super(message);
     }

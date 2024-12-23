@@ -1,19 +1,20 @@
 package com.senla.api.service;
 
-import com.senla.api.model.Post;
+import com.senla.api.dto.post.PostCreateDto;
+import com.senla.api.dto.post.PostGetDto;
+import com.senla.api.dto.post.PostUpdateDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface PostService {
-    Optional<Post> createPost(Post post);
+    PostGetDto createPost(PostCreateDto post);
 
-    Optional<Post> getPostById(UUID id);
+    PostGetDto getPostById(UUID id);
 
-    List<Post> getAllPosts();
+    List<PostGetDto> getAllPosts();
 
-    Optional<Post> updatePost(Post post, UUID id);
+    PostGetDto updatePost(PostUpdateDto post, UUID id);
 
-    Optional<Post> deletePost(UUID id);
+    PostGetDto deletePost(UUID id);
 }

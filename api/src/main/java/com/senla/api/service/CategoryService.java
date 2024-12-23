@@ -1,19 +1,19 @@
 package com.senla.api.service;
 
-import com.senla.api.model.Category;
+import com.senla.api.dto.category.CategoryCreateDto;
+import com.senla.api.dto.category.CategoryGetDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface CategoryService {
-    Optional<Category> createCategory(Category category);
+    CategoryGetDto createCategory(CategoryCreateDto category);
 
-    Optional<Category> getCategoryById(UUID id);
+    CategoryGetDto getCategoryById(UUID id);
 
-    List<Category> getAllCategories();
+    List<CategoryGetDto> getAllCategories();
 
-    Optional<Category> updateCategory(Category category, UUID id);
+    CategoryGetDto updateCategory(CategoryCreateDto category, UUID id);
 
-    Optional<Category> deleteCategory(UUID id);
+    CategoryGetDto deleteCategory(UUID id);
 }

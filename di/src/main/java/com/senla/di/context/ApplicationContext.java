@@ -20,6 +20,10 @@ public class ApplicationContext {
         return beanConfig;
     }
 
+    public Map<Class<?>, Object> getBeanCache() {
+        return beanCache;
+    }
+
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }

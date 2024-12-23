@@ -26,7 +26,7 @@ public class RoleDaoImpl implements RoleDao {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.CREATE_ROLE)) {
             preparedStatement.setObject(1, role.getUserId());
             preparedStatement.setObject(2, role.getName(), Types.OTHER);
-            return Optional.ofNullable(getRole(preparedStatement));
+            return Optional.of(getRole(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -36,7 +36,7 @@ public class RoleDaoImpl implements RoleDao {
     public Optional<Role> getById(UUID roleId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.SELECT_ROLE_BY_ID)) {
             preparedStatement.setObject(1, roleId);
-            return Optional.ofNullable(getRole(preparedStatement));
+            return Optional.of(getRole(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -52,12 +52,10 @@ public class RoleDaoImpl implements RoleDao {
                 UUID userId = resultSet.getObject("user_id", UUID.class);
                 RoleName name = RoleName.valueOf(resultSet.getString("name"));
 
-                roles.add(Role.builder()
-                        .id(id)
-                        .userId(userId)
-                        .name(name)
-                        .build()
-                );
+                Role role = new Role(userId, name);
+                role.setId(id);
+
+                roles.add(role);
             }
             return roles;
         } catch (SQLException e) {
@@ -70,7 +68,7 @@ public class RoleDaoImpl implements RoleDao {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.UPDATE_ROLE_BY_ID)) {
             preparedStatement.setObject(1, role.getName(), Types.OTHER);
             preparedStatement.setObject(2, roleId);
-            return Optional.ofNullable(getRole(preparedStatement));
+            return Optional.of(getRole(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -80,7 +78,7 @@ public class RoleDaoImpl implements RoleDao {
     public Optional<Role> delete(UUID roleId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(RoleQueries.DELETE_ROLE_BY_ID)) {
             preparedStatement.setObject(1, roleId);
-            return Optional.ofNullable(getRole(preparedStatement));
+            return Optional.of(getRole(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -93,11 +91,10 @@ public class RoleDaoImpl implements RoleDao {
             UUID userId = resultSet.getObject("user_id", UUID.class);
             RoleName name = RoleName.valueOf(resultSet.getString("name"));
 
-            return Role.builder()
-                    .id(id)
-                    .userId(userId)
-                    .name(name)
-                    .build();
+            Role role = new Role(userId, name);
+            role.setId(id);
+
+            return role;
         } else {
             throw new RoleNotFoundException("Role not found");
         }

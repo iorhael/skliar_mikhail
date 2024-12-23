@@ -6,79 +6,59 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class User {
-    private final UUID id;
-    private final String username;
-    private final String email;
-    private final String password;
-    private final LocalDateTime createdDate;
+    private UUID id;
+    private String username;
+    private String email;
+    private String password;
+    private LocalDateTime createdDate;
 
-    User(Builder builder) {
-        this.id = builder.id;
-        this.username = ValidationUtil.validateNotNullOrEmpty(builder.username);
-        this.email = ValidationUtil.validateNotNullOrEmpty(builder.email);
-        this.password = ValidationUtil.validateNotNullOrEmpty(builder.password);
-        this.createdDate = builder.createdDate;
+    public User() {
+    }
+
+    public User(String username, String email, String password) {
+        this.username = ValidationUtil.validateNotNullOrEmpty(username);
+        this.email = ValidationUtil.validateNotNullOrEmpty(email);
+        this.password = ValidationUtil.validateNotNullOrEmpty(password);
     }
 
     public UUID getId() {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private UUID id;
-        private String username;
-        private String email;
-        private String password;
-        private LocalDateTime createdDate;
-
-        public Builder id(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder username(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder createdDate(LocalDateTime createdDate) {
-            this.createdDate = createdDate;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     @Override

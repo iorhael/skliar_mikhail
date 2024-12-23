@@ -1,19 +1,20 @@
 package com.senla.api.service;
 
-import com.senla.api.model.Comment;
+import com.senla.api.dto.comment.CommentCreateDto;
+import com.senla.api.dto.comment.CommentGetDto;
+import com.senla.api.dto.comment.CommentUpdateDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface CommentService {
-    Optional<Comment> createComment(Comment comment);
+    CommentGetDto createComment(CommentCreateDto comment);
 
-    Optional<Comment> getCommentById(UUID id);
+    CommentGetDto getCommentById(UUID id);
 
-    List<Comment> getAllComments();
+    List<CommentGetDto> getAllComments();
 
-    Optional<Comment> updateComment(Comment comment, UUID id);
+    CommentGetDto updateComment(CommentUpdateDto comment, UUID id);
 
-    Optional<Comment> deleteComment(UUID id);
+    CommentGetDto deleteComment(UUID id);
 }

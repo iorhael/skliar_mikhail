@@ -10,6 +10,9 @@ public final class PropertyUtil {
         loadFile();
     }
 
+    private PropertyUtil() {
+    }
+
     public static String getProperty(String key) {
         return PROPERTIES.getProperty(key);
     }
@@ -20,8 +23,5 @@ public final class PropertyUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private PropertyUtil() {
     }
 }

@@ -23,7 +23,7 @@ public class TagDaoImpl implements TagDao {
     public Optional<Tag> create(Tag tag) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.CREATE_TAG)) {
             preparedStatement.setString(1, tag.getName());
-            return Optional.ofNullable(getTag(preparedStatement));
+            return Optional.of(getTag(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -33,7 +33,7 @@ public class TagDaoImpl implements TagDao {
     public Optional<Tag> getById(UUID tagId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.SELECT_TAG_BY_ID)) {
             preparedStatement.setObject(1, tagId);
-            return Optional.ofNullable(getTag(preparedStatement));
+            return Optional.of(getTag(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -48,11 +48,10 @@ public class TagDaoImpl implements TagDao {
                 UUID id = resultSet.getObject("id", UUID.class);
                 String name = resultSet.getString("name");
 
-                tags.add(Tag.builder()
-                        .id(id)
-                        .name(name)
-                        .build()
-                );
+                Tag tag = new Tag(name);
+                tag.setId(id);
+
+                tags.add(tag);
             }
             return tags;
         } catch (SQLException e) {
@@ -65,7 +64,7 @@ public class TagDaoImpl implements TagDao {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.UPDATE_TAG_BY_ID)) {
             preparedStatement.setString(1, tag.getName());
             preparedStatement.setObject(2, tagId);
-            return Optional.ofNullable(getTag(preparedStatement));
+            return Optional.of(getTag(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -75,7 +74,7 @@ public class TagDaoImpl implements TagDao {
     public Optional<Tag> delete(UUID tagId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(TagQueries.DELETE_TAG_BY_ID)) {
             preparedStatement.setObject(1, tagId);
-            return Optional.ofNullable(getTag(preparedStatement));
+            return Optional.of(getTag(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -87,10 +86,10 @@ public class TagDaoImpl implements TagDao {
             UUID id = resultSet.getObject("id", UUID.class);
             String name = resultSet.getString("name");
 
-            return Tag.builder()
-                    .id(id)
-                    .name(name)
-                    .build();
+            Tag tag = new Tag(name);
+            tag.setId(id);
+
+            return tag;
         } else {
             throw new TagNotFoundException("Tag not found");
         }

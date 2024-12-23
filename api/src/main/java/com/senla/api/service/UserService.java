@@ -1,19 +1,19 @@
 package com.senla.api.service;
 
-import com.senla.api.model.User;
+import com.senla.api.dto.user.UserCreateDto;
+import com.senla.api.dto.user.UserGetDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
-    Optional<User> createUser(User user);
+    UserGetDto createUser(UserCreateDto user);
 
-    Optional<User> getUserById(UUID id);
+    UserGetDto getUserById(UUID id);
 
-    List<User> getAllUsers();
+    List<UserGetDto> getAllUsers();
 
-    Optional<User> updateUser(User user, UUID id);
+    UserGetDto updateUser(UserCreateDto user, UUID id);
 
-    Optional<User> deleteUser(UUID id);
+    UserGetDto deleteUser(UUID id);
 }

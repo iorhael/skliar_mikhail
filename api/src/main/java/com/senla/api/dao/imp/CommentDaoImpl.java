@@ -28,7 +28,7 @@ public class CommentDaoImpl implements CommentDao {
             preparedStatement.setObject(2, comment.getAuthorId());
             preparedStatement.setString(3, comment.getContent());
             preparedStatement.setObject(4, comment.getParentId());
-            return Optional.ofNullable(getComment(preparedStatement));
+            return Optional.of(getComment(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -38,7 +38,7 @@ public class CommentDaoImpl implements CommentDao {
     public Optional<Comment> getById(UUID commentId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CommentQueries.SELECT_COMMENT_BY_ID)) {
             preparedStatement.setObject(1, commentId);
-            return Optional.ofNullable(getComment(preparedStatement));
+            return Optional.of(getComment(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -58,16 +58,13 @@ public class CommentDaoImpl implements CommentDao {
                 LocalDateTime updatedDate = resultSet.getTimestamp("updated_date").toLocalDateTime();
                 UUID parentId = resultSet.getObject("parent_id", UUID.class);
 
-                comments.add(Comment.builder()
-                        .id(id)
-                        .postId(postId)
-                        .authorId(authorId)
-                        .content(content)
-                        .createdDate(createdDate)
-                        .updatedDate(updatedDate)
-                        .parentId(parentId)
-                        .build()
-                );
+                Comment comment = new Comment(postId, authorId, content);
+                comment.setId(id);
+                comment.setCreatedDate(createdDate);
+                comment.setUpdatedDate(updatedDate);
+                comment.setParentId(parentId);
+
+                comments.add(comment);
             }
             return comments;
         } catch (SQLException e) {
@@ -81,7 +78,7 @@ public class CommentDaoImpl implements CommentDao {
             preparedStatement.setString(1, comment.getContent());
             preparedStatement.setTimestamp(2, Timestamp.valueOf(comment.getUpdatedDate()));
             preparedStatement.setObject(3, commentId);
-            return Optional.ofNullable(getComment(preparedStatement));
+            return Optional.of(getComment(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -91,7 +88,7 @@ public class CommentDaoImpl implements CommentDao {
     public Optional<Comment> delete(UUID commentId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(CommentQueries.DELETE_COMMENT_BY_ID)) {
             preparedStatement.setObject(1, commentId);
-            return Optional.ofNullable(getComment(preparedStatement));
+            return Optional.of(getComment(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -108,15 +105,13 @@ public class CommentDaoImpl implements CommentDao {
             LocalDateTime updatedDate = resultSet.getTimestamp("updated_date").toLocalDateTime();
             UUID parentId = resultSet.getObject("parent_id", UUID.class);
 
-            return Comment.builder()
-                    .id(id)
-                    .postId(postId)
-                    .authorId(authorId)
-                    .content(content)
-                    .createdDate(createdDate)
-                    .updatedDate(updatedDate)
-                    .parentId(parentId)
-                    .build();
+            Comment comment = new Comment(postId, authorId, content);
+            comment.setId(id);
+            comment.setCreatedDate(createdDate);
+            comment.setUpdatedDate(updatedDate);
+            comment.setParentId(parentId);
+
+            return comment;
         } else {
             throw new CommentNotFoundException("Comment not found");
         }

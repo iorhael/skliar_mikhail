@@ -6,55 +6,40 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Vote {
-    private final UUID pollOptionId;
-    private final UUID userId;
-    private final LocalDateTime voteDate;
+    private UUID pollOptionId;
+    private UUID userId;
+    private LocalDateTime voteDate;
 
-    Vote(Builder builder) {
-        this.pollOptionId = ValidationUtil.validateNotNull(builder.pollOptionId);
-        this.userId = ValidationUtil.validateNotNull(builder.userId);
-        this.voteDate = builder.voteDate;
+    public Vote() {
+    }
+
+    public Vote(UUID pollOptionId, UUID userId) {
+        this.pollOptionId = ValidationUtil.validateNotNull(pollOptionId);
+        this.userId = ValidationUtil.validateNotNull(userId);
     }
 
     public UUID getPollOptionId() {
         return pollOptionId;
     }
 
+    public void setPollOptionId(UUID pollOptionId) {
+        this.pollOptionId = pollOptionId;
+    }
+
     public UUID getUserId() {
         return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public LocalDateTime getVoteDate() {
         return voteDate;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private UUID pollOptionId;
-        private UUID userId;
-        private LocalDateTime voteDate;
-
-        public Builder pollOptionId(UUID pollOptionId) {
-            this.pollOptionId = pollOptionId;
-            return this;
-        }
-
-        public Builder userId(UUID userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public Builder voteDate(LocalDateTime voteDate) {
-            this.voteDate = voteDate;
-            return this;
-        }
-
-        public Vote build() {
-            return new Vote(this);
-        }
+    public void setVoteDate(LocalDateTime voteDate) {
+        this.voteDate = voteDate;
     }
 
     @Override
@@ -65,4 +50,5 @@ public class Vote {
                 ", voteDate=" + voteDate +
                 '}';
     }
+
 }

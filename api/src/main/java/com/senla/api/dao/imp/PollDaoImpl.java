@@ -25,7 +25,7 @@ public class PollDaoImpl implements PollDao {
             preparedStatement.setObject(1, poll.getPostId());
             preparedStatement.setObject(2, poll.getAuthorId());
             preparedStatement.setString(3, poll.getDescription());
-            return Optional.ofNullable(getPoll(preparedStatement));
+            return Optional.of(getPoll(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -35,7 +35,7 @@ public class PollDaoImpl implements PollDao {
     public Optional<Poll> getById(UUID pollId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.SELECT_POLL_BY_ID)) {
             preparedStatement.setObject(1, pollId);
-            return Optional.ofNullable(getPoll(preparedStatement));
+            return Optional.of(getPoll(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -52,13 +52,11 @@ public class PollDaoImpl implements PollDao {
                 UUID authorId = resultSet.getObject("author_id", UUID.class);
                 String description = resultSet.getString("description");
 
-                polls.add(Poll.builder()
-                        .id(id)
-                        .postId(postId)
-                        .authorId(authorId)
-                        .description(description)
-                        .build()
-                );
+                Poll poll = new Poll(authorId, description);
+                poll.setId(id);
+                poll.setPostId(postId);
+
+                polls.add(poll);
             }
             return polls;
         } catch (SQLException e) {
@@ -71,7 +69,7 @@ public class PollDaoImpl implements PollDao {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.UPDATE_POLL_BY_ID)) {
             preparedStatement.setString(1, poll.getDescription());
             preparedStatement.setObject(2, pollId);
-            return Optional.ofNullable(getPoll(preparedStatement));
+            return Optional.of(getPoll(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -81,7 +79,7 @@ public class PollDaoImpl implements PollDao {
     public Optional<Poll> delete(UUID pollId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(PollQueries.DELETE_POLL_BY_ID)) {
             preparedStatement.setObject(1, pollId);
-            return Optional.ofNullable(getPoll(preparedStatement));
+            return Optional.of(getPoll(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -95,12 +93,11 @@ public class PollDaoImpl implements PollDao {
             UUID authorId = resultSet.getObject("author_id", UUID.class);
             String description = resultSet.getString("description");
 
-            return Poll.builder()
-                    .id(id)
-                    .postId(postId)
-                    .authorId(authorId)
-                    .description(description)
-                    .build();
+            Poll poll = new Poll(authorId, description);
+            poll.setId(id);
+            poll.setPostId(postId);
+
+            return poll;
         } else {
             throw new PollNotFoundException("Poll not found");
         }

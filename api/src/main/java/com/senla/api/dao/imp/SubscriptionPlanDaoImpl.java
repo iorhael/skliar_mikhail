@@ -27,7 +27,7 @@ public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.CREATE_SUBSCRIPTION_PLAN)) {
             preparedStatement.setObject(1, subscriptionPlan.getName(), Types.OTHER);
             preparedStatement.setBigDecimal(2, subscriptionPlan.getPricePerMonth());
-            return Optional.ofNullable(getSubscriptionPlan(preparedStatement));
+            return Optional.of(getSubscriptionPlan(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -37,7 +37,7 @@ public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
     public Optional<SubscriptionPlan> getById(UUID subscriptionPlanId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.SELECT_SUBSCRIPTION_PLAN_BY_ID)) {
             preparedStatement.setObject(1, subscriptionPlanId);
-            return Optional.ofNullable(getSubscriptionPlan(preparedStatement));
+            return Optional.of(getSubscriptionPlan(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -53,12 +53,10 @@ public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
                 SubscriptionType name = SubscriptionType.valueOf(resultSet.getString("name"));
                 BigDecimal pricePerMonth = resultSet.getBigDecimal("price_per_month");
 
-                subscriptionPlans.add(SubscriptionPlan.builder()
-                        .id(id)
-                        .name(name)
-                        .pricePerMonth(pricePerMonth)
-                        .build()
-                );
+                SubscriptionPlan subscriptionPlan = new SubscriptionPlan(name, pricePerMonth);
+                subscriptionPlan.setId(id);
+
+                subscriptionPlans.add(subscriptionPlan);
             }
             return subscriptionPlans;
         } catch (SQLException e) {
@@ -72,7 +70,7 @@ public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
             preparedStatement.setObject(1, subscriptionPlan.getName(), Types.OTHER);
             preparedStatement.setBigDecimal(2, subscriptionPlan.getPricePerMonth());
             preparedStatement.setObject(3, subscriptionPlanId);
-            return Optional.ofNullable(getSubscriptionPlan(preparedStatement));
+            return Optional.of(getSubscriptionPlan(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -82,7 +80,7 @@ public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
     public Optional<SubscriptionPlan> delete(UUID subscriptionPlanId) {
         try (Connection connection = ConnectionManager.open(); PreparedStatement preparedStatement = connection.prepareStatement(SubscriptionPlanQueries.DELETE_SUBSCRIPTION_PLAN_BY_ID)) {
             preparedStatement.setObject(1, subscriptionPlanId);
-            return Optional.ofNullable(getSubscriptionPlan(preparedStatement));
+            return Optional.of(getSubscriptionPlan(preparedStatement));
         } catch (SQLException e) {
             return Optional.empty();
         }
@@ -95,11 +93,10 @@ public class SubscriptionPlanDaoImpl implements SubscriptionPlanDao {
             SubscriptionType name = SubscriptionType.valueOf(resultSet.getString("name"));
             BigDecimal pricePerMonth = resultSet.getBigDecimal("price_per_month");
 
-            return SubscriptionPlan.builder()
-                    .id(id)
-                    .name(name)
-                    .pricePerMonth(pricePerMonth)
-                    .build();
+            SubscriptionPlan subscriptionPlan = new SubscriptionPlan(name, pricePerMonth);
+            subscriptionPlan.setId(id);
+
+            return subscriptionPlan;
         } else {
             throw new SubscriptionNotFoundException("Subscription plan not found");
         }
