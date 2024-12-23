@@ -17,7 +17,7 @@
     <input type="text" id="content" name="content" required/>
     <br/>
     <label for="parentId">Parent Id</label>
-    <input type="text" id="parentId" name="content"/>
+    <input type="text" id="parentId" name="parentId"/>
     <br/>
     <button type="submit">Create</button>
 </form>

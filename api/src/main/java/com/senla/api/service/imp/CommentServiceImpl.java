@@ -10,9 +10,10 @@ import com.senla.api.service.CommentService;
 import com.senla.api.service.exception.comment.CommentCreateException;
 import com.senla.api.service.exception.comment.CommentDeleteException;
 import com.senla.api.service.exception.comment.CommentUpdateException;
+import com.senla.api.util.ModelMapperUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
-import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,22 +25,20 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentDao commentDao;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Override
     public CommentGetDto createComment(CommentCreateDto comment) {
-        Comment commentEntity = modelMapper.map(comment, Comment.class);
+        ModelMapperUtil.getConfiguredMapper().getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        Comment commentEntity = ModelMapperUtil.getConfiguredMapper().map(comment, Comment.class);
 
         return commentDao.create(commentEntity)
-                .map(c -> modelMapper.map(c, CommentGetDto.class))
+                .map(c -> ModelMapperUtil.getConfiguredMapper().map(c, CommentGetDto.class))
                 .orElseThrow(() -> new CommentCreateException("Can't create comment"));
     }
 
     @Override
     public CommentGetDto getCommentById(UUID id) {
         return commentDao.getById(id)
-                .map(post -> modelMapper.map(post, CommentGetDto.class))
+                .map(post -> ModelMapperUtil.getConfiguredMapper().map(post, CommentGetDto.class))
                 .orElseThrow(() -> new CommentNotFoundException("No post found"));
     }
 
@@ -49,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
         List<CommentGetDto> commentGetDtos = new ArrayList<>();
 
         for (Comment comment : comments) {
-            CommentGetDto commentGetDto = modelMapper.map(comment, CommentGetDto.class);
+            CommentGetDto commentGetDto = ModelMapperUtil.getConfiguredMapper().map(comment, CommentGetDto.class);
             commentGetDtos.add(commentGetDto);
         }
 
@@ -58,18 +57,18 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentGetDto updateComment(CommentUpdateDto comment, UUID id) {
-        Comment commentEntity = modelMapper.map(comment, Comment.class);
+        Comment commentEntity = ModelMapperUtil.getConfiguredMapper().map(comment, Comment.class);
         commentEntity.setUpdatedDate(LocalDateTime.now());
 
         return commentDao.update(commentEntity, id)
-                .map(p -> modelMapper.map(p, CommentGetDto.class))
+                .map(p -> ModelMapperUtil.getConfiguredMapper().map(p, CommentGetDto.class))
                 .orElseThrow(() -> new CommentUpdateException("Can't update comment"));
     }
 
     @Override
     public CommentGetDto deleteComment(UUID id) {
         return commentDao.delete(id)
-                .map(post -> modelMapper.map(post, CommentGetDto.class))
+                .map(post -> ModelMapperUtil.getConfiguredMapper().map(post, CommentGetDto.class))
                 .orElseThrow(() -> new CommentDeleteException("Can't delete comment"));
     }
 }

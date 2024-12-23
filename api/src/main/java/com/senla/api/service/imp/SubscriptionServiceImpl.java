@@ -10,9 +10,9 @@ import com.senla.api.service.SubscriptionService;
 import com.senla.api.service.exception.subscription.SubscriptionCreateException;
 import com.senla.api.service.exception.subscription.SubscriptionDeleteException;
 import com.senla.api.service.exception.subscription.SubscriptionUpdateException;
+import com.senla.api.util.ModelMapperUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
-import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,22 +23,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Autowired
     private SubscriptionDao subscriptionDao;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Override
     public SubscriptionGetDto createSubscription(SubscriptionCreateDto subscription) {
-        Subscription subscriptionEntity = modelMapper.map(subscription, Subscription.class);
+        Subscription subscriptionEntity = ModelMapperUtil.getConfiguredMapper().map(subscription, Subscription.class);
 
         return subscriptionDao.create(subscriptionEntity)
-                .map(s -> modelMapper.map(s, SubscriptionGetDto.class))
+                .map(s -> ModelMapperUtil.getConfiguredMapper().map(s, SubscriptionGetDto.class))
                 .orElseThrow(() -> new SubscriptionCreateException("Can't create subscription"));
     }
 
     @Override
     public SubscriptionGetDto getSubscriptionById(UUID id) {
         return subscriptionDao.getById(id)
-                .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
+                .map(subscription -> ModelMapperUtil.getConfiguredMapper().map(subscription, SubscriptionGetDto.class))
                 .orElseThrow(() -> new SubscriptionNotFoundException("Subscription not found"));
     }
 
@@ -48,7 +45,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         List<SubscriptionGetDto> subscriptionGetDtos = new ArrayList<>();
 
         for (Subscription subscription : subscriptions) {
-            SubscriptionGetDto subscriptionGetDto = modelMapper.map(subscription, SubscriptionGetDto.class);
+            SubscriptionGetDto subscriptionGetDto = ModelMapperUtil.getConfiguredMapper().map(subscription, SubscriptionGetDto.class);
             subscriptionGetDtos.add(subscriptionGetDto);
         }
 
@@ -57,17 +54,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionGetDto updateSubscription(SubscriptionUpdateDto subscription, UUID id) {
-        Subscription subscriptionEntity = modelMapper.map(subscription, Subscription.class);
+        Subscription subscriptionEntity = ModelMapperUtil.getConfiguredMapper().map(subscription, Subscription.class);
 
         return subscriptionDao.update(subscriptionEntity, id)
-                .map(s -> modelMapper.map(s, SubscriptionGetDto.class))
+                .map(s -> ModelMapperUtil.getConfiguredMapper().map(s, SubscriptionGetDto.class))
                 .orElseThrow(() -> new SubscriptionUpdateException("Can't update subscription"));
     }
 
     @Override
     public SubscriptionGetDto deleteSubscription(UUID id) {
         return subscriptionDao.delete(id)
-                .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
+                .map(subscription -> ModelMapperUtil.getConfiguredMapper().map(subscription, SubscriptionGetDto.class))
                 .orElseThrow(() -> new SubscriptionDeleteException("Can't delete subscription"));
     }
 }

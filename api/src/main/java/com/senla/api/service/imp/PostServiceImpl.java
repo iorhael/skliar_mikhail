@@ -10,9 +10,9 @@ import com.senla.api.service.PostService;
 import com.senla.api.service.exception.post.PostCreateException;
 import com.senla.api.service.exception.post.PostDeleteException;
 import com.senla.api.service.exception.post.PostUpdateException;
+import com.senla.api.util.ModelMapperUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
-import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,22 +24,19 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostDao postDao;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Override
     public PostGetDto createPost(PostCreateDto post) {
-        Post postEntity = modelMapper.map(post, Post.class);
+        Post postEntity = ModelMapperUtil.getConfiguredMapper().map(post, Post.class);
 
         return postDao.create(postEntity)
-                .map(p -> modelMapper.map(p, PostGetDto.class))
+                .map(p -> ModelMapperUtil.getConfiguredMapper().map(p, PostGetDto.class))
                 .orElseThrow(() -> new PostCreateException("Can't create post"));
     }
 
     @Override
     public PostGetDto getPostById(UUID id) {
         return postDao.getById(id)
-                .map(post -> modelMapper.map(post, PostGetDto.class))
+                .map(post -> ModelMapperUtil.getConfiguredMapper().map(post, PostGetDto.class))
                 .orElseThrow(() -> new PostNotFoundException("No post found"));
     }
 
@@ -49,7 +46,7 @@ public class PostServiceImpl implements PostService {
         List<PostGetDto> postGetDtos = new ArrayList<>();
 
         for (Post post : posts) {
-            PostGetDto postGetDto = modelMapper.map(post, PostGetDto.class);
+            PostGetDto postGetDto = ModelMapperUtil.getConfiguredMapper().map(post, PostGetDto.class);
             postGetDtos.add(postGetDto);
         }
 
@@ -58,19 +55,19 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostGetDto updatePost(PostUpdateDto post, UUID id) {
-        Post postEntity = modelMapper.map(post, Post.class);
+        Post postEntity = ModelMapperUtil.getConfiguredMapper().map(post, Post.class);
         postEntity.setUpdatedDate(LocalDateTime.now());
         postEntity.setViewsTotal(0); // Update when the post views functionality will be added
 
         return postDao.update(postEntity, id)
-                .map(p -> modelMapper.map(p, PostGetDto.class))
+                .map(p -> ModelMapperUtil.getConfiguredMapper().map(p, PostGetDto.class))
                 .orElseThrow(() -> new PostUpdateException("Can't update post"));
     }
 
     @Override
     public PostGetDto deletePost(UUID id) {
         return postDao.delete(id)
-                .map(post -> modelMapper.map(post, PostGetDto.class))
+                .map(post -> ModelMapperUtil.getConfiguredMapper().map(post, PostGetDto.class))
                 .orElseThrow(() -> new PostDeleteException("Can't delete post"));
     }
 }

@@ -7,7 +7,7 @@
 <body>
 <h1>Create New Poll</h1>
 <form action="insert" method="post">
-    <label for="postId">Poll Id</label>
+    <label for="postId">Post Id</label>
     <input type="text" id="postId" name="postId" required/>
     <br/>
     <label for="authorId">Author Id</label>

@@ -9,9 +9,9 @@ import com.senla.api.service.UserService;
 import com.senla.api.service.exception.user.UserCreateException;
 import com.senla.api.service.exception.user.UserDeleteException;
 import com.senla.api.service.exception.user.UserUpdateException;
+import com.senla.api.util.ModelMapperUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
-import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,22 +22,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Override
     public UserGetDto createUser(UserCreateDto user) {
-        User userEntity = modelMapper.map(user, User.class);
+        User userEntity = ModelMapperUtil.getConfiguredMapper().map(user, User.class);
 
         return userDao.create(userEntity)
-                .map(u -> modelMapper.map(u, UserGetDto.class))
+                .map(u -> ModelMapperUtil.getConfiguredMapper().map(u, UserGetDto.class))
                 .orElseThrow(() -> new UserCreateException("Can't create user"));
     }
 
     @Override
     public UserGetDto getUserById(UUID id) {
         return userDao.getById(id)
-                .map(user -> modelMapper.map(user, UserGetDto.class))
+                .map(user -> ModelMapperUtil.getConfiguredMapper().map(user, UserGetDto.class))
                 .orElseThrow(() -> new UserNotFoundException("No user found"));
     }
 
@@ -47,7 +44,7 @@ public class UserServiceImpl implements UserService {
         List<UserGetDto> userGetDtos = new ArrayList<>();
 
         for (User user : users) {
-            UserGetDto userGetDto = modelMapper.map(user, UserGetDto.class);
+            UserGetDto userGetDto = ModelMapperUtil.getConfiguredMapper().map(user, UserGetDto.class);
             userGetDtos.add(userGetDto);
         }
 
@@ -56,17 +53,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserGetDto updateUser(UserCreateDto user, UUID id) {
-        User userEntity = modelMapper.map(user, User.class);
+        User userEntity = ModelMapperUtil.getConfiguredMapper().map(user, User.class);
 
         return userDao.update(userEntity, id)
-                .map(u -> modelMapper.map(u, UserGetDto.class))
+                .map(u -> ModelMapperUtil.getConfiguredMapper().map(u, UserGetDto.class))
                 .orElseThrow(() -> new UserUpdateException("Can't update user"));
     }
 
     @Override
     public UserGetDto deleteUser(UUID id) {
         return userDao.delete(id)
-                .map(user -> modelMapper.map(user, UserGetDto.class))
+                .map(user -> ModelMapperUtil.getConfiguredMapper().map(user, UserGetDto.class))
                 .orElseThrow(() -> new UserDeleteException("Can't delete user"));
     }
 }
