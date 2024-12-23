@@ -3,6 +3,7 @@ package com.senla.api.controller;
 import com.senla.api.dto.category.CategoryCreateDto;
 import com.senla.api.dto.category.CategoryGetDto;
 import com.senla.api.service.CategoryService;
+import com.senla.api.util.ValidationUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 import jakarta.servlet.ServletException;
@@ -95,7 +96,7 @@ public class CategoryServlet extends HttpServlet {
         String parentIdParam = request.getParameter("parentId");
         UUID parentId = (parentIdParam == null || parentIdParam.isEmpty()) ? null : UUID.fromString(parentIdParam);
 
-        CategoryCreateDto category = new CategoryCreateDto(name, description, parentId);
+        CategoryCreateDto category = ValidationUtil.validate(new CategoryCreateDto(name, description, parentId));
 
         categoryService.createCategory(category);
         response.sendRedirect(request.getContextPath() + "/category");
@@ -110,7 +111,7 @@ public class CategoryServlet extends HttpServlet {
         String parentIdParam = request.getParameter("parentId");
         UUID parentId = (parentIdParam == null || parentIdParam.isEmpty()) ? null : UUID.fromString(parentIdParam);
 
-        CategoryCreateDto category = new CategoryCreateDto(name, description, parentId);
+        CategoryCreateDto category = ValidationUtil.validate(new CategoryCreateDto(name, description, parentId));
 
         categoryService.updateCategory(category, id);
         response.sendRedirect(request.getContextPath() + "/category");

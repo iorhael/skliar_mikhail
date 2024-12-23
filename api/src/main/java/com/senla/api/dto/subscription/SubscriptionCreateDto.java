@@ -1,19 +1,26 @@
 package com.senla.api.dto.subscription;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class SubscriptionCreateDto {
+    @NotNull
     private UUID userId;
+
+    @NotNull
     private UUID subscriptionPlanId;
+
+    @NotNull
+    @FutureOrPresent
     private LocalDateTime expiresDate;
 
     public SubscriptionCreateDto(UUID userId, UUID subscriptionPlanId, LocalDateTime expiresDate) {
-        this.userId = ValidationUtil.validateNotNull(userId);
-        this.subscriptionPlanId = ValidationUtil.validateNotNull(subscriptionPlanId);
-        this.expiresDate = ValidationUtil.validateNotNull(expiresDate);
+        this.userId = userId;
+        this.subscriptionPlanId = subscriptionPlanId;
+        this.expiresDate = expiresDate;
     }
 
     public SubscriptionCreateDto() {

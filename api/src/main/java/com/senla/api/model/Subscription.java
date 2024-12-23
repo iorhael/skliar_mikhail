@@ -1,23 +1,29 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Subscription {
     private UUID id;
+
+    @NotNull
     private UUID userId;
+
+    @NotNull
     private UUID subscriptionPlanId;
+
     private LocalDateTime startedDate;
+
     private LocalDateTime expiresDate;
 
     public Subscription() {
     }
 
     public Subscription(UUID userId, UUID subscriptionPlanId) {
-        this.userId = ValidationUtil.validateNotNull(userId);
-        this.subscriptionPlanId = ValidationUtil.validateNotNull(subscriptionPlanId);
+        this.userId = userId;
+        this.subscriptionPlanId = subscriptionPlanId;
     }
 
     public UUID getId() {

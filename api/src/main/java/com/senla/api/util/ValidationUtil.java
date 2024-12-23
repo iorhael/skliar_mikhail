@@ -1,20 +1,29 @@
 package com.senla.api.util;
 
+import com.senla.api.util.exception.ValidationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
+import java.util.Set;
+
 public final class ValidationUtil {
+    private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private static final Validator validator = factory.getValidator();
+
     private ValidationUtil() {
     }
 
-    public static String validateNotNullOrEmpty(String value) {
-        if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("Field must not be null or empty");
+    public static <T> T validate(T object) {
+        Set<ConstraintViolation<T>> violations = validator.validate(object);
+        if (!violations.isEmpty()) {
+            StringBuilder errorMessage = new StringBuilder("Validation errors:");
+            for (ConstraintViolation<T> violation : violations) {
+                errorMessage.append("\n").append(violation.getPropertyPath()).append(": ").append(violation.getMessage());
+            }
+            throw new ValidationException(errorMessage.toString());
         }
-        return value;
-    }
-
-    public static <T> T validateNotNull(T value) {
-        if (value == null) {
-            throw new IllegalArgumentException("Field must not be null");
-        }
-        return value;
+        return object;
     }
 }

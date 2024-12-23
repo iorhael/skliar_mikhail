@@ -1,19 +1,28 @@
 package com.senla.api.dto.user;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 public class UserCreateDto {
+    @NotBlank
     private String username;
+
+    @NotBlank
+    @Email
     private String email;
+
+    @NotBlank
+    @Length(min = 5)
     private String password;
 
     public UserCreateDto() {
     }
 
     public UserCreateDto(String username, String email, String password) {
-        this.username = ValidationUtil.validateNotNullOrEmpty(username);
-        this.email = ValidationUtil.validateNotNullOrEmpty(email);
-        this.password = ValidationUtil.validateNotNull(password);
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     public String getUsername() {

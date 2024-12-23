@@ -4,6 +4,7 @@ import com.senla.api.dto.subscription.SubscriptionCreateDto;
 import com.senla.api.dto.subscription.SubscriptionGetDto;
 import com.senla.api.dto.subscription.SubscriptionUpdateDto;
 import com.senla.api.service.SubscriptionService;
+import com.senla.api.util.ValidationUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 import jakarta.servlet.ServletException;
@@ -96,7 +97,7 @@ public class SubscriptionServlet extends HttpServlet {
         UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
         LocalDateTime expiresDate = validateDate(request.getParameter("expiresDate"));
 
-        SubscriptionCreateDto subscription = new SubscriptionCreateDto(userId, subscriptionPlanId, expiresDate);
+        SubscriptionCreateDto subscription = ValidationUtil.validate(new SubscriptionCreateDto(userId, subscriptionPlanId, expiresDate));
 
         subscriptionService.createSubscription(subscription);
         response.sendRedirect(request.getContextPath() + "/subscription");
@@ -108,7 +109,7 @@ public class SubscriptionServlet extends HttpServlet {
         UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
         LocalDateTime expiresDate = validateDate(request.getParameter("expiresDate"));
 
-        SubscriptionUpdateDto subscription = new SubscriptionUpdateDto(subscriptionPlanId, expiresDate);
+        SubscriptionUpdateDto subscription = ValidationUtil.validate(new SubscriptionUpdateDto(subscriptionPlanId, expiresDate));
 
         subscriptionService.updateSubscription(subscription, id);
         response.sendRedirect(request.getContextPath() + "/subscription");

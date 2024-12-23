@@ -1,10 +1,18 @@
 package com.senla.api.dto.category;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.UUID;
 
 public class CategoryGetDto {
+    @NotNull
     private UUID id;
+
+    @NotEmpty
     private String name;
+
+    @NotEmpty
     private String description;
 
     public CategoryGetDto() {

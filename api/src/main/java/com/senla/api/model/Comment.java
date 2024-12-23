@@ -1,26 +1,36 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Comment {
     private UUID id;
+
+    @NotNull
     private UUID postId;
+
+    @NotNull
     private UUID authorId;
+
+    @NotBlank
     private String content;
+
     private LocalDateTime createdDate;
+
     private LocalDateTime updatedDate;
+
     private UUID parentId;
 
     public Comment() {
     }
 
     public Comment(UUID postId, UUID authorId, String content) {
-        this.postId = ValidationUtil.validateNotNull(postId);
-        this.authorId = ValidationUtil.validateNotNull(authorId);
-        this.content = ValidationUtil.validateNotNullOrEmpty(content);
+        this.postId = postId;
+        this.authorId = authorId;
+        this.content = content;
     }
 
     public UUID getId() {

@@ -1,22 +1,27 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class PublicationStatus {
     private UUID id;
+
+    @NotNull
     private UUID postId;
+
+    @NotNull
     private PostStatus statusName;
+
     private LocalDateTime scheduledDate;
 
     public PublicationStatus() {
     }
 
     public PublicationStatus(UUID postId, PostStatus statusName) {
-        this.postId = ValidationUtil.validateNotNull(postId);
-        this.statusName = ValidationUtil.validateNotNull(statusName);
+        this.postId = postId;
+        this.statusName = statusName;
     }
 
     public UUID getId() {

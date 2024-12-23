@@ -1,21 +1,27 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 public class SubscriptionPlan {
     private UUID id;
+
+    @NotNull
     private SubscriptionType name;
+
+    @NotNull
+    @PositiveOrZero
     private BigDecimal pricePerMonth;
 
     public SubscriptionPlan() {
     }
 
     public SubscriptionPlan(SubscriptionType name, BigDecimal pricePerMonth) {
-        this.name = ValidationUtil.validateNotNull(name);
-        this.pricePerMonth = validatePricePerMonth(pricePerMonth);
+        this.name = name;
+        this.pricePerMonth = pricePerMonth;
     }
 
     public UUID getId() {
@@ -49,12 +55,5 @@ public class SubscriptionPlan {
                 ", name=" + name +
                 ", pricePerMonth=" + pricePerMonth +
                 '}';
-    }
-
-    private BigDecimal validatePricePerMonth(BigDecimal pricePerMonth) {
-        if (pricePerMonth == null || pricePerMonth.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Price per month must be equal or greater than zero");
-        }
-        return pricePerMonth;
     }
 }

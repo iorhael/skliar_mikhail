@@ -1,24 +1,34 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class User {
+    @NotNull
     private UUID id;
+
+    @NotBlank
     private String username;
+
+    @NotBlank
+    @Email
     private String email;
+
     private String password;
+
     private LocalDateTime createdDate;
 
     public User() {
     }
 
     public User(String username, String email, String password) {
-        this.username = ValidationUtil.validateNotNullOrEmpty(username);
-        this.email = ValidationUtil.validateNotNullOrEmpty(email);
-        this.password = ValidationUtil.validateNotNullOrEmpty(password);
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     public UUID getId() {

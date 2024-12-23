@@ -1,22 +1,29 @@
 package com.senla.api.dto.comment;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public class CommentCreateDto {
+    @NotNull
     private UUID postId;
+
+    @NotNull
     private UUID authorId;
+
+    @NotBlank
     private String content;
+
     private UUID parentId;
 
     public CommentCreateDto() {
     }
 
     public CommentCreateDto(UUID postId, UUID authorId, String content, UUID parentId) {
-        this.postId = ValidationUtil.validateNotNull(postId);
-        this.authorId = ValidationUtil.validateNotNull(authorId);
-        this.content = ValidationUtil.validateNotNullOrEmpty(content);
+        this.postId = postId;
+        this.authorId = authorId;
+        this.content = content;
         this.parentId = parentId;
     }
 

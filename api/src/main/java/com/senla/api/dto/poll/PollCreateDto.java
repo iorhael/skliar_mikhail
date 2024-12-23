@@ -1,21 +1,27 @@
 package com.senla.api.dto.poll;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public class PollCreateDto {
+    @NotNull
     private UUID postId;
+
+    @NotNull
     private UUID authorId;
+
+    @NotBlank
     private String description;
 
     public PollCreateDto() {
     }
 
     public PollCreateDto(UUID postId, UUID authorId, String description) {
-        this.postId = ValidationUtil.validateNotNull(postId);
-        this.authorId = ValidationUtil.validateNotNull(authorId);
-        this.description = ValidationUtil.validateNotNullOrEmpty(description);
+        this.postId = postId;
+        this.authorId = authorId;
+        this.description = description;
     }
 
     public UUID getPostId() {

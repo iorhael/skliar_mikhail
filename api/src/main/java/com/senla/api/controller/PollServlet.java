@@ -4,6 +4,7 @@ import com.senla.api.dto.poll.PollCreateDto;
 import com.senla.api.dto.poll.PollGetDto;
 import com.senla.api.dto.poll.PollUpdateDto;
 import com.senla.api.service.PollService;
+import com.senla.api.util.ValidationUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 import jakarta.servlet.ServletException;
@@ -94,7 +95,7 @@ public class PollServlet extends HttpServlet {
         UUID authorId = UUID.fromString(request.getParameter("authorId"));
         String description = request.getParameter("description");
 
-        PollCreateDto poll = new PollCreateDto(postId, authorId, description);
+        PollCreateDto poll = ValidationUtil.validate(new PollCreateDto(postId, authorId, description));
 
         pollService.createPoll(poll);
         response.sendRedirect(request.getContextPath() + "/poll");
@@ -105,7 +106,7 @@ public class PollServlet extends HttpServlet {
         UUID id = UUID.fromString(request.getParameter("id"));
         String description = request.getParameter("description");
 
-        PollUpdateDto poll = new PollUpdateDto(description);
+        PollUpdateDto poll = ValidationUtil.validate(new PollUpdateDto(description));
 
         pollService.updatePoll(poll, id);
         response.sendRedirect(request.getContextPath() + "/poll");

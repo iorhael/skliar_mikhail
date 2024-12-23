@@ -3,6 +3,7 @@ package com.senla.api.controller;
 import com.senla.api.dto.user.UserCreateDto;
 import com.senla.api.dto.user.UserGetDto;
 import com.senla.api.service.UserService;
+import com.senla.api.util.ValidationUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 import jakarta.servlet.ServletException;
@@ -93,7 +94,7 @@ public class UserServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        UserCreateDto user = new UserCreateDto(username, email, password);
+        UserCreateDto user = ValidationUtil.validate(new UserCreateDto(username, email, password));
 
         userService.createUser(user);
         response.sendRedirect(request.getContextPath() + "/user");
@@ -106,7 +107,7 @@ public class UserServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        UserCreateDto user = new UserCreateDto(username, email, password);
+        UserCreateDto user = ValidationUtil.validate(new UserCreateDto(username, email, password));
 
         userService.updateUser(user, id);
         response.sendRedirect(request.getContextPath() + "/user");

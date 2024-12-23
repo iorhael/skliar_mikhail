@@ -1,21 +1,25 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Vote {
+    @NotNull
     private UUID pollOptionId;
+
+    @NotNull
     private UUID userId;
+
     private LocalDateTime voteDate;
 
     public Vote() {
     }
 
     public Vote(UUID pollOptionId, UUID userId) {
-        this.pollOptionId = ValidationUtil.validateNotNull(pollOptionId);
-        this.userId = ValidationUtil.validateNotNull(userId);
+        this.pollOptionId = pollOptionId;
+        this.userId = userId;
     }
 
     public UUID getPollOptionId() {

@@ -4,6 +4,7 @@ import com.senla.api.dto.post.PostCreateDto;
 import com.senla.api.dto.post.PostGetDto;
 import com.senla.api.dto.post.PostUpdateDto;
 import com.senla.api.service.PostService;
+import com.senla.api.util.ValidationUtil;
 import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 import jakarta.servlet.ServletException;
@@ -98,7 +99,7 @@ public class PostServlet extends HttpServlet {
         LocalDateTime publicationDate = validateDate(request.getParameter("publicationDate"));
         UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
 
-        PostCreateDto post = new PostCreateDto(authorId, title, content, publicationDate, subscriptionPlanId);
+        PostCreateDto post = ValidationUtil.validate(new PostCreateDto(authorId, title, content, publicationDate, subscriptionPlanId));
 
         postService.createPost(post);
         response.sendRedirect(request.getContextPath() + "/post");
@@ -112,7 +113,7 @@ public class PostServlet extends HttpServlet {
         LocalDateTime publicationDate = validateDate(request.getParameter("publicationDate"));
         UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
 
-        PostUpdateDto post = new PostUpdateDto(title, content, publicationDate, subscriptionPlanId);
+        PostUpdateDto post = ValidationUtil.validate(new PostUpdateDto(title, content, publicationDate, subscriptionPlanId));
 
         postService.updatePost(post, id);
         response.sendRedirect(request.getContextPath() + "/post");

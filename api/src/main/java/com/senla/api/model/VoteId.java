@@ -1,12 +1,8 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record VoteId(UUID userId, UUID pollOptionId) {
-    public VoteId {
-        ValidationUtil.validateNotNull(pollOptionId);
-        ValidationUtil.validateNotNull(userId);
-    }
+public record VoteId(@NotNull UUID userId, @NotNull UUID pollOptionId) {
 }

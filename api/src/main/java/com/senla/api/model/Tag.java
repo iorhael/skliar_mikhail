@@ -1,18 +1,20 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
 public class Tag {
     private UUID id;
+
+    @NotBlank
     private String name;
 
     public Tag() {
     }
 
     public Tag(String name) {
-        this.name = ValidationUtil.validateNotNullOrEmpty(name);
+        this.name = name;
     }
 
     public UUID getId() {

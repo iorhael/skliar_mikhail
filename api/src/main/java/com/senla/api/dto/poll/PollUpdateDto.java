@@ -1,15 +1,16 @@
 package com.senla.api.dto.poll;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
 
 public class PollUpdateDto {
+    @NotBlank
     private String description;
 
     public PollUpdateDto() {
     }
 
     public PollUpdateDto(String description) {
-        this.description = ValidationUtil.validateNotNullOrEmpty(description);
+        this.description = description;
     }
 
     public String getDescription() {

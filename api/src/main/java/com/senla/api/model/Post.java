@@ -1,29 +1,42 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Post {
     private UUID id;
+
+    @NotNull
     private UUID authorId;
+
+    @NotNull
     private UUID subscriptionPlanId;
+
+    @NotBlank
     private String title;
+
+    @NotBlank
     private String content;
-    private long viewsTotal;
+
+    private Long viewsTotal;
+
     private LocalDateTime createdDate;
+
     private LocalDateTime updatedDate;
+
     private LocalDateTime publicationDate;
 
     public Post() {
     }
 
     public Post(UUID authorId, UUID subscriptionPlanId, String title, String content) {
-        this.authorId = ValidationUtil.validateNotNull(authorId);
-        this.subscriptionPlanId = ValidationUtil.validateNotNull(subscriptionPlanId);
-        this.title = ValidationUtil.validateNotNullOrEmpty(title);
-        this.content = ValidationUtil.validateNotNullOrEmpty(content);
+        this.authorId = authorId;
+        this.subscriptionPlanId = subscriptionPlanId;
+        this.title = title;
+        this.content = content;
     }
 
     public UUID getId() {

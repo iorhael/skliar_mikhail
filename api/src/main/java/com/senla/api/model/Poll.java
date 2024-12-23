@@ -1,21 +1,27 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public class Poll {
     private UUID id;
+
     private UUID postId;
+
+    @NotNull
     private UUID authorId;
+
+    @NotBlank
     private String description;
 
     public Poll() {
     }
 
     public Poll(UUID authorId, String description) {
-        this.authorId = ValidationUtil.validateNotNull(authorId);
-        this.description = ValidationUtil.validateNotNullOrEmpty(description);
+        this.authorId = authorId;
+        this.description = description;
     }
 
     public UUID getId() {

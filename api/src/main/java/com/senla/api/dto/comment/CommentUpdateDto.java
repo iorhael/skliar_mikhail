@@ -1,15 +1,16 @@
 package com.senla.api.dto.comment;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
 
 public class CommentUpdateDto {
+    @NotBlank
     private String content;
 
     public CommentUpdateDto() {
     }
 
     public CommentUpdateDto(String content) {
-        this.content = ValidationUtil.validateNotNullOrEmpty(content);
+        this.content = content;
     }
 
     public String getContent() {

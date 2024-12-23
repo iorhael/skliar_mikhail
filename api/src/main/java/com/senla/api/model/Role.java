@@ -1,20 +1,24 @@
 package com.senla.api.model;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public class Role {
     private UUID id;
+
+    @NotNull
     private UUID userId;
+
+    @NotNull
     private RoleName name;
 
     public Role() {
     }
 
     public Role(UUID userId, RoleName name) {
-        this.userId = ValidationUtil.validateNotNull(userId);
-        this.name = ValidationUtil.validateNotNull(name);
+        this.userId = userId;
+        this.name = name;
     }
 
     public UUID getId() {

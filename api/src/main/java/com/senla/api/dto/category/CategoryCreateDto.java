@@ -1,20 +1,24 @@
 package com.senla.api.dto.category;
 
-import com.senla.api.util.ValidationUtil;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
 public class CategoryCreateDto {
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String description;
+
     private UUID parentId;
 
     public CategoryCreateDto() {
     }
 
     public CategoryCreateDto(String name, String description, UUID parentId) {
-        this.name = ValidationUtil.validateNotNullOrEmpty(name);
-        this.description = ValidationUtil.validateNotNullOrEmpty(description);
+        this.name = name;
+        this.description = description;
         this.parentId = parentId;
     }
 
