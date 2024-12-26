@@ -15,7 +15,6 @@ import com.senla.util.ModelMapperUtil;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class UserServiceImpl implements UserService {
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public List<UserGetDto> getAllUsers() {
         return userRepository.getAll().stream()
                 .map(user -> ModelMapperUtil.MODEL_MAPPER.map(user, UserGetDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

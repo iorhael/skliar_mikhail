@@ -21,6 +21,7 @@ public class CommentServlet extends HttpServlet {
     @Autowired
     private CommentService commentService;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -42,6 +43,7 @@ public class CommentServlet extends HttpServlet {
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();

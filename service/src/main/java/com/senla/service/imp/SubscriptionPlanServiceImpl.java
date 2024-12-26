@@ -14,7 +14,6 @@ import com.senla.util.ModelMapperUtil;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
@@ -41,7 +40,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     public List<SubscriptionPlanDto> getAllSubscriptionPlans() {
         return subscriptionPlanRepository.getAll().stream()
                 .map(subscriptionPlan -> ModelMapperUtil.MODEL_MAPPER.map(subscriptionPlan, SubscriptionPlanDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

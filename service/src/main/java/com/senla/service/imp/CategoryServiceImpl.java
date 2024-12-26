@@ -15,7 +15,6 @@ import com.senla.util.ModelMapperUtil;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class CategoryServiceImpl implements CategoryService {
@@ -42,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryGetDto> getAllCategories() {
         return categoryRepository.getAll().stream()
                 .map(category -> ModelMapperUtil.MODEL_MAPPER.map(category, CategoryGetDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

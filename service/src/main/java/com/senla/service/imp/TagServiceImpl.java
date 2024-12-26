@@ -14,7 +14,6 @@ import com.senla.util.ModelMapperUtil;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class TagServiceImpl implements TagService {
@@ -41,7 +40,7 @@ public class TagServiceImpl implements TagService {
     public List<TagDto> getAllTags() {
         return tagRepository.getAll().stream()
                 .map(tag -> ModelMapperUtil.MODEL_MAPPER.map(tag, TagDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

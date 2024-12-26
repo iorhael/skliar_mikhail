@@ -17,7 +17,6 @@ import com.senla.util.ModelMapperUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class CommentServiceImpl implements CommentService {
@@ -44,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentGetDto> getAllComments() {
         return commentRepository.getAll().stream()
                 .map(comment -> ModelMapperUtil.MODEL_MAPPER.map(comment, CommentGetDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

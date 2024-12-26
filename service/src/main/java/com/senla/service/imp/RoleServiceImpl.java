@@ -14,7 +14,6 @@ import com.senla.util.ModelMapperUtil;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class RoleServiceImpl implements RoleService {
@@ -41,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
     public List<RoleDto> getAllRoles() {
         return roleRepository.getAll().stream()
                 .map(role -> ModelMapperUtil.MODEL_MAPPER.map(role, RoleDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

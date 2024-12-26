@@ -14,7 +14,6 @@ import com.senla.util.ModelMapperUtil;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class PollOptionServiceImpl implements PollOptionService {
@@ -41,7 +40,7 @@ public class PollOptionServiceImpl implements PollOptionService {
     public List<PollOptionDto> getAllPollOptions() {
         return pollOptionRepository.getAll().stream()
                 .map(pollOption -> ModelMapperUtil.MODEL_MAPPER.map(pollOption, PollOptionDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

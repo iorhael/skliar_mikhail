@@ -17,7 +17,6 @@ import com.senla.util.ModelMapperUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class PostServiceImpl implements PostService {
@@ -44,7 +43,7 @@ public class PostServiceImpl implements PostService {
     public List<PostGetDto> getAllPosts() {
         return postRepository.getAll().stream()
                 .map(post -> ModelMapperUtil.MODEL_MAPPER.map(post, PostGetDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.senla.di.annotation.Component;
 import com.senla.dto.poll.PollCreateDto;
 import com.senla.dto.poll.PollGetDto;
 import com.senla.dto.poll.PollUpdateDto;
-import com.senla.dto.post.PostGetDto;
 import com.senla.model.Poll;
 import com.senla.repository.PollRepository;
 import com.senla.repository.exception.PollNotFoundException;
@@ -15,10 +14,8 @@ import com.senla.service.exception.poll.PollDeleteException;
 import com.senla.service.exception.poll.PollUpdateException;
 import com.senla.util.ModelMapperUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class PollServiceImpl implements PollService {
@@ -45,7 +42,7 @@ public class PollServiceImpl implements PollService {
     public List<PollGetDto> getAllPolls() {
         return pollRepository.getAll().stream()
                 .map(poll -> ModelMapperUtil.MODEL_MAPPER.map(poll, PollGetDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

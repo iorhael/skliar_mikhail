@@ -14,7 +14,6 @@ import com.senla.service.exception.vote.VoteUpdateException;
 import com.senla.util.ModelMapperUtil;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class VoteServiceImpl implements VoteService {
@@ -41,7 +40,7 @@ public class VoteServiceImpl implements VoteService {
     public List<VoteDto> getAllVotes() {
         return voteRepository.getAll().stream()
                 .map(vote -> ModelMapperUtil.MODEL_MAPPER.map(vote, VoteDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

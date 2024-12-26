@@ -14,7 +14,6 @@ import com.senla.util.ModelMapperUtil;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class PublicationStatusServiceImpl implements PublicationStatusService {
@@ -41,7 +40,7 @@ public class PublicationStatusServiceImpl implements PublicationStatusService {
     public List<PublicationStatusDto> getAllPublicationStatuses() {
         return publicationStatusRepository.getAll().stream()
                 .map(publicationStatus -> ModelMapperUtil.MODEL_MAPPER.map(publicationStatus, PublicationStatusDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

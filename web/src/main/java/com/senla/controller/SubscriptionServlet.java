@@ -23,6 +23,7 @@ public class SubscriptionServlet extends HttpServlet {
     @Autowired
     private SubscriptionService subscriptionService;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -44,6 +45,7 @@ public class SubscriptionServlet extends HttpServlet {
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
