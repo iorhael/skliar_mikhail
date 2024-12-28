@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error/400.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>405</error-code>
+        <location>/error/405.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>com.senla.service.exception.ServiceException</exception-type>
+        <location>/error/400.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>java.lang.IllegalArgumentException</exception-type>
+        <location>/error/400.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>com.senla.util.exception.ValidationException</exception-type>
+        <location>/error/400.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>com.senla.repository.exception.EntityNotFoundException</exception-type>
+        <location>/error/404.jsp</location>
+    </error-page>
+</web-app>
+
