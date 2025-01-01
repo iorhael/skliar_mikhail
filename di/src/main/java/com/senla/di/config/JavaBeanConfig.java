@@ -8,12 +8,12 @@ public class JavaBeanConfig implements BeanConfig {
 
     private final Reflections scanner;
 
-    public Reflections getScanner() {
-        return scanner;
-    }
-
     public JavaBeanConfig(String packageToScan) {
         this.scanner = new Reflections(packageToScan);
+    }
+
+    public Reflections getScanner() {
+        return scanner;
     }
 
     @Override
