@@ -1,57 +1,57 @@
 package com.senla.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "poll_options")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class PollOption {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @NotNull
-    private UUID pollId;
-
-    @NotBlank
+    @Column(name = "description")
     private String description;
 
-    public PollOption() {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "poll_id")
+    @ToString.Exclude
+    private Poll poll;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pollOption", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Vote> votes = new ArrayList<>();
+
+    public void addVote(Vote vote) {
+        vote.setPollOption(this);
+        votes.add(vote);
     }
 
-    public PollOption(UUID pollId, String description) {
-        this.pollId = pollId;
-        this.description = description;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getPollId() {
-        return pollId;
-    }
-
-    public void setPollId(UUID pollId) {
-        this.pollId = pollId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "PollOption{" +
-                "id=" + id +
-                ", pollId=" + pollId +
-                ", description='" + description + '\'' +
-                '}';
+    public void removeVote(Vote vote) {
+        votes.remove(vote);
     }
 }

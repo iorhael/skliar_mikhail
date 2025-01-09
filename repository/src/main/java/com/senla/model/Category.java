@@ -1,65 +1,75 @@
 package com.senla.model;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+
+@Entity
+@Table(name = "categories")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Category {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @NotBlank
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
     private String description;
 
-    private UUID parentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    @ToString.Exclude
+    private Category parentCategory;
 
-    public Category() {
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "parentCategory")
+    @ToString.Exclude
+    private List<Category> childrenCategories = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "categories")
+    @ToString.Exclude
+    private List<Post> posts = new ArrayList<>();
+
+    public void addChildrenCategory(Category category) {
+        category.setParentCategory(this);
+        childrenCategories.add(category);
     }
 
-    public Category(String name) {
-        this.name = name;
+    public void removeChildrenCategory(Category category) {
+        childrenCategories.remove(category);
     }
 
-    public UUID getId() {
-        return id;
+    public void addPost(Post post) {
+        post.getCategories().add(this);
+        posts.add(post);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public UUID getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(UUID parentId) {
-        this.parentId = parentId;
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", parentId=" + parentId +
-                '}';
+    public void removePost(Post post) {
+        posts.remove(post);
     }
 }

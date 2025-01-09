@@ -1,128 +1,130 @@
 package com.senla.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "posts")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @NotNull
-    private UUID authorId;
-
-    @NotNull
-    private UUID subscriptionPlanId;
-
-    @NotBlank
+    @Column(name = "title")
     private String title;
 
-    @NotBlank
+    @Column(name = "content")
     private String content;
 
+    @Column(name = "views_total")
     private Long viewsTotal;
 
+    @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;
 
+    @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
+    @Column(name = "publication_date")
     private LocalDateTime publicationDate;
 
-    public Post() {
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "post")
+    @Setter(AccessLevel.NONE)
+    @ToString.Exclude
+    private PublicationStatus publicationStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    @ToString.Exclude
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_plan_id")
+    @ToString.Exclude
+    private SubscriptionPlan subscriptionPlan;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Comment> comments = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = {@JoinColumn(name = "post_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
+    )
+    @ToString.Exclude
+    private List<Tag> tags = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "post_categories",
+            joinColumns = {@JoinColumn(name = "post_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )
+    @ToString.Exclude
+    private List<Category> categories = new ArrayList<>();
+
+    public void setPublicationStatus(PublicationStatus publicationStatus) {
+        publicationStatus.setPost(this);
+        this.publicationStatus = publicationStatus;
     }
 
-    public Post(UUID authorId, UUID subscriptionPlanId, String title, String content) {
-        this.authorId = authorId;
-        this.subscriptionPlanId = subscriptionPlanId;
-        this.title = title;
-        this.content = content;
+    public void addComment(Comment comment) {
+        comment.setPost(this);
+        comments.add(comment);
     }
 
-    public UUID getId() {
-        return id;
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void addTag(Tag tag) {
+        tag.getPosts().add(this);
+        tags.add(tag);
     }
 
-    public UUID getAuthorId() {
-        return authorId;
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
     }
 
-    public void setAuthorId(UUID authorId) {
-        this.authorId = authorId;
+    public void addCategory(Category category) {
+        category.getPosts().add(this);
+        categories.add(category);
     }
 
-    public UUID getSubscriptionPlanId() {
-        return subscriptionPlanId;
-    }
-
-    public void setSubscriptionPlanId(UUID subscriptionPlanId) {
-        this.subscriptionPlanId = subscriptionPlanId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public long getViewsTotal() {
-        return viewsTotal;
-    }
-
-    public void setViewsTotal(long viewsTotal) {
-        this.viewsTotal = viewsTotal;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public LocalDateTime getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(LocalDateTime updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    public LocalDateTime getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(LocalDateTime publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", authorId=" + authorId +
-                ", subscriptionPlanId=" + subscriptionPlanId +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", viewsTotal=" + viewsTotal +
-                ", createdDate=" + createdDate +
-                ", updatedDate=" + updatedDate +
-                ", publicationDate=" + publicationDate +
-                '}';
+    public void removeCategory(Category category) {
+        categories.remove(category);
     }
 }

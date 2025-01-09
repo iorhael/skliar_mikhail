@@ -1,84 +1,123 @@
 package com.senla.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "users")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class User {
-    @NotNull
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @NotBlank
+    @Column(name = "username")
     private String username;
 
-    @NotBlank
-    @Email
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
     private String password;
 
+    @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;
 
-    public User() {
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    @Setter(AccessLevel.NONE)
+    @ToString.Exclude
+    private Subscription subscription;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Poll> polls = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @ToString.Exclude
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Vote> votes = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Role> roles = new ArrayList<>();
+
+    public void setSubscription(Subscription subscription) {
+        subscription.setUser(this);
+        this.subscription = subscription;
     }
 
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public void addPost(Post post) {
+        post.setUser(this);
+        posts.add(post);
     }
 
-    public UUID getId() {
-        return id;
+    public void removePost(Post post) {
+        posts.remove(post);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void addPoll(Poll poll) {
+        poll.setUser(this);
+        polls.add(poll);
     }
 
-    public String getUsername() {
-        return username;
+    public void removePoll(Poll poll) {
+        polls.remove(poll);
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void addComment(Comment comment) {
+        comment.setUser(this);
+        comments.add(comment);
     }
 
-    public String getEmail() {
-        return email;
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void addVote(Vote vote) {
+        vote.setUser(this);
+        votes.add(vote);
     }
 
-    public String getPassword() {
-        return password;
+    public void removeVote(Vote vote) {
+        votes.remove(vote);
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void addRole(Role role) {
+        role.setUser(this);
+        roles.add(role);
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", createdDate=" + createdDate +
-                '}';
+    public void removeRole(Role role) {
+        roles.remove(role);
     }
 }
