@@ -2,8 +2,8 @@ package com.senla.repository;
 
 import com.senla.di.annotation.Component;
 import com.senla.model.Subscription;
-import com.senla.util.SessionManager;
-import org.hibernate.Session;
+import com.senla.util.EntityManagerUtil;
+import jakarta.persistence.EntityManager;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,21 +16,18 @@ public class SubscriptionRepository extends BaseRepository<Subscription, UUID> {
 
     @Override
     public Optional<Subscription> update(Subscription subscription, UUID id) {
-        Optional<Subscription> result = Optional.empty();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
 
-        try (Session session = SessionManager.openSession()) {
-            session.beginTransaction();
-
-            Subscription existingSubscription = session.get(Subscription.class, id);
+            Subscription existingSubscription = entityManager.find(Subscription.class, id);
 
             if (existingSubscription != null) {
                 existingSubscription.setExpiresDate(subscription.getExpiresDate());
-
-                result = Optional.of(existingSubscription);
             }
 
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
+
+            return Optional.ofNullable(subscription);
         }
-        return result;
     }
 }

@@ -2,8 +2,8 @@ package com.senla.repository;
 
 import com.senla.di.annotation.Component;
 import com.senla.model.PollOption;
-import com.senla.util.SessionManager;
-import org.hibernate.Session;
+import com.senla.util.EntityManagerUtil;
+import jakarta.persistence.EntityManager;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,21 +16,18 @@ public class PollOptionRepository extends BaseRepository<PollOption, UUID> {
 
     @Override
     public Optional<PollOption> update(PollOption pollOption, UUID id) {
-        Optional<PollOption> result = Optional.empty();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
 
-        try (Session session = SessionManager.openSession()) {
-            session.beginTransaction();
-
-            PollOption existingPollOption = session.get(PollOption.class, id);
+            PollOption existingPollOption = entityManager.find(PollOption.class, id);
 
             if (existingPollOption != null) {
                 existingPollOption.setDescription(pollOption.getDescription());
-
-                result = Optional.of(existingPollOption);
             }
 
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
+
+            return Optional.ofNullable(existingPollOption);
         }
-        return result;
     }
 }

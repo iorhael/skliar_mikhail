@@ -2,8 +2,8 @@ package com.senla.repository;
 
 import com.senla.di.annotation.Component;
 import com.senla.model.Category;
-import com.senla.util.SessionManager;
-import org.hibernate.Session;
+import com.senla.util.EntityManagerUtil;
+import jakarta.persistence.EntityManager;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,22 +16,19 @@ public class CategoryRepository extends BaseRepository<Category, UUID> {
 
     @Override
     public Optional<Category> update(Category category, UUID id) {
-        Optional<Category> result = Optional.empty();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
 
-        try (Session session = SessionManager.openSession()) {
-            session.beginTransaction();
-
-            Category existingCategory = session.get(Category.class, id);
+            Category existingCategory = entityManager.find(Category.class, id);
 
             if (existingCategory != null) {
                 existingCategory.setName(category.getName());
                 existingCategory.setDescription(category.getDescription());
-
-                result = Optional.of(existingCategory);
             }
 
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
+
+            return Optional.ofNullable(existingCategory);
         }
-        return result;
     }
 }

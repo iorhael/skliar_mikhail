@@ -1,7 +1,7 @@
 package com.senla.repository;
 
-import com.senla.util.SessionManager;
-import org.hibernate.Session;
+import com.senla.util.EntityManagerUtil;
+import jakarta.persistence.EntityManager;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,45 +15,43 @@ public abstract class BaseRepository<T, I extends Serializable> {
     }
 
     public T create(T entity) {
-        try (Session session = SessionManager.openSession()) {
-            session.beginTransaction();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
 
-            session.persist(entity);
+            entityManager.persist(entity);
 
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
         }
         return entity;
     }
 
     public Optional<T> findById(I id) {
-        try (Session session = SessionManager.openSession()) {
-            T entity = session.get(entityClass, id);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            T entity = entityManager.find(entityClass, id);
             return Optional.ofNullable(entity);
         }
     }
 
     public List<T> findAll() {
-        try (Session session = SessionManager.openSession()) {
-            return session.createQuery("FROM " + entityClass.getSimpleName(), entityClass).list();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            return entityManager.createQuery("FROM " + entityClass.getSimpleName(), entityClass).getResultList();
         }
     }
 
     public Optional<T> deleteById(I id) {
-        Optional<T> result = Optional.empty();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
 
-        try (Session session = SessionManager.openSession()) {
-            session.beginTransaction();
-
-            T entity = session.get(entityClass, id);
+            T entity = entityManager.find(entityClass, id);
 
             if (entity != null) {
-                result = Optional.of(entity);
-                session.remove(entity);
+                entityManager.remove(entity);
             }
 
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
+
+            return Optional.ofNullable(entity);
         }
-        return result;
     }
 
     public abstract Optional<T> update(T entity, I id);

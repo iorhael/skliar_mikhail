@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "posts")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

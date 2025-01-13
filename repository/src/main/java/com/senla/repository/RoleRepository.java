@@ -2,8 +2,8 @@ package com.senla.repository;
 
 import com.senla.di.annotation.Component;
 import com.senla.model.Role;
-import com.senla.util.SessionManager;
-import org.hibernate.Session;
+import com.senla.util.EntityManagerUtil;
+import jakarta.persistence.EntityManager;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,21 +16,18 @@ public class RoleRepository extends BaseRepository<Role, UUID> {
 
     @Override
     public Optional<Role> update(Role role, UUID id) {
-        Optional<Role> result = Optional.empty();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
 
-        try (Session session = SessionManager.openSession()) {
-            session.beginTransaction();
-
-            Role existingRole = session.get(Role.class, id);
+            Role existingRole = entityManager.find(Role.class, id);
 
             if (existingRole != null) {
                 existingRole.setName(role.getName());
-
-                result = Optional.of(existingRole);
             }
 
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
+
+            return Optional.ofNullable(existingRole);
         }
-        return result;
     }
 }

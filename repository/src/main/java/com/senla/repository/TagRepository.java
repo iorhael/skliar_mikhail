@@ -2,8 +2,8 @@ package com.senla.repository;
 
 import com.senla.di.annotation.Component;
 import com.senla.model.Tag;
-import com.senla.util.SessionManager;
-import org.hibernate.Session;
+import com.senla.util.EntityManagerUtil;
+import jakarta.persistence.EntityManager;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,21 +16,18 @@ public class TagRepository extends BaseRepository<Tag, UUID> {
 
     @Override
     public Optional<Tag> update(Tag tag, UUID id) {
-        Optional<Tag> result = Optional.empty();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
 
-        try (Session session = SessionManager.openSession()) {
-            session.beginTransaction();
-
-            Tag existingTag = session.get(Tag.class, id);
+            Tag existingTag = entityManager.find(Tag.class, id);
 
             if (existingTag != null) {
                 existingTag.setName(tag.getName());
-
-                result = Optional.of(existingTag);
             }
 
-            session.getTransaction().commit();
+            entityManager.getTransaction().commit();
+
+            return Optional.ofNullable(existingTag);
         }
-        return result;
     }
 }
