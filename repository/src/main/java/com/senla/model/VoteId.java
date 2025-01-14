@@ -1,8 +1,18 @@
 package com.senla.model;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Embeddable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public record VoteId(@NotNull UUID userId, @NotNull UUID pollOptionId) {
+@Embeddable
+@Data
+@NoArgsConstructor
+public class VoteId implements Serializable {
+
+    private UUID userId;
+
+    private UUID pollOptionId;
 }

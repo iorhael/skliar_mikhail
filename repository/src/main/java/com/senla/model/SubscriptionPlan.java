@@ -1,59 +1,69 @@
 package com.senla.model;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "subscription_plans")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class SubscriptionPlan {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @NotNull
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(name = "name")
     private SubscriptionType name;
 
-    @NotNull
-    @PositiveOrZero
+    @Column(name = "price_per_month")
     private BigDecimal pricePerMonth;
 
-    public SubscriptionPlan() {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "subscriptionPlan", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Subscription> subscriptions = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "subscriptionPlan", orphanRemoval = true)
+    @ToString.Exclude
+    private List<Post> posts = new ArrayList<>();
+
+    public void addPost(Post post) {
+        post.setSubscriptionPlan(this);
+        posts.add(post);
     }
 
-    public SubscriptionPlan(SubscriptionType name, BigDecimal pricePerMonth) {
-        this.name = name;
-        this.pricePerMonth = pricePerMonth;
+    public void removePost(Post post) {
+        posts.remove(post);
     }
 
-    public UUID getId() {
-        return id;
+    public void addSubscription(Subscription subscription) {
+        subscription.setSubscriptionPlan(this);
+        subscriptions.add(subscription);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public SubscriptionType getName() {
-        return name;
-    }
-
-    public void setName(SubscriptionType name) {
-        this.name = name;
-    }
-
-    public BigDecimal getPricePerMonth() {
-        return pricePerMonth;
-    }
-
-    public void setPricePerMonth(BigDecimal pricePerMonth) {
-        this.pricePerMonth = pricePerMonth;
-    }
-
-    @Override
-    public String toString() {
-        return "SubscriptionPlan{" +
-                "id=" + id +
-                ", name=" + name +
-                ", pricePerMonth=" + pricePerMonth +
-                '}';
+    public void removeSubscription(Subscription subscription) {
+        subscriptions.remove(subscription);
     }
 }

@@ -1,81 +1,51 @@
 package com.senla.model;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
+@Entity
+@Table(name = "subscriptions")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Subscription {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @NotNull
-    private UUID userId;
-
-    @NotNull
-    private UUID subscriptionPlanId;
-
+    @Column(name = "started_date", updatable = false)
     private LocalDateTime startedDate;
 
-    @FutureOrPresent
+    @Column(name = "expires_date")
     private LocalDateTime expiresDate;
 
-    public Subscription() {
-    }
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
 
-    public Subscription(UUID userId, UUID subscriptionPlanId) {
-        this.userId = userId;
-        this.subscriptionPlanId = subscriptionPlanId;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getSubscriptionPlanId() {
-        return subscriptionPlanId;
-    }
-
-    public void setSubscriptionPlanId(UUID subscriptionPlanId) {
-        this.subscriptionPlanId = subscriptionPlanId;
-    }
-
-    public LocalDateTime getStartedDate() {
-        return startedDate;
-    }
-
-    public void setStartedDate(LocalDateTime startedDate) {
-        this.startedDate = startedDate;
-    }
-
-    public LocalDateTime getExpiresDate() {
-        return expiresDate;
-    }
-
-    public void setExpiresDate(LocalDateTime expiresDate) {
-        this.expiresDate = expiresDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Subscription{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", subscriptionPlanId=" + subscriptionPlanId +
-                ", startedDate=" + startedDate +
-                ", expiresDate=" + expiresDate +
-                '}';
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_plan_id")
+    @ToString.Exclude
+    private SubscriptionPlan subscriptionPlan;
 }

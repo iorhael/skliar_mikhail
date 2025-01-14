@@ -4,9 +4,9 @@ VALUES ('user1', 'user1@example.com', 'password_hash_1'),
        ('admin', 'admin@example.com', 'password_hash_3');
 
 INSERT INTO roles (user_id, name)
-VALUES ((SELECT id FROM users WHERE username = 'user1'), 'Reader'),
-       ((SELECT id FROM users WHERE username = 'user2'), 'Author'),
-       ((SELECT id FROM users WHERE username = 'admin'), 'Admin');
+VALUES ((SELECT id FROM users WHERE username = 'user1'), 'READER'),
+       ((SELECT id FROM users WHERE username = 'user2'), 'AUTHOR'),
+       ((SELECT id FROM users WHERE username = 'admin'), 'ADMIN');
 
 INSERT INTO subscription_plans(name, price_per_month)
 VALUES ('FREE', 0.0),

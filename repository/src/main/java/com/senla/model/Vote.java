@@ -1,58 +1,46 @@
 package com.senla.model;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
+@Entity
+@Table(name = "votes")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Vote {
-    @NotNull
-    private UUID pollOptionId;
 
-    @NotNull
-    private UUID userId;
+    @EmbeddedId
+    private VoteId id = new VoteId();
 
+    @Column(name = "vote_date", updatable = false)
     private LocalDateTime voteDate;
 
-    public Vote() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
 
-    public Vote(UUID pollOptionId, UUID userId) {
-        this.pollOptionId = pollOptionId;
-        this.userId = userId;
-    }
 
-    public UUID getPollOptionId() {
-        return pollOptionId;
-    }
-
-    public void setPollOptionId(UUID pollOptionId) {
-        this.pollOptionId = pollOptionId;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getVoteDate() {
-        return voteDate;
-    }
-
-    public void setVoteDate(LocalDateTime voteDate) {
-        this.voteDate = voteDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Vote{" +
-                "pollOptionId=" + pollOptionId +
-                ", userId=" + userId +
-                ", voteDate=" + voteDate +
-                '}';
-    }
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("pollOptionId")
+    @JoinColumn(name = "poll_option_id")
+    @ToString.Exclude
+    private PollOption pollOption;
 }
