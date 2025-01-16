@@ -1,7 +1,6 @@
-package com.senla.dto.subscription;
+package com.senla.dto.publicationStatus;
 
-import com.senla.model.SubscriptionPlan;
-import com.senla.model.User;
+import com.senla.model.PostStatus;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,20 +9,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class SubscriptionCreateDto {
+public class PublicationStatusGetDto {
+
+    private UUID id;
 
     @NotNull
-    private User user;
+    private PostStatus statusName;
 
-    @NotNull
-    private SubscriptionPlan subscriptionPlan;
-
-    @NotNull
     @FutureOrPresent
-    private LocalDateTime expiresDate;
+    private LocalDateTime scheduledDate;
 }

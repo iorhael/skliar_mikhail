@@ -1,18 +1,19 @@
 package com.senla.service;
 
-import com.senla.dto.role.RoleDto;
+import com.senla.dto.role.RoleCreateDto;
+import com.senla.dto.role.RoleGetDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface RoleService {
-    RoleDto createRole(RoleDto role);
+    RoleGetDto createRole(RoleCreateDto role);
 
-    RoleDto getRoleById(UUID id);
+    RoleGetDto getRoleById(UUID id);
 
-    List<RoleDto> getAllRoles();
+    List<RoleGetDto> getAllRoles();
 
-    RoleDto updateRole(RoleDto role, UUID id);
+    RoleGetDto updateRole(RoleGetDto role, UUID id);
 
-    RoleDto deleteRole(UUID id);
+    RoleGetDto deleteRole(UUID id);
 }

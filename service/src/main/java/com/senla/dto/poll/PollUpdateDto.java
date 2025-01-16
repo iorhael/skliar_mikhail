@@ -1,23 +1,17 @@
 package com.senla.dto.poll;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class PollUpdateDto {
+
     @NotBlank
     private String description;
-
-    public PollUpdateDto() {
-    }
-
-    public PollUpdateDto(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

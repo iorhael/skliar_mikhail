@@ -7,40 +7,47 @@ import com.senla.dto.poll.PollGetDto;
 import com.senla.dto.poll.PollUpdateDto;
 import com.senla.model.Poll;
 import com.senla.repository.PollRepository;
-import com.senla.repository.exception.PollNotFoundException;
 import com.senla.service.PollService;
-import com.senla.service.exception.poll.PollCreateException;
+import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.poll.PollDeleteException;
 import com.senla.service.exception.poll.PollUpdateException;
 import com.senla.util.ModelMapperUtil;
+import org.modelmapper.TypeMap;
 
 import java.util.List;
 import java.util.UUID;
 
 @Component
 public class PollServiceImpl implements PollService {
+
     @Autowired
     private PollRepository pollRepository;
 
     @Override
     public PollGetDto createPoll(PollCreateDto poll) {
         Poll pollEntity = ModelMapperUtil.MODEL_MAPPER.map(poll, Poll.class);
+        Poll createdPoll = pollRepository.create(pollEntity);
 
-        return pollRepository.create(pollEntity)
-                .map(p -> ModelMapperUtil.MODEL_MAPPER.map(p, PollGetDto.class))
-                .orElseThrow(() -> new PollCreateException("Can't create poll"));
+        return ModelMapperUtil.MODEL_MAPPER.map(createdPoll, PollGetDto.class);
     }
 
     @Override
     public PollGetDto getPollById(UUID id) {
-        return pollRepository.getById(id)
+        TypeMap<Poll, PollGetDto> getMapper = ModelMapperUtil.MODEL_MAPPER.createTypeMap(Poll.class, PollGetDto.class);
+        getMapper.addMappings(
+                mapper -> {
+                    mapper.map(src -> src.getAuthor().getUsername(), PollGetDto::setAuthorName);
+                    mapper.map(src -> src.getPost().getTitle(), PollGetDto::setPostTitle);
+                });
+
+        return pollRepository.findById(id)
                 .map(poll -> ModelMapperUtil.MODEL_MAPPER.map(poll, PollGetDto.class))
-                .orElseThrow(() -> new PollNotFoundException("No poll found"));
+                .orElseThrow(() -> new ServiceException("No poll found"));
     }
 
     @Override
     public List<PollGetDto> getAllPolls() {
-        return pollRepository.getAll().stream()
+        return pollRepository.findAll().stream()
                 .map(poll -> ModelMapperUtil.MODEL_MAPPER.map(poll, PollGetDto.class))
                 .toList();
     }
@@ -56,7 +63,7 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public PollGetDto deletePoll(UUID id) {
-        return pollRepository.delete(id)
+        return pollRepository.deleteById(id)
                 .map(category -> ModelMapperUtil.MODEL_MAPPER.map(category, PollGetDto.class))
                 .orElseThrow(() -> new PollDeleteException("Can't delete poll"));
     }

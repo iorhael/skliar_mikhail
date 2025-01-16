@@ -1,26 +1,26 @@
-package com.senla.dto.poll;
+package com.senla.dto.vote;
 
-import com.senla.model.Post;
+import com.senla.model.PollOption;
 import com.senla.model.User;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class PollCreateDto {
+public class VoteCreateDto {
 
     @NotNull
-    private Post post;
+    private PollOption pollOption;
 
     @NotNull
-    private User author;
+    private User user;
 
-    @NotBlank
-    private String description;
+    private LocalDateTime voteDate;
 }

@@ -6,9 +6,8 @@ import com.senla.dto.category.CategoryCreateDto;
 import com.senla.dto.category.CategoryGetDto;
 import com.senla.model.Category;
 import com.senla.repository.CategoryRepository;
-import com.senla.repository.exception.CategoryNotFoundException;
 import com.senla.service.CategoryService;
-import com.senla.service.exception.category.CategoryCreateException;
+import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.category.CategoryDeleteException;
 import com.senla.service.exception.category.CategoryUpdateException;
 import com.senla.util.ModelMapperUtil;
@@ -18,28 +17,28 @@ import java.util.UUID;
 
 @Component
 public class CategoryServiceImpl implements CategoryService {
+
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Override
     public CategoryGetDto createCategory(CategoryCreateDto category) {
         Category categoryEntity = ModelMapperUtil.MODEL_MAPPER.map(category, Category.class);
+        Category createdCategory = categoryRepository.create(categoryEntity);
 
-        return categoryRepository.create(categoryEntity)
-                .map(c -> ModelMapperUtil.MODEL_MAPPER.map(c, CategoryGetDto.class))
-                .orElseThrow(() -> new CategoryCreateException("Can't create category"));
+        return ModelMapperUtil.MODEL_MAPPER.map(createdCategory, CategoryGetDto.class);
     }
 
     @Override
     public CategoryGetDto getCategoryById(UUID id) {
-        return categoryRepository.getById(id)
+        return categoryRepository.findById(id)
                 .map(category -> ModelMapperUtil.MODEL_MAPPER.map(category, CategoryGetDto.class))
-                .orElseThrow(() -> new CategoryNotFoundException("No category found"));
+                .orElseThrow(() -> new ServiceException("No category found"));
     }
 
     @Override
     public List<CategoryGetDto> getAllCategories() {
-        return categoryRepository.getAll().stream()
+        return categoryRepository.findAll().stream()
                 .map(category -> ModelMapperUtil.MODEL_MAPPER.map(category, CategoryGetDto.class))
                 .toList();
     }
@@ -55,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryGetDto deleteCategory(UUID id) {
-        return categoryRepository.delete(id)
+        return categoryRepository.deleteById(id)
                 .map(category -> ModelMapperUtil.MODEL_MAPPER.map(category, CategoryGetDto.class))
                 .orElseThrow(() -> new CategoryDeleteException("Can't delete category"));
     }

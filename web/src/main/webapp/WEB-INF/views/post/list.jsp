@@ -12,7 +12,7 @@
         </caption>
         <tr>
             <th>ID</th>
-            <th>Author Id</th>
+            <th>Author Name</th>
             <th>Title</th>
             <th>Content</th>
             <th>Publication Date</th>
@@ -21,7 +21,7 @@
         <c:forEach var="post" items="${listPosts}">
             <tr>
                 <td><c:out value="${post.id}"/></td>
-                <td><c:out value="${post.authorId}"/></td>
+                <td><c:out value="${post.authorName}"/></td>
                 <td><c:out value="${post.title}"/></td>
                 <td><c:out value="${post.content}"/></td>
                 <td><c:out value="${post.publicationDate}"/></td>

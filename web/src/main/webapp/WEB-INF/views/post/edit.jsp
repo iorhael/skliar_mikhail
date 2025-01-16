@@ -17,9 +17,6 @@
     <label for="publicationDate">Publication Date</label>
     <input type="datetime-local" id="publicationDate" name="publicationDate" value="${post.publicationDate}" required/>
     <br/>
-    <label for="subscriptionPlanId">Subscription Plan Id</label>
-    <input type="text" id="subscriptionPlanId" name="subscriptionPlanId" required/>
-    <br/>
     <button type="submit">Update</button>
 </form>
 <a href="<c:url value='/post'/>">Cancel</a>

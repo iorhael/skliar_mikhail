@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,4 +49,11 @@ public class Subscription {
     @JoinColumn(name = "subscription_plan_id")
     @ToString.Exclude
     private SubscriptionPlan subscriptionPlan;
+
+    @PrePersist
+    public void prePersist() {
+        if (startedDate == null) {
+            startedDate = LocalDateTime.now();
+        }
+    }
 }

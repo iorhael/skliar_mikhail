@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,10 +50,10 @@ public class Comment {
     @ToString.Exclude
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     @ToString.Exclude
-    private User user;
+    private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
@@ -70,5 +71,12 @@ public class Comment {
 
     public void removeChildrenComment(Comment comment) {
         childrenComments.remove(comment);
+    }
+
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        createdDate = (createdDate == null) ? now : createdDate;
+        updatedDate = (updatedDate == null) ? now : updatedDate;
     }
 }

@@ -6,9 +6,8 @@ import com.senla.dto.user.UserCreateDto;
 import com.senla.dto.user.UserGetDto;
 import com.senla.model.User;
 import com.senla.repository.UserRepository;
-import com.senla.repository.exception.UserNotFoundException;
 import com.senla.service.UserService;
-import com.senla.service.exception.user.UserCreateException;
+import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.user.UserDeleteException;
 import com.senla.service.exception.user.UserUpdateException;
 import com.senla.util.ModelMapperUtil;
@@ -18,28 +17,28 @@ import java.util.UUID;
 
 @Component
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public UserGetDto createUser(UserCreateDto user) {
         User userEntity = ModelMapperUtil.MODEL_MAPPER.map(user, User.class);
+        User createdUser = userRepository.create(userEntity);
 
-        return userRepository.create(userEntity)
-                .map(u -> ModelMapperUtil.MODEL_MAPPER.map(u, UserGetDto.class))
-                .orElseThrow(() -> new UserCreateException("Can't create user"));
+        return ModelMapperUtil.MODEL_MAPPER.map(createdUser, UserGetDto.class);
     }
 
     @Override
     public UserGetDto getUserById(UUID id) {
-        return userRepository.getById(id)
+        return userRepository.findById(id)
                 .map(user -> ModelMapperUtil.MODEL_MAPPER.map(user, UserGetDto.class))
-                .orElseThrow(() -> new UserNotFoundException("No user found"));
+                .orElseThrow(() -> new ServiceException("No user found"));
     }
 
     @Override
     public List<UserGetDto> getAllUsers() {
-        return userRepository.getAll().stream()
+        return userRepository.findAll().stream()
                 .map(user -> ModelMapperUtil.MODEL_MAPPER.map(user, UserGetDto.class))
                 .toList();
     }
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserGetDto deleteUser(UUID id) {
-        return userRepository.delete(id)
+        return userRepository.deleteById(id)
                 .map(user -> ModelMapperUtil.MODEL_MAPPER.map(user, UserGetDto.class))
                 .orElseThrow(() -> new UserDeleteException("Can't delete user"));
     }

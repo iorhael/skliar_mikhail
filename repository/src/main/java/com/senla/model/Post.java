@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -65,10 +66,10 @@ public class Post {
     @ToString.Exclude
     private PublicationStatus publicationStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     @ToString.Exclude
-    private User user;
+    private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscription_plan_id")
@@ -127,5 +128,12 @@ public class Post {
 
     public void removeCategory(Category category) {
         categories.remove(category);
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (createdDate == null) {
+            createdDate = LocalDateTime.now();
+        }
     }
 }

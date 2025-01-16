@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @Component
 public class UserServlet extends HttpServlet {
+
     @Autowired
     private UserService userService;
 

@@ -1,18 +1,19 @@
 package com.senla.service;
 
-import com.senla.dto.pollOption.PollOptionDto;
+import com.senla.dto.pollOption.PollOptionCreateDto;
+import com.senla.dto.pollOption.PollOptionGetDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface PollOptionService {
-    PollOptionDto createPollOption(PollOptionDto pollOption);
+    PollOptionGetDto createPollOption(PollOptionCreateDto pollOption);
 
-    PollOptionDto getPollOptionById(UUID id);
+    PollOptionGetDto getPollOptionById(UUID id);
 
-    List<PollOptionDto> getAllPollOptions();
+    List<PollOptionGetDto> getAllPollOptions();
 
-    PollOptionDto updatePollOption(PollOptionDto pollOption, UUID id);
+    PollOptionGetDto updatePollOption(PollOptionGetDto pollOption, UUID id);
 
-    PollOptionDto deletePollOption(UUID id);
+    PollOptionGetDto deletePollOption(UUID id);
 }

@@ -3,7 +3,6 @@ package com.senla.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -31,14 +30,14 @@ public class Vote {
     @Column(name = "vote_date", updatable = false)
     private LocalDateTime voteDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
     @ToString.Exclude
-    private User user;
+    private User owner;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("pollOptionId")
     @JoinColumn(name = "poll_option_id")
     @ToString.Exclude

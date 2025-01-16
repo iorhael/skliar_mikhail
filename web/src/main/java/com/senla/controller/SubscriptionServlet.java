@@ -5,6 +5,8 @@ import com.senla.di.annotation.Component;
 import com.senla.dto.subscription.SubscriptionCreateDto;
 import com.senla.dto.subscription.SubscriptionGetDto;
 import com.senla.dto.subscription.SubscriptionUpdateDto;
+import com.senla.model.SubscriptionPlan;
+import com.senla.model.User;
 import com.senla.service.SubscriptionService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 @Component
 public class SubscriptionServlet extends HttpServlet {
+
     @Autowired
     private SubscriptionService subscriptionService;
 
@@ -99,7 +102,13 @@ public class SubscriptionServlet extends HttpServlet {
         UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
         LocalDateTime expiresDate = validateDate(request.getParameter("expiresDate"));
 
-        SubscriptionCreateDto subscription = ValidationUtil.validate(new SubscriptionCreateDto(userId, subscriptionPlanId, expiresDate));
+        User user = new User();
+        user.setId(userId);
+
+        SubscriptionPlan subscriptionPlan = new SubscriptionPlan();
+        subscriptionPlan.setId(subscriptionPlanId);
+
+        SubscriptionCreateDto subscription = ValidationUtil.validate(new SubscriptionCreateDto(user, subscriptionPlan, expiresDate));
 
         subscriptionService.createSubscription(subscription);
         response.sendRedirect(request.getContextPath() + "/subscription");
@@ -108,10 +117,9 @@ public class SubscriptionServlet extends HttpServlet {
     private void updateSubscription(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         UUID id = UUID.fromString(request.getParameter("id"));
-        UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
         LocalDateTime expiresDate = validateDate(request.getParameter("expiresDate"));
 
-        SubscriptionUpdateDto subscription = ValidationUtil.validate(new SubscriptionUpdateDto(subscriptionPlanId, expiresDate));
+        SubscriptionUpdateDto subscription = ValidationUtil.validate(new SubscriptionUpdateDto(expiresDate));
 
         subscriptionService.updateSubscription(subscription, id);
         response.sendRedirect(request.getContextPath() + "/subscription");

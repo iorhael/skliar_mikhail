@@ -12,7 +12,7 @@
         </caption>
         <tr>
             <th>ID</th>
-            <th>Author Id</th>
+            <th>Author Name</th>
             <th>Content</th>
             <th>Created Date</th>
             <th>Actions</th>
@@ -20,7 +20,7 @@
         <c:forEach var="comment" items="${listComments}">
             <tr>
                 <td><c:out value="${comment.id}"/></td>
-                <td><c:out value="${comment.authorId}"/></td>
+                <td><c:out value="${comment.authorName}"/></td>
                 <td><c:out value="${comment.content}"/></td>
                 <td><c:out value="${comment.createdDate}"/></td>
                 <td>

@@ -1,5 +1,6 @@
-package com.senla.dto.user;
+package com.senla.dto.pollOption;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +12,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserGetDto {
+public class PollOptionGetDto {
 
     private UUID id;
 
-    private String username;
-
-    private String email;
+    @NotBlank
+    private String description;
 }

@@ -5,6 +5,9 @@ import com.senla.di.annotation.Component;
 import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
+import com.senla.model.Comment;
+import com.senla.model.Post;
+import com.senla.model.User;
 import com.senla.service.CommentService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -18,6 +21,7 @@ import java.util.UUID;
 
 @Component
 public class CommentServlet extends HttpServlet {
+
     @Autowired
     private CommentService commentService;
 
@@ -100,7 +104,16 @@ public class CommentServlet extends HttpServlet {
         String parentIdParam = request.getParameter("parentId");
         UUID parentId = (parentIdParam == null || parentIdParam.isEmpty()) ? null : UUID.fromString(parentIdParam);
 
-        CommentCreateDto comment = ValidationUtil.validate(new CommentCreateDto(postId, authorId, content, parentId));
+        Post post = new Post();
+        post.setId(postId);
+
+        User author = new User();
+        author.setId(authorId);
+
+        Comment parentComment = new Comment();
+        parentComment.setId(parentId);
+
+        CommentCreateDto comment = ValidationUtil.validate(new CommentCreateDto(post, author, content, parentComment));
 
         commentService.createComment(comment);
         response.sendRedirect(request.getContextPath() + "/comment");

@@ -5,6 +5,8 @@ import com.senla.di.annotation.Component;
 import com.senla.dto.poll.PollCreateDto;
 import com.senla.dto.poll.PollGetDto;
 import com.senla.dto.poll.PollUpdateDto;
+import com.senla.model.Post;
+import com.senla.model.User;
 import com.senla.service.PollService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -18,6 +20,7 @@ import java.util.UUID;
 
 @Component
 public class PollServlet extends HttpServlet {
+
     @Autowired
     private PollService pollService;
 
@@ -97,7 +100,13 @@ public class PollServlet extends HttpServlet {
         UUID authorId = UUID.fromString(request.getParameter("authorId"));
         String description = request.getParameter("description");
 
-        PollCreateDto poll = ValidationUtil.validate(new PollCreateDto(postId, authorId, description));
+        Post post = new Post();
+        post.setId(postId);
+
+        User author = new User();
+        author.setId(authorId);
+
+        PollCreateDto poll = ValidationUtil.validate(new PollCreateDto(post, author, description));
 
         pollService.createPoll(poll);
         response.sendRedirect(request.getContextPath() + "/poll");

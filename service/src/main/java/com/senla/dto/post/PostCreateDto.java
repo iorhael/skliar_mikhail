@@ -1,14 +1,24 @@
 package com.senla.dto.post;
 
+import com.senla.model.SubscriptionPlan;
+import com.senla.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class PostCreateDto {
+
     @NotNull
-    private UUID authorId;
+    private User author;
 
     @NotBlank
     private String title;
@@ -20,56 +30,5 @@ public class PostCreateDto {
     private LocalDateTime publicationDate;
 
     @NotNull
-    private UUID subscriptionPlanId;
-
-    public PostCreateDto() {
-    }
-
-    public PostCreateDto(UUID authorId, String title, String content, LocalDateTime publicationDate, UUID subscriptionPlanId) {
-        this.authorId = authorId;
-        this.title = title;
-        this.content = content;
-        this.publicationDate = publicationDate;
-        this.subscriptionPlanId = subscriptionPlanId;
-    }
-
-    public UUID getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(UUID authorId) {
-        this.authorId = authorId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public LocalDateTime getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(LocalDateTime publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public UUID getSubscriptionPlanId() {
-        return subscriptionPlanId;
-    }
-
-    public void setSubscriptionPlanId(UUID subscriptionPlanId) {
-        this.subscriptionPlanId = subscriptionPlanId;
-    }
+    private SubscriptionPlan subscriptionPlan;
 }

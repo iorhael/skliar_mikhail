@@ -1,7 +1,6 @@
-package com.senla.dto.poll;
+package com.senla.dto.pollOption;
 
-import com.senla.model.Post;
-import com.senla.model.User;
+import com.senla.model.Poll;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,13 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PollCreateDto {
+public class PollOptionCreateDto {
 
     @NotNull
-    private Post post;
-
-    @NotNull
-    private User author;
+    private Poll poll;
 
     @NotBlank
     private String description;

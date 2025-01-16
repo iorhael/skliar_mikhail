@@ -4,6 +4,7 @@ import com.senla.di.annotation.Autowired;
 import com.senla.di.annotation.Component;
 import com.senla.dto.category.CategoryCreateDto;
 import com.senla.dto.category.CategoryGetDto;
+import com.senla.model.Category;
 import com.senla.service.CategoryService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @Component
 public class CategoryServlet extends HttpServlet {
+
     @Autowired
     private CategoryService categoryService;
 
@@ -97,8 +99,10 @@ public class CategoryServlet extends HttpServlet {
 
         String parentIdParam = request.getParameter("parentId");
         UUID parentId = (parentIdParam == null || parentIdParam.isEmpty()) ? null : UUID.fromString(parentIdParam);
+        Category parentCategory = new Category();
+        parentCategory.setId(parentId);
 
-        CategoryCreateDto category = ValidationUtil.validate(new CategoryCreateDto(name, description, parentId));
+        CategoryCreateDto category = ValidationUtil.validate(new CategoryCreateDto(name, description, parentCategory));
 
         categoryService.createCategory(category);
         response.sendRedirect(request.getContextPath() + "/category");
@@ -112,8 +116,10 @@ public class CategoryServlet extends HttpServlet {
 
         String parentIdParam = request.getParameter("parentId");
         UUID parentId = (parentIdParam == null || parentIdParam.isEmpty()) ? null : UUID.fromString(parentIdParam);
+        Category parentCategory = new Category();
+        parentCategory.setId(parentId);
 
-        CategoryCreateDto category = ValidationUtil.validate(new CategoryCreateDto(name, description, parentId));
+        CategoryCreateDto category = ValidationUtil.validate(new CategoryCreateDto(name, description, parentCategory));
 
         categoryService.updateCategory(category, id);
         response.sendRedirect(request.getContextPath() + "/category");

@@ -1,6 +1,7 @@
 package com.senla.repository;
 
 import com.senla.di.annotation.Component;
+import com.senla.model.Post;
 import com.senla.model.PublicationStatus;
 import com.senla.util.EntityManagerUtil;
 import jakarta.persistence.EntityManager;
@@ -12,6 +13,22 @@ import java.util.UUID;
 public class PublicationStatusRepository extends BaseRepository<PublicationStatus, UUID> {
     public PublicationStatusRepository() {
         super(PublicationStatus.class);
+    }
+
+    @Override
+    public PublicationStatus create(PublicationStatus publicationStatus) {
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
+
+            Post persistedPost = entityManager.getReference(Post.class, publicationStatus.getPost().getId());
+
+            publicationStatus.setPost(persistedPost);
+
+            entityManager.persist(publicationStatus);
+
+            entityManager.getTransaction().commit();
+        }
+        return publicationStatus;
     }
 
     @Override

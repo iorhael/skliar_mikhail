@@ -1,5 +1,7 @@
-package com.senla.dto.user;
+package com.senla.dto.role;
 
+import com.senla.model.RoleName;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +13,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserGetDto {
+public class RoleGetDto {
 
     private UUID id;
 
-    private String username;
-
-    private String email;
+    @NotNull
+    private RoleName name;
 }

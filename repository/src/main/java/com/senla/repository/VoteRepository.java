@@ -1,6 +1,8 @@
 package com.senla.repository;
 
 import com.senla.di.annotation.Component;
+import com.senla.model.PollOption;
+import com.senla.model.User;
 import com.senla.model.Vote;
 import com.senla.model.VoteId;
 import com.senla.util.EntityManagerUtil;
@@ -12,6 +14,24 @@ import java.util.Optional;
 public class VoteRepository extends BaseRepository<Vote, VoteId> {
     public VoteRepository() {
         super(Vote.class);
+    }
+
+    @Override
+    public Vote create(Vote vote) {
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManager()) {
+            entityManager.getTransaction().begin();
+
+            User persistedOwner = entityManager.getReference(User.class, vote.getOwner().getId());
+            PollOption persistedPollOption = entityManager.getReference(PollOption.class, vote.getPollOption().getId());
+
+            vote.setOwner(persistedOwner);
+            vote.setPollOption(persistedPollOption);
+
+            entityManager.persist(vote);
+
+            entityManager.getTransaction().commit();
+        }
+        return vote;
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.senla.di.annotation.Component;
 import com.senla.dto.post.PostCreateDto;
 import com.senla.dto.post.PostGetDto;
 import com.senla.dto.post.PostUpdateDto;
+import com.senla.model.SubscriptionPlan;
+import com.senla.model.User;
 import com.senla.service.PostService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 @Component
 public class PostServlet extends HttpServlet {
+
     @Autowired
     private PostService postService;
 
@@ -101,7 +104,13 @@ public class PostServlet extends HttpServlet {
         LocalDateTime publicationDate = validateDate(request.getParameter("publicationDate"));
         UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
 
-        PostCreateDto post = ValidationUtil.validate(new PostCreateDto(authorId, title, content, publicationDate, subscriptionPlanId));
+        User author = new User();
+        author.setId(authorId);
+
+        SubscriptionPlan subscriptionPlan = new SubscriptionPlan();
+        subscriptionPlan.setId(subscriptionPlanId);
+
+        PostCreateDto post = ValidationUtil.validate(new PostCreateDto(author, title, content, publicationDate, subscriptionPlan));
 
         postService.createPost(post);
         response.sendRedirect(request.getContextPath() + "/post");
@@ -113,9 +122,8 @@ public class PostServlet extends HttpServlet {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         LocalDateTime publicationDate = validateDate(request.getParameter("publicationDate"));
-        UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
 
-        PostUpdateDto post = ValidationUtil.validate(new PostUpdateDto(title, content, publicationDate, subscriptionPlanId));
+        PostUpdateDto post = ValidationUtil.validate(new PostUpdateDto(title, content, publicationDate));
 
         postService.updatePost(post, id);
         response.sendRedirect(request.getContextPath() + "/post");

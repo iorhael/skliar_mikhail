@@ -3,7 +3,6 @@ package com.senla.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,15 +36,15 @@ public class Poll {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "post_id")
     @ToString.Exclude
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     @ToString.Exclude
-    private User user;
+    private User author;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "poll", orphanRemoval = true)
     @ToString.Exclude

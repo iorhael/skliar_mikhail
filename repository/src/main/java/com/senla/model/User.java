@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -51,19 +52,19 @@ public class User {
     @ToString.Exclude
     private Subscription subscription;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author", orphanRemoval = true)
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author", orphanRemoval = true)
     @ToString.Exclude
     private List<Poll> polls = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
     @ToString.Exclude
     private List<Vote> votes = new ArrayList<>();
 
@@ -77,7 +78,7 @@ public class User {
     }
 
     public void addPost(Post post) {
-        post.setUser(this);
+        post.setAuthor(this);
         posts.add(post);
     }
 
@@ -86,7 +87,7 @@ public class User {
     }
 
     public void addPoll(Poll poll) {
-        poll.setUser(this);
+        poll.setAuthor(this);
         polls.add(poll);
     }
 
@@ -95,7 +96,7 @@ public class User {
     }
 
     public void addComment(Comment comment) {
-        comment.setUser(this);
+        comment.setAuthor(this);
         comments.add(comment);
     }
 
@@ -104,7 +105,7 @@ public class User {
     }
 
     public void addVote(Vote vote) {
-        vote.setUser(this);
+        vote.setOwner(this);
         votes.add(vote);
     }
 
@@ -119,5 +120,12 @@ public class User {
 
     public void removeRole(Role role) {
         roles.remove(role);
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (createdDate == null) {
+            createdDate = LocalDateTime.now();
+        }
     }
 }
