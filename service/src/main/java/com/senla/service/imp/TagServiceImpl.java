@@ -1,7 +1,5 @@
 package com.senla.service.imp;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.tag.TagDto;
 import com.senla.model.Tag;
 import com.senla.repository.TagRepository;
@@ -9,52 +7,66 @@ import com.senla.service.TagService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.tag.TagDeleteException;
 import com.senla.service.exception.tag.TagUpdateException;
-import com.senla.util.ModelMapperUtil;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Service
 public class TagServiceImpl implements TagService {
 
-    @Autowired
-    private TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
-    @Override
-    public TagDto createTag(TagDto subscription) {
-        Tag tagEntity = ModelMapperUtil.MODEL_MAPPER.map(subscription, Tag.class);
-        Tag createdTag = tagRepository.create(tagEntity);
+    private final ModelMapper modelMapper;
 
-        return ModelMapperUtil.MODEL_MAPPER.map(createdTag, TagDto.class);
+    public TagServiceImpl(TagRepository tagRepository, ModelMapper modelMapper) {
+        this.tagRepository = tagRepository;
+        this.modelMapper = modelMapper;
     }
 
+    @Transactional
+    @Override
+    public TagDto createTag(TagDto subscription) {
+        Tag tagEntity = modelMapper.map(subscription, Tag.class);
+
+        Tag createdTag = tagRepository.create(tagEntity);
+
+        return modelMapper.map(createdTag, TagDto.class);
+    }
+
+    @Transactional
     @Override
     public TagDto getTagById(UUID id) {
         return tagRepository.findById(id)
-                .map(tag -> ModelMapperUtil.MODEL_MAPPER.map(tag, TagDto.class))
+                .map(tag -> modelMapper.map(tag, TagDto.class))
                 .orElseThrow(() -> new ServiceException("Tag not found"));
     }
 
+    @Transactional
     @Override
     public List<TagDto> getAllTags() {
         return tagRepository.findAll().stream()
-                .map(tag -> ModelMapperUtil.MODEL_MAPPER.map(tag, TagDto.class))
+                .map(tag -> modelMapper.map(tag, TagDto.class))
                 .toList();
     }
 
+    @Transactional
     @Override
     public TagDto updateTag(TagDto subscription, UUID id) {
-        Tag tagEntity = ModelMapperUtil.MODEL_MAPPER.map(subscription, Tag.class);
+        Tag tagEntity = modelMapper.map(subscription, Tag.class);
 
         return tagRepository.update(tagEntity, id)
-                .map(t -> ModelMapperUtil.MODEL_MAPPER.map(t, TagDto.class))
+                .map(t -> modelMapper.map(t, TagDto.class))
                 .orElseThrow(() -> new TagUpdateException("Can't update tag"));
     }
 
+    @Transactional
     @Override
     public TagDto deleteTag(UUID id) {
         return tagRepository.deleteById(id)
-                .map(subscription -> ModelMapperUtil.MODEL_MAPPER.map(subscription, TagDto.class))
+                .map(subscription -> modelMapper.map(subscription, TagDto.class))
                 .orElseThrow(() -> new TagDeleteException("Can't delete tag"));
     }
 }

@@ -1,7 +1,5 @@
 package com.senla.service.imp;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.subscriptionPlan.SubscriptionPlanDto;
 import com.senla.model.SubscriptionPlan;
 import com.senla.repository.SubscriptionPlanRepository;
@@ -9,52 +7,66 @@ import com.senla.service.SubscriptionPlanService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.subscriptionPlan.SubscriptionPlanDeleteException;
 import com.senla.service.exception.subscriptionPlan.SubscriptionPlanUpdateException;
-import com.senla.util.ModelMapperUtil;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Service
 public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
 
-    @Autowired
-    private SubscriptionPlanRepository subscriptionPlanRepository;
+    private final SubscriptionPlanRepository subscriptionPlanRepository;
 
-    @Override
-    public SubscriptionPlanDto createSubscriptionPlan(SubscriptionPlanDto subscriptionPlan) {
-        SubscriptionPlan subscriptionPlanEntity = ModelMapperUtil.MODEL_MAPPER.map(subscriptionPlan, SubscriptionPlan.class);
-        SubscriptionPlan createdSubscriptionPlan = subscriptionPlanRepository.create(subscriptionPlanEntity);
+    private final ModelMapper modelMapper;
 
-        return ModelMapperUtil.MODEL_MAPPER.map(createdSubscriptionPlan, SubscriptionPlanDto.class);
+    public SubscriptionPlanServiceImpl(SubscriptionPlanRepository subscriptionPlanRepository, ModelMapper modelMapper) {
+        this.subscriptionPlanRepository = subscriptionPlanRepository;
+        this.modelMapper = modelMapper;
     }
 
+    @Transactional
+    @Override
+    public SubscriptionPlanDto createSubscriptionPlan(SubscriptionPlanDto subscriptionPlan) {
+        SubscriptionPlan subscriptionPlanEntity = modelMapper.map(subscriptionPlan, SubscriptionPlan.class);
+
+        SubscriptionPlan createdSubscriptionPlan = subscriptionPlanRepository.create(subscriptionPlanEntity);
+
+        return modelMapper.map(createdSubscriptionPlan, SubscriptionPlanDto.class);
+    }
+
+    @Transactional
     @Override
     public SubscriptionPlanDto getSubscriptionPlanById(UUID id) {
         return subscriptionPlanRepository.findById(id)
-                .map(subscriptionPlan -> ModelMapperUtil.MODEL_MAPPER.map(subscriptionPlan, SubscriptionPlanDto.class))
+                .map(subscriptionPlan -> modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class))
                 .orElseThrow(() -> new ServiceException("No subscription plan found"));
     }
 
+    @Transactional
     @Override
     public List<SubscriptionPlanDto> getAllSubscriptionPlans() {
         return subscriptionPlanRepository.findAll().stream()
-                .map(subscriptionPlan -> ModelMapperUtil.MODEL_MAPPER.map(subscriptionPlan, SubscriptionPlanDto.class))
+                .map(subscriptionPlan -> modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class))
                 .toList();
     }
 
+    @Transactional
     @Override
     public SubscriptionPlanDto updateSubscriptionPlan(SubscriptionPlanDto role, UUID id) {
-        SubscriptionPlan roleEntity = ModelMapperUtil.MODEL_MAPPER.map(role, SubscriptionPlan.class);
+        SubscriptionPlan roleEntity = modelMapper.map(role, SubscriptionPlan.class);
 
         return subscriptionPlanRepository.update(roleEntity, id)
-                .map(s -> ModelMapperUtil.MODEL_MAPPER.map(s, SubscriptionPlanDto.class))
+                .map(s -> modelMapper.map(s, SubscriptionPlanDto.class))
                 .orElseThrow(() -> new SubscriptionPlanUpdateException("Can't update subscription plan"));
     }
 
+    @Transactional
     @Override
     public SubscriptionPlanDto deleteSubscriptionPlan(UUID id) {
         return subscriptionPlanRepository.deleteById(id)
-                .map(pollOption -> ModelMapperUtil.MODEL_MAPPER.map(pollOption, SubscriptionPlanDto.class))
+                .map(pollOption -> modelMapper.map(pollOption, SubscriptionPlanDto.class))
                 .orElseThrow(() -> new SubscriptionPlanDeleteException("Can't delete subscription plan"));
     }
 }

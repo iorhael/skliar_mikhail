@@ -1,7 +1,5 @@
 package com.senla.service.imp;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.vote.VoteCreateDto;
 import com.senla.dto.vote.VoteGetDto;
 import com.senla.dto.vote.VoteUpdateDto;
@@ -12,59 +10,65 @@ import com.senla.service.VoteService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.vote.VoteDeleteException;
 import com.senla.service.exception.vote.VoteUpdateException;
-import com.senla.util.ModelMapperUtil;
-import org.modelmapper.TypeMap;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Component
+@Service
 public class VoteServiceImpl implements VoteService {
 
-    @Autowired
-    private VoteRepository voteRepository;
+    private final VoteRepository voteRepository;
 
-    @Override
-    public VoteGetDto createVote(VoteCreateDto subscription) {
-        Vote voteEntity = ModelMapperUtil.MODEL_MAPPER.map(subscription, Vote.class);
-        Vote createdVote = voteRepository.create(voteEntity);
+    private final ModelMapper modelMapper;
 
-        return ModelMapperUtil.MODEL_MAPPER.map(createdVote, VoteGetDto.class);
+    public VoteServiceImpl(VoteRepository voteRepository, ModelMapper modelMapper) {
+        this.voteRepository = voteRepository;
+        this.modelMapper = modelMapper;
     }
 
+    @Transactional
+    @Override
+    public VoteGetDto createVote(VoteCreateDto subscription) {
+        Vote voteEntity = modelMapper.map(subscription, Vote.class);
+
+        Vote createdVote = voteRepository.create(voteEntity);
+
+        return modelMapper.map(createdVote, VoteGetDto.class);
+    }
+
+    @Transactional
     @Override
     public VoteGetDto getVoteById(VoteId id) {
-        TypeMap<Vote, VoteGetDto> getMapper = ModelMapperUtil.MODEL_MAPPER.createTypeMap(Vote.class, VoteGetDto.class);
-        getMapper.addMappings(
-                mapper -> {
-                    mapper.map(src -> src.getPollOption().getDescription(), VoteGetDto::setPollOptionDescription);
-                    mapper.map(src -> src.getOwner().getUsername(), VoteGetDto::setOwnerName);
-                });
-
         return voteRepository.findById(id)
-                .map(vote -> ModelMapperUtil.MODEL_MAPPER.map(vote, VoteGetDto.class))
+                .map(vote -> modelMapper.map(vote, VoteGetDto.class))
                 .orElseThrow(() -> new ServiceException("Vote not found"));
     }
 
+    @Transactional
     @Override
     public List<VoteGetDto> getAllVotes() {
         return voteRepository.findAll().stream()
-                .map(vote -> ModelMapperUtil.MODEL_MAPPER.map(vote, VoteGetDto.class))
+                .map(vote -> modelMapper.map(vote, VoteGetDto.class))
                 .toList();
     }
 
+    @Transactional
     @Override
     public VoteGetDto updateVote(VoteUpdateDto vote, VoteId id) {
-        Vote voteEntity = ModelMapperUtil.MODEL_MAPPER.map(vote, Vote.class);
+        Vote voteEntity = modelMapper.map(vote, Vote.class);
 
         return voteRepository.update(voteEntity, id)
-                .map(t -> ModelMapperUtil.MODEL_MAPPER.map(t, VoteGetDto.class))
+                .map(t -> modelMapper.map(t, VoteGetDto.class))
                 .orElseThrow(() -> new VoteUpdateException("Can't update vote"));
     }
 
+    @Transactional
     @Override
     public VoteGetDto deleteVote(VoteId id) {
         return voteRepository.deleteById(id)
-                .map(vote -> ModelMapperUtil.MODEL_MAPPER.map(vote, VoteGetDto.class))
+                .map(vote -> modelMapper.map(vote, VoteGetDto.class))
                 .orElseThrow(() -> new VoteDeleteException("Can't delete vote"));
     }
 }

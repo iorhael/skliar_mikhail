@@ -1,7 +1,5 @@
 package com.senla.service.imp;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
@@ -11,59 +9,68 @@ import com.senla.service.CommentService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.comment.CommentDeleteException;
 import com.senla.service.exception.comment.CommentUpdateException;
-import com.senla.util.ModelMapperUtil;
-import org.modelmapper.TypeMap;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Service
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
-    @Override
-    public CommentGetDto createComment(CommentCreateDto comment) {
-        Comment commentEntity = ModelMapperUtil.MODEL_MAPPER.map(comment, Comment.class);
-        Comment createdComment = commentRepository.create(commentEntity);
+    private final ModelMapper modelMapper;
 
-        return ModelMapperUtil.MODEL_MAPPER.map(createdComment, CommentGetDto.class);
+    public CommentServiceImpl(CommentRepository commentRepository, ModelMapper modelMapper) {
+        this.commentRepository = commentRepository;
+        this.modelMapper = modelMapper;
     }
 
+    @Transactional
+    @Override
+    public CommentGetDto createComment(CommentCreateDto comment) {
+        Comment commentEntity = modelMapper.map(comment, Comment.class);
+
+        Comment createdComment = commentRepository.create(commentEntity);
+
+        return modelMapper.map(createdComment, CommentGetDto.class);
+    }
+
+    @Transactional
     @Override
     public CommentGetDto getCommentById(UUID id) {
         return commentRepository.findById(id)
-                .map(post -> ModelMapperUtil.MODEL_MAPPER.map(post, CommentGetDto.class))
+                .map(post -> modelMapper.map(post, CommentGetDto.class))
                 .orElseThrow(() -> new ServiceException("No post found"));
     }
 
+    @Transactional
     @Override
     public List<CommentGetDto> getAllComments() {
-        TypeMap<Comment, CommentGetDto> getMapper = ModelMapperUtil.MODEL_MAPPER.createTypeMap(Comment.class, CommentGetDto.class);
-        getMapper.addMappings(
-                mapper -> mapper.map(src -> src.getAuthor().getUsername(), CommentGetDto::setAuthorName)
-        );
         return commentRepository.findAll().stream()
-                .map(comment -> ModelMapperUtil.MODEL_MAPPER.map(comment, CommentGetDto.class))
+                .map(comment -> modelMapper.map(comment, CommentGetDto.class))
                 .toList();
     }
 
+    @Transactional
     @Override
     public CommentGetDto updateComment(CommentUpdateDto comment, UUID id) {
-        Comment commentEntity = ModelMapperUtil.MODEL_MAPPER.map(comment, Comment.class);
+        Comment commentEntity = modelMapper.map(comment, Comment.class);
         commentEntity.setUpdatedDate(LocalDateTime.now());
 
         return commentRepository.update(commentEntity, id)
-                .map(p -> ModelMapperUtil.MODEL_MAPPER.map(p, CommentGetDto.class))
+                .map(p -> modelMapper.map(p, CommentGetDto.class))
                 .orElseThrow(() -> new CommentUpdateException("Can't update comment"));
     }
 
+    @Transactional
     @Override
     public CommentGetDto deleteComment(UUID id) {
         return commentRepository.deleteById(id)
-                .map(comment -> ModelMapperUtil.MODEL_MAPPER.map(comment, CommentGetDto.class))
+                .map(comment -> modelMapper.map(comment, CommentGetDto.class))
                 .orElseThrow(() -> new CommentDeleteException("Can't delete comment"));
     }
 }

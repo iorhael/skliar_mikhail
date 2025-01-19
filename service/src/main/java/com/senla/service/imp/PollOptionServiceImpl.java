@@ -1,7 +1,5 @@
 package com.senla.service.imp;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.pollOption.PollOptionCreateDto;
 import com.senla.dto.pollOption.PollOptionGetDto;
 import com.senla.model.PollOption;
@@ -10,52 +8,66 @@ import com.senla.service.PollOptionService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.pollOption.PollOptionDeleteException;
 import com.senla.service.exception.pollOption.PollOptionUpdateException;
-import com.senla.util.ModelMapperUtil;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Service
 public class PollOptionServiceImpl implements PollOptionService {
 
-    @Autowired
-    private PollOptionRepository pollOptionRepository;
+    private final PollOptionRepository pollOptionRepository;
 
-    @Override
-    public PollOptionGetDto createPollOption(PollOptionCreateDto pollOption) {
-        PollOption pollOptionEntity = ModelMapperUtil.MODEL_MAPPER.map(pollOption, PollOption.class);
-        PollOption createdPoll = pollOptionRepository.create(pollOptionEntity);
+    private final ModelMapper modelMapper;
 
-        return ModelMapperUtil.MODEL_MAPPER.map(createdPoll, PollOptionGetDto.class);
+    public PollOptionServiceImpl(PollOptionRepository pollOptionRepository, ModelMapper modelMapper) {
+        this.pollOptionRepository = pollOptionRepository;
+        this.modelMapper = modelMapper;
     }
 
+    @Transactional
+    @Override
+    public PollOptionGetDto createPollOption(PollOptionCreateDto pollOption) {
+        PollOption pollOptionEntity = modelMapper.map(pollOption, PollOption.class);
+
+        PollOption createdPoll = pollOptionRepository.create(pollOptionEntity);
+
+        return modelMapper.map(createdPoll, PollOptionGetDto.class);
+    }
+
+    @Transactional
     @Override
     public PollOptionGetDto getPollOptionById(UUID id) {
         return pollOptionRepository.findById(id)
-                .map(pollOption -> ModelMapperUtil.MODEL_MAPPER.map(pollOption, PollOptionGetDto.class))
+                .map(pollOption -> modelMapper.map(pollOption, PollOptionGetDto.class))
                 .orElseThrow(() -> new ServiceException("No poll option found"));
     }
 
+    @Transactional
     @Override
     public List<PollOptionGetDto> getAllPollOptions() {
         return pollOptionRepository.findAll().stream()
-                .map(pollOption -> ModelMapperUtil.MODEL_MAPPER.map(pollOption, PollOptionGetDto.class))
+                .map(pollOption -> modelMapper.map(pollOption, PollOptionGetDto.class))
                 .toList();
     }
 
+    @Transactional
     @Override
     public PollOptionGetDto updatePollOption(PollOptionGetDto pollOption, UUID id) {
-        PollOption pollOptionEntity = ModelMapperUtil.MODEL_MAPPER.map(pollOption, PollOption.class);
+        PollOption pollOptionEntity = modelMapper.map(pollOption, PollOption.class);
 
         return pollOptionRepository.update(pollOptionEntity, id)
-                .map(p -> ModelMapperUtil.MODEL_MAPPER.map(p, PollOptionGetDto.class))
+                .map(p -> modelMapper.map(p, PollOptionGetDto.class))
                 .orElseThrow(() -> new PollOptionUpdateException("Can't update poll option"));
     }
 
+    @Transactional
     @Override
     public PollOptionGetDto deletePollOption(UUID id) {
         return pollOptionRepository.deleteById(id)
-                .map(pollOption -> ModelMapperUtil.MODEL_MAPPER.map(pollOption, PollOptionGetDto.class))
+                .map(pollOption -> modelMapper.map(pollOption, PollOptionGetDto.class))
                 .orElseThrow(() -> new PollOptionDeleteException("Can't delete poll option"));
     }
 }

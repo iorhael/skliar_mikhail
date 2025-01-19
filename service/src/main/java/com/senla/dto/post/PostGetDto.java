@@ -1,6 +1,5 @@
 package com.senla.dto.post;
 
-import com.senla.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,7 @@ public class PostGetDto {
 
     private UUID id;
 
-    private User authorName;
+    private String authorName;
 
     private String title;
 

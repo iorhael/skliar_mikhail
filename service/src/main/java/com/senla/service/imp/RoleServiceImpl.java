@@ -1,7 +1,5 @@
 package com.senla.service.imp;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.role.RoleCreateDto;
 import com.senla.dto.role.RoleGetDto;
 import com.senla.model.Role;
@@ -10,52 +8,66 @@ import com.senla.service.RoleService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.role.RoleDeleteException;
 import com.senla.service.exception.role.RoleUpdateException;
-import com.senla.util.ModelMapperUtil;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Service
 public class RoleServiceImpl implements RoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Override
-    public RoleGetDto createRole(RoleCreateDto role) {
-        Role roleEntity = ModelMapperUtil.MODEL_MAPPER.map(role, Role.class);
-        Role createdRole = roleRepository.create(roleEntity);
+    private final ModelMapper modelMapper;
 
-        return ModelMapperUtil.MODEL_MAPPER.map(createdRole, RoleGetDto.class);
+    public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper) {
+        this.roleRepository = roleRepository;
+        this.modelMapper = modelMapper;
     }
 
+    @Transactional
+    @Override
+    public RoleGetDto createRole(RoleCreateDto role) {
+        Role roleEntity = modelMapper.map(role, Role.class);
+
+        Role createdRole = roleRepository.create(roleEntity);
+
+        return modelMapper.map(createdRole, RoleGetDto.class);
+    }
+
+    @Transactional
     @Override
     public RoleGetDto getRoleById(UUID id) {
         return roleRepository.findById(id)
-                .map(role -> ModelMapperUtil.MODEL_MAPPER.map(role, RoleGetDto.class))
+                .map(role -> modelMapper.map(role, RoleGetDto.class))
                 .orElseThrow(() -> new ServiceException("No role found"));
     }
 
+    @Transactional
     @Override
     public List<RoleGetDto> getAllRoles() {
         return roleRepository.findAll().stream()
-                .map(role -> ModelMapperUtil.MODEL_MAPPER.map(role, RoleGetDto.class))
+                .map(role -> modelMapper.map(role, RoleGetDto.class))
                 .toList();
     }
 
+    @Transactional
     @Override
     public RoleGetDto updateRole(RoleGetDto role, UUID id) {
-        Role roleEntity = ModelMapperUtil.MODEL_MAPPER.map(role, Role.class);
+        Role roleEntity = modelMapper.map(role, Role.class);
 
         return roleRepository.update(roleEntity, id)
-                .map(r -> ModelMapperUtil.MODEL_MAPPER.map(r, RoleGetDto.class))
+                .map(r -> modelMapper.map(r, RoleGetDto.class))
                 .orElseThrow(() -> new RoleUpdateException("Can't update role"));
     }
 
+    @Transactional
     @Override
     public RoleGetDto deleteRole(UUID id) {
         return roleRepository.deleteById(id)
-                .map(pollOption -> ModelMapperUtil.MODEL_MAPPER.map(pollOption, RoleGetDto.class))
+                .map(pollOption -> modelMapper.map(pollOption, RoleGetDto.class))
                 .orElseThrow(() -> new RoleDeleteException("Can't delete role"));
     }
 }

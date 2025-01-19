@@ -1,7 +1,5 @@
 package com.senla.service.imp;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.publicationStatus.PublicationStatusCreateDto;
 import com.senla.dto.publicationStatus.PublicationStatusGetDto;
 import com.senla.model.PublicationStatus;
@@ -10,52 +8,66 @@ import com.senla.service.PublicationStatusService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.publicationStatus.PublicationStatusDeleteException;
 import com.senla.service.exception.publicationStatus.PublicationStatusUpdateException;
-import com.senla.util.ModelMapperUtil;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Service
 public class PublicationStatusServiceImpl implements PublicationStatusService {
 
-    @Autowired
-    private PublicationStatusRepository publicationStatusRepository;
+    private final PublicationStatusRepository publicationStatusRepository;
 
-    @Override
-    public PublicationStatusGetDto createPublicationStatus(PublicationStatusCreateDto publicationStatus) {
-        PublicationStatus publicationStatusEntity = ModelMapperUtil.MODEL_MAPPER.map(publicationStatus, PublicationStatus.class);
-        PublicationStatus createdPulicationStatus = publicationStatusRepository.create(publicationStatusEntity);
+    private final ModelMapper modelMapper;
 
-        return ModelMapperUtil.MODEL_MAPPER.map(createdPulicationStatus, PublicationStatusGetDto.class);
+    public PublicationStatusServiceImpl(PublicationStatusRepository publicationStatusRepository, ModelMapper modelMapper) {
+        this.publicationStatusRepository = publicationStatusRepository;
+        this.modelMapper = modelMapper;
     }
 
+    @Transactional
+    @Override
+    public PublicationStatusGetDto createPublicationStatus(PublicationStatusCreateDto publicationStatus) {
+        PublicationStatus publicationStatusEntity = modelMapper.map(publicationStatus, PublicationStatus.class);
+
+        PublicationStatus createdPulicationStatus = publicationStatusRepository.create(publicationStatusEntity);
+
+        return modelMapper.map(createdPulicationStatus, PublicationStatusGetDto.class);
+    }
+
+    @Transactional
     @Override
     public PublicationStatusGetDto getPublicationStatusById(UUID id) {
         return publicationStatusRepository.findById(id)
-                .map(publicationStatus -> ModelMapperUtil.MODEL_MAPPER.map(publicationStatus, PublicationStatusGetDto.class))
+                .map(publicationStatus -> modelMapper.map(publicationStatus, PublicationStatusGetDto.class))
                 .orElseThrow(() -> new ServiceException("No publication status found"));
     }
 
+    @Transactional
     @Override
     public List<PublicationStatusGetDto> getAllPublicationStatuses() {
         return publicationStatusRepository.findAll().stream()
-                .map(publicationStatus -> ModelMapperUtil.MODEL_MAPPER.map(publicationStatus, PublicationStatusGetDto.class))
+                .map(publicationStatus -> modelMapper.map(publicationStatus, PublicationStatusGetDto.class))
                 .toList();
     }
 
+    @Transactional
     @Override
     public PublicationStatusGetDto updatePublicationStatus(PublicationStatusGetDto publicationStatus, UUID id) {
-        PublicationStatus publicationStatusEntity = ModelMapperUtil.MODEL_MAPPER.map(publicationStatus, PublicationStatus.class);
+        PublicationStatus publicationStatusEntity = modelMapper.map(publicationStatus, PublicationStatus.class);
 
         return publicationStatusRepository.update(publicationStatusEntity, id)
-                .map(p -> ModelMapperUtil.MODEL_MAPPER.map(p, PublicationStatusGetDto.class))
+                .map(p -> modelMapper.map(p, PublicationStatusGetDto.class))
                 .orElseThrow(() -> new PublicationStatusUpdateException("Can't update publication status"));
     }
 
+    @Transactional
     @Override
     public PublicationStatusGetDto deletePublicationStatus(UUID id) {
         return publicationStatusRepository.deleteById(id)
-                .map(pollOption -> ModelMapperUtil.MODEL_MAPPER.map(pollOption, PublicationStatusGetDto.class))
+                .map(pollOption -> modelMapper.map(pollOption, PublicationStatusGetDto.class))
                 .orElseThrow(() -> new PublicationStatusDeleteException("Can't delete publication status"));
     }
 }
