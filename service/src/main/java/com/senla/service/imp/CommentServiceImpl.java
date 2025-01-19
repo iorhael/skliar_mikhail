@@ -9,25 +9,21 @@ import com.senla.service.CommentService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.comment.CommentDeleteException;
 import com.senla.service.exception.comment.CommentUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
     private final ModelMapper modelMapper;
-
-    public CommentServiceImpl(CommentRepository commentRepository, ModelMapper modelMapper) {
-        this.commentRepository = commentRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override
@@ -59,7 +55,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentGetDto updateComment(CommentUpdateDto comment, UUID id) {
         Comment commentEntity = modelMapper.map(comment, Comment.class);
-        commentEntity.setUpdatedDate(LocalDateTime.now());
 
         return commentRepository.update(commentEntity, id)
                 .map(p -> modelMapper.map(p, CommentGetDto.class))

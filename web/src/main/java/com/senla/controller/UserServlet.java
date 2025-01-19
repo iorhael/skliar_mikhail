@@ -1,7 +1,5 @@
 package com.senla.controller;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.user.UserCreateDto;
 import com.senla.dto.user.UserGetDto;
 import com.senla.service.UserService;
@@ -10,18 +8,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Controller
+@RequiredArgsConstructor
 public class UserServlet extends HttpServlet {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();

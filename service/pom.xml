@@ -11,29 +11,27 @@
 
     <artifactId>service</artifactId>
 
+    <properties>
+        <repository.version>1.0-SNAPSHOT</repository.version>
+        <modelmapper.version>3.2.2</modelmapper.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.senla</groupId>
             <artifactId>repository</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${repository.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>3.2.2</version>
-            <scope>compile</scope>
+            <version>${modelmapper.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,5 +22,5 @@ public class PostUpdateDto {
     private String content;
 
     @NotNull
-    private LocalDateTime publicationDate;
+    private Instant publicationDate;
 }

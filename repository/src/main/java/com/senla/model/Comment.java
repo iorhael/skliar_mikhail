@@ -10,15 +10,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -39,11 +40,13 @@ public class Comment {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "created_date")
+    @CreationTimestamp
+    private Instant createdDate;
 
     @Column(name = "updated_date")
-    private LocalDateTime updatedDate;
+    @UpdateTimestamp
+    private Instant updatedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -71,12 +74,5 @@ public class Comment {
 
     public void removeChildrenComment(Comment comment) {
         childrenComments.remove(comment);
-    }
-
-    @PrePersist
-    public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        createdDate = (createdDate == null) ? now : createdDate;
-        updatedDate = (updatedDate == null) ? now : updatedDate;
     }
 }

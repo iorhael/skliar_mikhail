@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,8 +15,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,8 +44,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "created_date")
+    @CreationTimestamp
+    private Instant createdDate;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     @Setter(AccessLevel.NONE)
@@ -120,12 +121,5 @@ public class User {
 
     public void removeRole(Role role) {
         roles.remove(role);
-    }
-
-    @PrePersist
-    public void prePersist() {
-        if (createdDate == null) {
-            createdDate = LocalDateTime.now();
-        }
     }
 }

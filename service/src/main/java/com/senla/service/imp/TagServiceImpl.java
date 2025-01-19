@@ -7,6 +7,7 @@ import com.senla.service.TagService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.tag.TagDeleteException;
 import com.senla.service.exception.tag.TagUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,16 +16,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
 
     private final ModelMapper modelMapper;
-
-    public TagServiceImpl(TagRepository tagRepository, ModelMapper modelMapper) {
-        this.tagRepository = tagRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override

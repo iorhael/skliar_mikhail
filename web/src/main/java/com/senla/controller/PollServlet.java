@@ -1,7 +1,5 @@
 package com.senla.controller;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.poll.PollCreateDto;
 import com.senla.dto.poll.PollGetDto;
 import com.senla.dto.poll.PollUpdateDto;
@@ -13,18 +11,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Controller
+@RequiredArgsConstructor
 public class PollServlet extends HttpServlet {
 
-    @Autowired
-    private PollService pollService;
+    private final PollService pollService;
 
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();

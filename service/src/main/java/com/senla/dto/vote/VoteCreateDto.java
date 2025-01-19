@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,5 +22,5 @@ public class VoteCreateDto {
     @NotNull
     private User user;
 
-    private LocalDateTime voteDate;
+    private Instant voteDate;
 }

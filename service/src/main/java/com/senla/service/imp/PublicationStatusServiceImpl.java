@@ -8,6 +8,7 @@ import com.senla.service.PublicationStatusService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.publicationStatus.PublicationStatusDeleteException;
 import com.senla.service.exception.publicationStatus.PublicationStatusUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class PublicationStatusServiceImpl implements PublicationStatusService {
 
     private final PublicationStatusRepository publicationStatusRepository;
 
     private final ModelMapper modelMapper;
-
-    public PublicationStatusServiceImpl(PublicationStatusRepository publicationStatusRepository, ModelMapper modelMapper) {
-        this.publicationStatusRepository = publicationStatusRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override

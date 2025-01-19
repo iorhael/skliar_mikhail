@@ -9,6 +9,7 @@ import com.senla.service.SubscriptionService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.subscription.SubscriptionDeleteException;
 import com.senla.service.exception.subscription.SubscriptionUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +18,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
 
     private final ModelMapper modelMapper;
-
-    public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, ModelMapper modelMapper) {
-        this.subscriptionRepository = subscriptionRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override

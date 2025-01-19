@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class PostCreateDto {
     private String content;
 
     @NotNull
-    private LocalDateTime publicationDate;
+    private Instant publicationDate;
 
     @NotNull
     private SubscriptionPlan subscriptionPlan;

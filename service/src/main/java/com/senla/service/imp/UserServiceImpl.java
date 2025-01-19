@@ -8,6 +8,7 @@ import com.senla.service.UserService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.user.UserDeleteException;
 import com.senla.service.exception.user.UserUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
     private final ModelMapper modelMapper;
-
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override

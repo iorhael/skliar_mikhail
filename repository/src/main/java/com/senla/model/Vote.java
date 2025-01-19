@@ -12,8 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "votes")
@@ -27,8 +28,9 @@ public class Vote {
     @EmbeddedId
     private VoteId id = new VoteId();
 
-    @Column(name = "vote_date", updatable = false)
-    private LocalDateTime voteDate;
+    @Column(name = "vote_date")
+    @CreationTimestamp
+    private Instant voteDate;
 
     @ManyToOne
     @MapsId("userId")

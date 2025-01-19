@@ -1,6 +1,7 @@
 package com.senla.repository;
 
 import com.senla.model.Category;
+import com.senla.model.Comment;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -15,10 +16,10 @@ public class CategoryRepository extends BaseRepository<Category, UUID> {
 
     @Override
     public Category create(Category category) {
-        UUID parentCategoryId = category.getParentCategory().getId();
-        Category persistedParentCategory = (parentCategoryId != null) ? entityManager.getReference(Category.class, parentCategoryId) : null;
-
-        category.setParentCategory(persistedParentCategory);
+        Optional.ofNullable(category.getParentCategory())
+                .map(Category::getId)
+                .map(parentCategoryId -> entityManager.getReference(Category.class, parentCategoryId))
+                .ifPresent(category::setParentCategory);
 
         entityManager.persist(category);
 

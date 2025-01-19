@@ -36,7 +36,6 @@ public class PostRepository extends BaseRepository<Post, UUID> {
             existingPost.setTitle(post.getTitle());
             existingPost.setContent(post.getContent());
             existingPost.setPublicationDate(post.getPublicationDate());
-            existingPost.setUpdatedDate(post.getUpdatedDate());
             existingPost.setViewsTotal(post.getViewsTotal());
         }
 

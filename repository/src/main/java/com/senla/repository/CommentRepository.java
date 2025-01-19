@@ -20,12 +20,13 @@ public class CommentRepository extends BaseRepository<Comment, UUID> {
         Post persistedPost = entityManager.getReference(Post.class, comment.getPost().getId());
         User persistedAuthor = entityManager.getReference(User.class, comment.getAuthor().getId());
 
-        UUID parentCommentId = comment.getParentComment().getId();
-        Comment persistedParentComment = (parentCommentId != null) ? entityManager.getReference(Comment.class, parentCommentId) : null;
-
         comment.setPost(persistedPost);
         comment.setAuthor(persistedAuthor);
-        comment.setParentComment(persistedParentComment);
+
+        Optional.ofNullable(comment.getParentComment())
+                .map(Comment::getId)
+                .map(parentCommentId -> entityManager.getReference(Comment.class, parentCommentId))
+                .ifPresent(comment::setParentComment);
 
         entityManager.persist(comment);
 
@@ -38,7 +39,6 @@ public class CommentRepository extends BaseRepository<Comment, UUID> {
 
         if (existingComment != null) {
             existingComment.setContent(comment.getContent());
-            existingComment.setUpdatedDate(comment.getUpdatedDate());
         }
 
         return Optional.ofNullable(existingComment);

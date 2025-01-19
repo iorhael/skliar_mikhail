@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -16,7 +16,7 @@ public class SubscriptionGetDto {
 
     private UUID id;
 
-    private LocalDateTime startedDate;
+    private Instant startedDate;
 
-    private LocalDateTime expiresDate;
+    private Instant expiresDate;
 }

@@ -23,8 +23,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -52,14 +54,16 @@ public class Post {
     @Column(name = "views_total")
     private Long viewsTotal;
 
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "created_date")
+    @CreationTimestamp
+    private Instant createdDate;
 
     @Column(name = "updated_date")
-    private LocalDateTime updatedDate;
+    @UpdateTimestamp
+    private Instant updatedDate;
 
     @Column(name = "publication_date")
-    private LocalDateTime publicationDate;
+    private Instant publicationDate;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "post")
     @Setter(AccessLevel.NONE)
@@ -132,9 +136,6 @@ public class Post {
 
     @PrePersist
     public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        viewsTotal = (viewsTotal == null) ? 0L : viewsTotal; // Fix when it will be clear how to work with views
-        createdDate = (createdDate == null) ? now : createdDate;
-        updatedDate = (updatedDate == null) ? now : updatedDate;
+        viewsTotal = (viewsTotal == null) ? 0L : viewsTotal;
     }
 }

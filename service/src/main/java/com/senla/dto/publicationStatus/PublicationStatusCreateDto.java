@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +24,5 @@ public class PublicationStatusCreateDto {
     private PostStatus statusName;
 
     @FutureOrPresent
-    private LocalDateTime scheduledDate;
+    private Instant scheduledDate;
 }

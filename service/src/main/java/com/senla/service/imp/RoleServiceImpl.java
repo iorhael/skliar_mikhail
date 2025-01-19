@@ -8,6 +8,7 @@ import com.senla.service.RoleService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.role.RoleDeleteException;
 import com.senla.service.exception.role.RoleUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
     private final ModelMapper modelMapper;
-
-    public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper) {
-        this.roleRepository = roleRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -22,6 +22,6 @@ public class PostGetDto {
 
     private String content;
 
-    private LocalDateTime publicationDate;
+    private Instant publicationDate;
 }
 

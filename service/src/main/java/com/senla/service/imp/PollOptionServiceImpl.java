@@ -8,6 +8,7 @@ import com.senla.service.PollOptionService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.pollOption.PollOptionDeleteException;
 import com.senla.service.exception.pollOption.PollOptionUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class PollOptionServiceImpl implements PollOptionService {
 
     private final PollOptionRepository pollOptionRepository;
 
     private final ModelMapper modelMapper;
-
-    public PollOptionServiceImpl(PollOptionRepository pollOptionRepository, ModelMapper modelMapper) {
-        this.pollOptionRepository = pollOptionRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override

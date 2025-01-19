@@ -9,25 +9,21 @@ import com.senla.service.PostService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.post.PostDeleteException;
 import com.senla.service.exception.post.PostUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
     private final ModelMapper modelMapper;
-
-    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
-        this.postRepository = postRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override
@@ -59,7 +55,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostGetDto updatePost(PostUpdateDto post, UUID id) {
         Post postEntity = modelMapper.map(post, Post.class);
-        postEntity.setUpdatedDate(LocalDateTime.now());
         postEntity.setViewsTotal(0L); // Update when the post views functionality will be added
 
         return postRepository.update(postEntity, id)

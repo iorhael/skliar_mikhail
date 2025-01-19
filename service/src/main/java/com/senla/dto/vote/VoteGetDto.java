@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,5 +17,5 @@ public class VoteGetDto {
 
     private String ownerName;
 
-    private LocalDateTime voteDate;
+    private Instant voteDate;
 }

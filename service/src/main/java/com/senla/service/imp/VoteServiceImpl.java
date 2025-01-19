@@ -10,6 +10,7 @@ import com.senla.service.VoteService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.vote.VoteDeleteException;
 import com.senla.service.exception.vote.VoteUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class VoteServiceImpl implements VoteService {
 
     private final VoteRepository voteRepository;
 
     private final ModelMapper modelMapper;
-
-    public VoteServiceImpl(VoteRepository voteRepository, ModelMapper modelMapper) {
-        this.voteRepository = voteRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override

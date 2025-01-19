@@ -9,15 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -33,11 +33,12 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @Column(name = "started_date", updatable = false)
-    private LocalDateTime startedDate;
+    @Column(name = "started_date")
+    @CreationTimestamp
+    private Instant startedDate;
 
     @Column(name = "expires_date")
-    private LocalDateTime expiresDate;
+    private Instant expiresDate;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -48,11 +49,4 @@ public class Subscription {
     @JoinColumn(name = "subscription_plan_id")
     @ToString.Exclude
     private SubscriptionPlan subscriptionPlan;
-
-    @PrePersist
-    public void prePersist() {
-        if (startedDate == null) {
-            startedDate = LocalDateTime.now();
-        }
-    }
 }

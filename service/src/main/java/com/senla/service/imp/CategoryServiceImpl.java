@@ -8,6 +8,7 @@ import com.senla.service.CategoryService;
 import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.category.CategoryDeleteException;
 import com.senla.service.exception.category.CategoryUpdateException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
     private final ModelMapper modelMapper;
-
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ModelMapper modelMapper) {
-        this.categoryRepository = categoryRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional
     @Override
