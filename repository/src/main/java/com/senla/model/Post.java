@@ -132,8 +132,9 @@ public class Post {
 
     @PrePersist
     public void prePersist() {
-        if (createdDate == null) {
-            createdDate = LocalDateTime.now();
-        }
+        LocalDateTime now = LocalDateTime.now();
+        viewsTotal = (viewsTotal == null) ? 0L : viewsTotal; // Fix when it will be clear how to work with views
+        createdDate = (createdDate == null) ? now : createdDate;
+        updatedDate = (updatedDate == null) ? now : updatedDate;
     }
 }
