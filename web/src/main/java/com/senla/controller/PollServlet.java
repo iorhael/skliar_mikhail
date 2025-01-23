@@ -1,27 +1,29 @@
 package com.senla.controller;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.poll.PollCreateDto;
 import com.senla.dto.poll.PollGetDto;
 import com.senla.dto.poll.PollUpdateDto;
+import com.senla.model.Post;
+import com.senla.model.User;
 import com.senla.service.PollService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Controller
+@RequiredArgsConstructor
 public class PollServlet extends HttpServlet {
-    @Autowired
-    private PollService pollService;
 
-    @Override
+    private final PollService pollService;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -97,7 +99,13 @@ public class PollServlet extends HttpServlet {
         UUID authorId = UUID.fromString(request.getParameter("authorId"));
         String description = request.getParameter("description");
 
-        PollCreateDto poll = ValidationUtil.validate(new PollCreateDto(postId, authorId, description));
+        Post post = new Post();
+        post.setId(postId);
+
+        User author = new User();
+        author.setId(authorId);
+
+        PollCreateDto poll = ValidationUtil.validate(new PollCreateDto(post, author, description));
 
         pollService.createPoll(poll);
         response.sendRedirect(request.getContextPath() + "/poll");

@@ -1,50 +1,26 @@
 package com.senla.dto.poll;
 
+import com.senla.model.Post;
+import com.senla.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.UUID;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class PollCreateDto {
-    @NotNull
-    private UUID postId;
 
     @NotNull
-    private UUID authorId;
+    private Post post;
+
+    @NotNull
+    private User author;
 
     @NotBlank
     private String description;
-
-    public PollCreateDto() {
-    }
-
-    public PollCreateDto(UUID postId, UUID authorId, String description) {
-        this.postId = postId;
-        this.authorId = authorId;
-        this.description = description;
-    }
-
-    public UUID getPostId() {
-        return postId;
-    }
-
-    public void setPostId(UUID postId) {
-        this.postId = postId;
-    }
-
-    public UUID getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(UUID authorId) {
-        this.authorId = authorId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

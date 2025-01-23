@@ -1,24 +1,26 @@
 package com.senla.controller;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.category.CategoryCreateDto;
 import com.senla.dto.category.CategoryGetDto;
+import com.senla.model.Category;
 import com.senla.service.CategoryService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Controller
+@RequiredArgsConstructor
 public class CategoryServlet extends HttpServlet {
-    @Autowired
-    private CategoryService categoryService;
+
+    private final CategoryService categoryService;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -94,11 +96,19 @@ public class CategoryServlet extends HttpServlet {
             throws IOException {
         String name = request.getParameter("name");
         String description = request.getParameter("description");
-
         String parentIdParam = request.getParameter("parentId");
-        UUID parentId = (parentIdParam == null || parentIdParam.isEmpty()) ? null : UUID.fromString(parentIdParam);
 
-        CategoryCreateDto category = ValidationUtil.validate(new CategoryCreateDto(name, description, parentId));
+        CategoryCreateDto category = new CategoryCreateDto();
+        category.setName(name);
+        category.setDescription(description);
+
+        if (!parentIdParam.isBlank()) {
+            Category parentCategory = new Category();
+            parentCategory.setId(UUID.fromString(parentIdParam));
+            category.setParentCategory(parentCategory);
+        }
+
+        ValidationUtil.validate(category);
 
         categoryService.createCategory(category);
         response.sendRedirect(request.getContextPath() + "/category");
@@ -109,11 +119,19 @@ public class CategoryServlet extends HttpServlet {
         UUID id = UUID.fromString(request.getParameter("id"));
         String name = request.getParameter("name");
         String description = request.getParameter("description");
-
         String parentIdParam = request.getParameter("parentId");
-        UUID parentId = (parentIdParam == null || parentIdParam.isEmpty()) ? null : UUID.fromString(parentIdParam);
 
-        CategoryCreateDto category = ValidationUtil.validate(new CategoryCreateDto(name, description, parentId));
+        CategoryCreateDto category = new CategoryCreateDto();
+        category.setName(name);
+        category.setDescription(description);
+
+        if (!parentIdParam.isBlank()) {
+            Category parentCategory = new Category();
+            parentCategory.setId(UUID.fromString(parentIdParam));
+            category.setParentCategory(parentCategory);
+        }
+
+        ValidationUtil.validate(category);
 
         categoryService.updateCategory(category, id);
         response.sendRedirect(request.getContextPath() + "/category");

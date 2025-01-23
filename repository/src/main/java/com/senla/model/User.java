@@ -15,8 +15,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,27 +44,28 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "created_date")
+    @CreationTimestamp
+    private Instant createdDate;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     @Setter(AccessLevel.NONE)
     @ToString.Exclude
     private Subscription subscription;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author", orphanRemoval = true)
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author", orphanRemoval = true)
     @ToString.Exclude
     private List<Poll> polls = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", orphanRemoval = true)
     @ToString.Exclude
     private List<Vote> votes = new ArrayList<>();
 
@@ -77,7 +79,7 @@ public class User {
     }
 
     public void addPost(Post post) {
-        post.setUser(this);
+        post.setAuthor(this);
         posts.add(post);
     }
 
@@ -86,7 +88,7 @@ public class User {
     }
 
     public void addPoll(Poll poll) {
-        poll.setUser(this);
+        poll.setAuthor(this);
         polls.add(poll);
     }
 
@@ -95,7 +97,7 @@ public class User {
     }
 
     public void addComment(Comment comment) {
-        comment.setUser(this);
+        comment.setAuthor(this);
         comments.add(comment);
     }
 
@@ -104,7 +106,7 @@ public class User {
     }
 
     public void addVote(Vote vote) {
-        vote.setUser(this);
+        vote.setOwner(this);
         votes.add(vote);
     }
 

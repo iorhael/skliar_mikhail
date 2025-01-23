@@ -8,9 +8,6 @@
 <h1>Edit Subscription</h1>
 <form action="update" method="post">
     <input type="hidden" name="id" value="${subscription.id}"/>
-    <label for="subscriptionPlanId">Subscription Plan Id</label>
-    <input type="text" id="subscriptionPlanId" name="subscriptionPlanId" required/>
-    <br/>
     <label for="expiresDate">Expires Date</label>
     <input type="datetime-local" id="expiresDate" name="expiresDate" value="${subscription.expiresDate}" required/>
     <br/>

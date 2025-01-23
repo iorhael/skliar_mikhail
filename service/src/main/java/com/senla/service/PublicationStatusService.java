@@ -1,18 +1,19 @@
 package com.senla.service;
 
-import com.senla.dto.publicationStatus.PublicationStatusDto;
+import com.senla.dto.publicationStatus.PublicationStatusCreateDto;
+import com.senla.dto.publicationStatus.PublicationStatusGetDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface PublicationStatusService {
-    PublicationStatusDto createPublicationStatus(PublicationStatusDto publicationStatus);
+    PublicationStatusGetDto createPublicationStatus(PublicationStatusCreateDto publicationStatus);
 
-    PublicationStatusDto getPublicationStatusById(UUID id);
+    PublicationStatusGetDto getPublicationStatusById(UUID id);
 
-    List<PublicationStatusDto> getAllPublicationStatuses();
+    List<PublicationStatusGetDto> getAllPublicationStatuses();
 
-    PublicationStatusDto updatePublicationStatus(PublicationStatusDto publicationStatus, UUID id);
+    PublicationStatusGetDto updatePublicationStatus(PublicationStatusGetDto publicationStatus, UUID id);
 
-    PublicationStatusDto deletePublicationStatus(UUID id);
+    PublicationStatusGetDto deletePublicationStatus(UUID id);
 }

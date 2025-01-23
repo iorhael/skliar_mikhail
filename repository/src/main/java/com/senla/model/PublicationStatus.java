@@ -18,7 +18,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -40,7 +40,7 @@ public class PublicationStatus {
     private PostStatus statusName;
 
     @Column(name = "scheduled_date")
-    private LocalDateTime scheduledDate;
+    private Instant scheduledDate;
 
     @OneToOne
     @JoinColumn(name = "post_id")

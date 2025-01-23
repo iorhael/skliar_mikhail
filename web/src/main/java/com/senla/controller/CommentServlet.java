@@ -1,27 +1,30 @@
 package com.senla.controller;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
+import com.senla.model.Comment;
+import com.senla.model.Post;
+import com.senla.model.User;
 import com.senla.service.CommentService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Controller
+@RequiredArgsConstructor
 public class CommentServlet extends HttpServlet {
-    @Autowired
-    private CommentService commentService;
 
-    @Override
+    private final CommentService commentService;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -96,11 +99,26 @@ public class CommentServlet extends HttpServlet {
         UUID postId = UUID.fromString(request.getParameter("postId"));
         UUID authorId = UUID.fromString(request.getParameter("authorId"));
         String content = request.getParameter("content");
-
         String parentIdParam = request.getParameter("parentId");
-        UUID parentId = (parentIdParam == null || parentIdParam.isEmpty()) ? null : UUID.fromString(parentIdParam);
 
-        CommentCreateDto comment = ValidationUtil.validate(new CommentCreateDto(postId, authorId, content, parentId));
+        CommentCreateDto comment = new CommentCreateDto();
+        comment.setContent(content);
+
+        Post post = new Post();
+        post.setId(postId);
+        comment.setPost(post);
+
+        User author = new User();
+        author.setId(authorId);
+        comment.setAuthor(author);
+
+        if (!parentIdParam.isBlank()) {
+            Comment parentComment = new Comment();
+            parentComment.setId(UUID.fromString(parentIdParam));
+            comment.setParentComment(parentComment);
+        }
+
+        ValidationUtil.validate(comment);
 
         commentService.createComment(comment);
         response.sendRedirect(request.getContextPath() + "/comment");

@@ -1,64 +1,27 @@
 package com.senla.dto.post;
 
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.Instant;
 import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class PostGetDto {
+
     private UUID id;
-    private UUID authorId;
+
+    private String authorName;
+
     private String title;
+
     private String content;
-    private LocalDateTime publicationDate;
 
-    public PostGetDto() {
-    }
-
-    public PostGetDto(UUID id, UUID authorId, String title, String content, LocalDateTime publicationDate) {
-        this.id = id;
-        this.authorId = authorId;
-        this.title = title;
-        this.content = content;
-        this.publicationDate = publicationDate;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(UUID authorId) {
-        this.authorId = authorId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public LocalDateTime getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(LocalDateTime publicationDate) {
-        this.publicationDate = publicationDate;
-    }
+    private Instant publicationDate;
 }
 

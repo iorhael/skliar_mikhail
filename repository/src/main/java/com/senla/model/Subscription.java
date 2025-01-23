@@ -15,10 +15,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "subscriptions")
@@ -33,11 +33,12 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @Column(name = "started_date", updatable = false)
-    private LocalDateTime startedDate;
+    @Column(name = "started_date")
+    @CreationTimestamp
+    private Instant startedDate;
 
     @Column(name = "expires_date")
-    private LocalDateTime expiresDate;
+    private Instant expiresDate;
 
     @OneToOne
     @JoinColumn(name = "user_id")

@@ -1,27 +1,30 @@
 package com.senla.controller;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.subscription.SubscriptionCreateDto;
 import com.senla.dto.subscription.SubscriptionGetDto;
 import com.senla.dto.subscription.SubscriptionUpdateDto;
+import com.senla.model.SubscriptionPlan;
+import com.senla.model.User;
 import com.senla.service.SubscriptionService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Controller
+@RequiredArgsConstructor
 public class SubscriptionServlet extends HttpServlet {
-    @Autowired
-    private SubscriptionService subscriptionService;
+
+    private final SubscriptionService subscriptionService;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -97,9 +100,15 @@ public class SubscriptionServlet extends HttpServlet {
             throws IOException {
         UUID userId = UUID.fromString(request.getParameter("userId"));
         UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
-        LocalDateTime expiresDate = validateDate(request.getParameter("expiresDate"));
+        Instant expiresDate = validateDate(request.getParameter("expiresDate"));
 
-        SubscriptionCreateDto subscription = ValidationUtil.validate(new SubscriptionCreateDto(userId, subscriptionPlanId, expiresDate));
+        User user = new User();
+        user.setId(userId);
+
+        SubscriptionPlan subscriptionPlan = new SubscriptionPlan();
+        subscriptionPlan.setId(subscriptionPlanId);
+
+        SubscriptionCreateDto subscription = ValidationUtil.validate(new SubscriptionCreateDto(user, subscriptionPlan, expiresDate));
 
         subscriptionService.createSubscription(subscription);
         response.sendRedirect(request.getContextPath() + "/subscription");
@@ -108,10 +117,9 @@ public class SubscriptionServlet extends HttpServlet {
     private void updateSubscription(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         UUID id = UUID.fromString(request.getParameter("id"));
-        UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
-        LocalDateTime expiresDate = validateDate(request.getParameter("expiresDate"));
+        Instant expiresDate = validateDate(request.getParameter("expiresDate"));
 
-        SubscriptionUpdateDto subscription = ValidationUtil.validate(new SubscriptionUpdateDto(subscriptionPlanId, expiresDate));
+        SubscriptionUpdateDto subscription = ValidationUtil.validate(new SubscriptionUpdateDto(expiresDate));
 
         subscriptionService.updateSubscription(subscription, id);
         response.sendRedirect(request.getContextPath() + "/subscription");
@@ -125,9 +133,9 @@ public class SubscriptionServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/subscription");
     }
 
-    private LocalDateTime validateDate(String date) {
+    private Instant validateDate(String date) {
         try {
-            return LocalDateTime.parse(date);
+            return Instant.parse(date);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid expiresDate format");
         }

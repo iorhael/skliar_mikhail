@@ -1,29 +1,31 @@
 package com.senla.controller;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.post.PostCreateDto;
 import com.senla.dto.post.PostGetDto;
 import com.senla.dto.post.PostUpdateDto;
+import com.senla.model.SubscriptionPlan;
+import com.senla.model.User;
 import com.senla.service.PostService;
 import com.senla.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Controller
+@RequiredArgsConstructor
 public class PostServlet extends HttpServlet {
-    @Autowired
-    private PostService postService;
 
-    @Override
+    private final PostService postService;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -98,10 +100,16 @@ public class PostServlet extends HttpServlet {
         UUID authorId = UUID.fromString(request.getParameter("authorId"));
         String title = request.getParameter("title");
         String content = request.getParameter("content");
-        LocalDateTime publicationDate = validateDate(request.getParameter("publicationDate"));
+        Instant publicationDate = validateDate(request.getParameter("publicationDate"));
         UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
 
-        PostCreateDto post = ValidationUtil.validate(new PostCreateDto(authorId, title, content, publicationDate, subscriptionPlanId));
+        User author = new User();
+        author.setId(authorId);
+
+        SubscriptionPlan subscriptionPlan = new SubscriptionPlan();
+        subscriptionPlan.setId(subscriptionPlanId);
+
+        PostCreateDto post = ValidationUtil.validate(new PostCreateDto(author, title, content, publicationDate, subscriptionPlan));
 
         postService.createPost(post);
         response.sendRedirect(request.getContextPath() + "/post");
@@ -112,10 +120,9 @@ public class PostServlet extends HttpServlet {
         UUID id = UUID.fromString(request.getParameter("id"));
         String title = request.getParameter("title");
         String content = request.getParameter("content");
-        LocalDateTime publicationDate = validateDate(request.getParameter("publicationDate"));
-        UUID subscriptionPlanId = UUID.fromString(request.getParameter("subscriptionPlanId"));
+        Instant publicationDate = validateDate(request.getParameter("publicationDate"));
 
-        PostUpdateDto post = ValidationUtil.validate(new PostUpdateDto(title, content, publicationDate, subscriptionPlanId));
+        PostUpdateDto post = ValidationUtil.validate(new PostUpdateDto(title, content, publicationDate));
 
         postService.updatePost(post, id);
         response.sendRedirect(request.getContextPath() + "/post");
@@ -129,9 +136,9 @@ public class PostServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/post");
     }
 
-    private LocalDateTime validateDate(String date) {
+    private Instant validateDate(String date) {
         try {
-            return LocalDateTime.parse(date);
+            return Instant.parse(date);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid expiresDate format");
         }

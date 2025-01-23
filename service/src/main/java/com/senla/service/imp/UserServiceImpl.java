@@ -1,62 +1,70 @@
 package com.senla.service.imp;
 
-import com.senla.di.annotation.Autowired;
-import com.senla.di.annotation.Component;
 import com.senla.dto.user.UserCreateDto;
 import com.senla.dto.user.UserGetDto;
 import com.senla.model.User;
 import com.senla.repository.UserRepository;
-import com.senla.repository.exception.UserNotFoundException;
 import com.senla.service.UserService;
-import com.senla.service.exception.user.UserCreateException;
+import com.senla.service.exception.ServiceException;
 import com.senla.service.exception.user.UserDeleteException;
 import com.senla.service.exception.user.UserUpdateException;
-import com.senla.util.ModelMapperUtil;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
 
+    private final UserRepository userRepository;
+
+    private final ModelMapper modelMapper;
+
+    @Transactional
     @Override
     public UserGetDto createUser(UserCreateDto user) {
-        User userEntity = ModelMapperUtil.MODEL_MAPPER.map(user, User.class);
+        User userEntity = modelMapper.map(user, User.class);
 
-        return userRepository.create(userEntity)
-                .map(u -> ModelMapperUtil.MODEL_MAPPER.map(u, UserGetDto.class))
-                .orElseThrow(() -> new UserCreateException("Can't create user"));
+        User createdUser = userRepository.create(userEntity);
+
+        return modelMapper.map(createdUser, UserGetDto.class);
     }
 
+    @Transactional
     @Override
     public UserGetDto getUserById(UUID id) {
-        return userRepository.getById(id)
-                .map(user -> ModelMapperUtil.MODEL_MAPPER.map(user, UserGetDto.class))
-                .orElseThrow(() -> new UserNotFoundException("No user found"));
+        return userRepository.findById(id)
+                .map(user -> modelMapper.map(user, UserGetDto.class))
+                .orElseThrow(() -> new ServiceException("No user found"));
     }
 
+    @Transactional
     @Override
     public List<UserGetDto> getAllUsers() {
-        return userRepository.getAll().stream()
-                .map(user -> ModelMapperUtil.MODEL_MAPPER.map(user, UserGetDto.class))
+        return userRepository.findAll().stream()
+                .map(user -> modelMapper.map(user, UserGetDto.class))
                 .toList();
     }
 
+    @Transactional
     @Override
     public UserGetDto updateUser(UserCreateDto user, UUID id) {
-        User userEntity = ModelMapperUtil.MODEL_MAPPER.map(user, User.class);
+        User userEntity = modelMapper.map(user, User.class);
 
         return userRepository.update(userEntity, id)
-                .map(u -> ModelMapperUtil.MODEL_MAPPER.map(u, UserGetDto.class))
+                .map(u -> modelMapper.map(u, UserGetDto.class))
                 .orElseThrow(() -> new UserUpdateException("Can't update user"));
     }
 
+    @Transactional
     @Override
     public UserGetDto deleteUser(UUID id) {
-        return userRepository.delete(id)
-                .map(user -> ModelMapperUtil.MODEL_MAPPER.map(user, UserGetDto.class))
+        return userRepository.deleteById(id)
+                .map(user -> modelMapper.map(user, UserGetDto.class))
                 .orElseThrow(() -> new UserDeleteException("Can't delete user"));
     }
 }

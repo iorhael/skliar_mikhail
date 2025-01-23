@@ -1,52 +1,29 @@
 package com.senla.dto.subscription;
 
+import com.senla.model.SubscriptionPlan;
+import com.senla.model.User;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.Instant;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class SubscriptionCreateDto {
-    @NotNull
-    private UUID userId;
 
     @NotNull
-    private UUID subscriptionPlanId;
+    private User user;
+
+    @NotNull
+    private SubscriptionPlan subscriptionPlan;
 
     @NotNull
     @FutureOrPresent
-    private LocalDateTime expiresDate;
-
-    public SubscriptionCreateDto(UUID userId, UUID subscriptionPlanId, LocalDateTime expiresDate) {
-        this.userId = userId;
-        this.subscriptionPlanId = subscriptionPlanId;
-        this.expiresDate = expiresDate;
-    }
-
-    public SubscriptionCreateDto() {
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getSubscriptionPlanId() {
-        return subscriptionPlanId;
-    }
-
-    public void setSubscriptionPlanId(UUID subscriptionPlanId) {
-        this.subscriptionPlanId = subscriptionPlanId;
-    }
-
-    public LocalDateTime getExpiresDate() {
-        return expiresDate;
-    }
-
-    public void setExpiresDate(LocalDateTime expiresDate) {
-        this.expiresDate = expiresDate;
-    }
+    private Instant expiresDate;
 }

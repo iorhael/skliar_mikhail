@@ -1,23 +1,17 @@
 package com.senla.dto.comment;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class CommentUpdateDto {
+
     @NotBlank
     private String content;
-
-    public CommentUpdateDto() {
-    }
-
-    public CommentUpdateDto(String content) {
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

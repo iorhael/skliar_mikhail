@@ -1,18 +1,20 @@
 package com.senla.service;
 
-import com.senla.dto.vote.VoteDto;
+import com.senla.dto.vote.VoteCreateDto;
+import com.senla.dto.vote.VoteGetDto;
+import com.senla.dto.vote.VoteUpdateDto;
 import com.senla.model.VoteId;
 
 import java.util.List;
 
 public interface VoteService {
-    VoteDto createVote(VoteDto vote);
+    VoteGetDto createVote(VoteCreateDto vote);
 
-    VoteDto getVoteById(VoteId id);
+    VoteGetDto getVoteById(VoteId id);
 
-    List<VoteDto> getAllVotes();
+    List<VoteGetDto> getAllVotes();
 
-    VoteDto updateVote(VoteDto vote, VoteId id);
+    VoteGetDto updateVote(VoteUpdateDto vote, VoteId id);
 
-    VoteDto deleteVote(VoteId id);
+    VoteGetDto deleteVote(VoteId id);
 }

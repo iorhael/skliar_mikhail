@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,8 +23,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,24 +54,26 @@ public class Post {
     @Column(name = "views_total")
     private Long viewsTotal;
 
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "created_date")
+    @CreationTimestamp
+    private Instant createdDate;
 
     @Column(name = "updated_date")
-    private LocalDateTime updatedDate;
+    @UpdateTimestamp
+    private Instant updatedDate;
 
     @Column(name = "publication_date")
-    private LocalDateTime publicationDate;
+    private Instant publicationDate;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "post")
     @Setter(AccessLevel.NONE)
     @ToString.Exclude
     private PublicationStatus publicationStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     @ToString.Exclude
-    private User user;
+    private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscription_plan_id")
@@ -127,5 +132,10 @@ public class Post {
 
     public void removeCategory(Category category) {
         categories.remove(category);
+    }
+
+    @PrePersist
+    public void prePersist() {
+        viewsTotal = (viewsTotal == null) ? 0L : viewsTotal;
     }
 }

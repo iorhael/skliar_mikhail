@@ -1,43 +1,22 @@
 package com.senla.dto.subscription;
 
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.Instant;
 import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class SubscriptionGetDto {
+
     private UUID id;
-    private LocalDateTime startedDate;
-    private LocalDateTime expiresDate;
 
-    public SubscriptionGetDto() {
-    }
+    private Instant startedDate;
 
-    public SubscriptionGetDto(UUID id, LocalDateTime startedDate, LocalDateTime expiresDate) {
-        this.id = id;
-        this.startedDate = startedDate;
-        this.expiresDate = expiresDate;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getStartedDate() {
-        return startedDate;
-    }
-
-    public void setStartedDate(LocalDateTime startedDate) {
-        this.startedDate = startedDate;
-    }
-
-    public LocalDateTime getExpiresDate() {
-        return expiresDate;
-    }
-
-    public void setExpiresDate(LocalDateTime expiresDate) {
-        this.expiresDate = expiresDate;
-    }
+    private Instant expiresDate;
 }
