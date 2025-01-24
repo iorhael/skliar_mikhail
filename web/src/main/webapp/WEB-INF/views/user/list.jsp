@@ -16,7 +16,7 @@
             <th>Email</th>
             <th>Actions</th>
         </tr>
-        <c:forEach var="user" items="${listUsers}">
+        <c:forEach var="user" items="${users}">
             <tr>
                 <td><c:out value="${user.id}"/></td>
                 <td><c:out value="${user.username}"/></td>

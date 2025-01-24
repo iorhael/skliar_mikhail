@@ -18,7 +18,7 @@
             <th>Publication Date</th>
             <th>Actions</th>
         </tr>
-        <c:forEach var="post" items="${listPosts}">
+        <c:forEach var="post" items="${posts}">
             <tr>
                 <td><c:out value="${post.id}"/></td>
                 <td><c:out value="${post.authorName}"/></td>

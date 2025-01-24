@@ -16,7 +16,7 @@
             <th>Description</th>
             <th>Actions</th>
         </tr>
-        <c:forEach var="poll" items="${listPolls}">
+        <c:forEach var="poll" items="${polls}">
             <tr>
                 <td><c:out value="${poll.id}"/></td>
                 <td><c:out value="${poll.authorName}"/></td>

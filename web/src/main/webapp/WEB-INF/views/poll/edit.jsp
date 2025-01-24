@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,13 +7,14 @@
 </head>
 <body>
 <h1>Edit Poll</h1>
-<form action="update" method="post">
-    <input type="hidden" name="id" value="${poll.id}"/>
-    <label for="description">Description</label>
-    <input type="text" id="description" name="description" value="${poll.description}" required/>
+<form:form action="update" method="post" modelAttribute="poll">
+    <input type="hidden" name="id" value="${id}"/>
+    Description:
+    <form:input path="description"/>
+    <form:errors path="description"/>
     <br/>
-    <button type="submit">Update</button>
-</form>
+    <button type="submit">Submit</button>
+</form:form>
 <a href="<c:url value='/poll'/>">Cancel</a>
 </body>
 </html>

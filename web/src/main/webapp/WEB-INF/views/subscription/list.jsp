@@ -16,7 +16,7 @@
             <th>Expires Date</th>
             <th>Actions</th>
         </tr>
-        <c:forEach var="subscription" items="${listSubscriptions}">
+        <c:forEach var="subscription" items="${subscriptions}">
             <tr>
                 <td><c:out value="${subscription.id}"/></td>
                 <td><c:out value="${subscription.startedDate}"/></td>

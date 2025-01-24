@@ -33,6 +33,7 @@ public class CategoryRepository extends BaseRepository<Category, UUID> {
         if (existingCategory != null) {
             existingCategory.setName(category.getName());
             existingCategory.setDescription(category.getDescription());
+            existingCategory.setParentCategory(category.getParentCategory());
         }
 
         return Optional.ofNullable(existingCategory);

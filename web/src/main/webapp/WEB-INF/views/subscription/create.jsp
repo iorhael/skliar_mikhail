@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,18 +7,23 @@
 </head>
 <body>
 <h1>Create New Subscription</h1>
-<form action="insert" method="post">
-    <label for="userId">User Id</label>
-    <input type="text" id="userId" name="userId" required/>
+<form:form action="insert" method="post" modelAttribute="subscription">
+    Expires Date:
+    <form:input path="expiresDate"/>
+    <form:errors path="expiresDate"/>
     <br/>
-    <label for="subscriptionPlanId">Subscription Plan Id</label>
-    <input type="text" id="subscriptionPlanId" name="subscriptionPlanId" required/>
+    User:
+    <form:select path="user.id">
+        <form:options items="${users}" itemValue="id" itemLabel="username"/>
+    </form:select>
     <br/>
-    <label for="expiresDate">Expires Date</label>
-    <input type="datetime-local" id="expiresDate" name="expiresDate" required/>
+    Subscription Plan:
+    <form:select path="subscriptionPlan.id">
+        <form:options items="${subscriptionPlans}" itemValue="id" itemLabel="name"/>
+    </form:select>
     <br/>
     <button type="submit">Create</button>
-</form>
+</form:form>
 <a href="<c:url value='/subscription'/>">Cancel</a>
 </body>
 </html>
