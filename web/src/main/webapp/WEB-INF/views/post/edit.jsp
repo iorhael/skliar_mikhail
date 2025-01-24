@@ -10,12 +10,12 @@
 <form:form action="update" method="post" modelAttribute="post">
     <input type="hidden" name="id" value="${id}"/>
     Title:
-    <form:input path="title" />
-    <form:errors path="title" />
+    <form:input path="title"/>
+    <form:errors path="title"/>
     <br/>
     Content:
-    <form:input path="content" />
-    <form:errors path="content" />
+    <form:input path="content"/>
+    <form:errors path="content"/>
     <br/>
     Publication Date:
     <form:input path="publicationDate"/>

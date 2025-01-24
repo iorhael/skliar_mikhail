@@ -3,8 +3,8 @@ package com.senla.controller;
 import com.senla.dto.subscription.SubscriptionCreateDto;
 import com.senla.dto.subscription.SubscriptionGetDto;
 import com.senla.dto.subscription.SubscriptionUpdateDto;
-import com.senla.service.SubscriptionService;
 import com.senla.service.SubscriptionPlanService;
+import com.senla.service.SubscriptionService;
 import com.senla.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,16 @@ import java.util.UUID;
 @RequestMapping("/subscription")
 @RequiredArgsConstructor
 public class SubscriptionController {
+    private static final String LIST_PATH = "subscription/list";
+    private static final String CREATE_PATH = "subscription/create";
+    private static final String EDIT_PATH = "subscription/edit";
+    private static final String LIST_REDIRECT_PATH = "redirect:/subscription";
+    private static final String CREATE_REDIRECT_PATH = "redirect:/subscription/new";
+    private static final String EDIT_REDIRECT_PATH = "redirect:/subscription/edit?id=";
+    private static final String SUBSCRIPTION_ATTRIBUTE_NAME = "subscription";
+    private static final String SUBSCRIPTIONS_ATTRIBUTE_NAME = "subscriptions";
+    private static final String USERS_ATTRIBUTE_NAME = "users";
+    private static final String SUBSCRIPTION_PLANS_ATTRIBUTE_NAME = "subscriptionPlans";
 
     private final SubscriptionService subscriptionService;
 
@@ -38,65 +48,65 @@ public class SubscriptionController {
     @GetMapping
     public String showListForm(Model model) {
         List<SubscriptionGetDto> subscriptions = subscriptionService.getAllSubscriptions();
-        model.addAttribute("subscriptions", subscriptions);
+        model.addAttribute(SUBSCRIPTIONS_ATTRIBUTE_NAME, subscriptions);
 
-        return "subscription/list";
+        return LIST_PATH;
     }
 
     @GetMapping("/new")
     public String showNewForm(Model model) {
-        if (!model.containsAttribute("subscription")) {
-            model.addAttribute("subscription", new SubscriptionCreateDto());
+        if (!model.containsAttribute(SUBSCRIPTION_ATTRIBUTE_NAME)) {
+            model.addAttribute(SUBSCRIPTION_ATTRIBUTE_NAME, new SubscriptionCreateDto());
         }
-        model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("subscriptionPlans", subscriptionPlanService.getAllSubscriptionPlans());
+        model.addAttribute(USERS_ATTRIBUTE_NAME, userService.getAllUsers());
+        model.addAttribute(SUBSCRIPTION_PLANS_ATTRIBUTE_NAME, subscriptionPlanService.getAllSubscriptionPlans());
 
-        return "subscription/create";
+        return CREATE_PATH;
     }
 
     @PostMapping("/insert")
-    public String createSubscription(@Valid @ModelAttribute("subscription") SubscriptionCreateDto subscription,
+    public String createSubscription(@Valid @ModelAttribute(SUBSCRIPTION_ATTRIBUTE_NAME) SubscriptionCreateDto subscription,
                                      BindingResult bindingResult,
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.subscription", bindingResult);
-            redirectAttributes.addFlashAttribute("subscription", subscription);
-            return "redirect:/subscription/new";
+            redirectAttributes.addFlashAttribute(SUBSCRIPTION_ATTRIBUTE_NAME, subscription);
+            return CREATE_REDIRECT_PATH;
         }
 
         subscriptionService.createSubscription(subscription);
-        return "redirect:/subscription";
+        return LIST_REDIRECT_PATH;
     }
 
     @GetMapping("/edit")
     public String showEditForm(@RequestParam UUID id, Model model) {
-        if (!model.containsAttribute("subscription")) {
+        if (!model.containsAttribute(SUBSCRIPTION_ATTRIBUTE_NAME)) {
             SubscriptionUpdateDto subscription = modelMapper.map(subscriptionService.getSubscriptionById(id), SubscriptionUpdateDto.class);
-            model.addAttribute("subscription", subscription);
+            model.addAttribute(SUBSCRIPTION_ATTRIBUTE_NAME, subscription);
         }
         model.addAttribute("id", id);
 
-        return "subscription/edit";
+        return EDIT_PATH;
     }
 
     @PostMapping("/update")
     public String updateSubscription(@RequestParam UUID id,
-                                     @Valid @ModelAttribute("subscription") SubscriptionUpdateDto subscription,
+                                     @Valid @ModelAttribute(SUBSCRIPTION_ATTRIBUTE_NAME) SubscriptionUpdateDto subscription,
                                      BindingResult bindingResult,
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.subscription", bindingResult);
-            redirectAttributes.addFlashAttribute("subscription", subscription);
-            return "redirect:/subscription/edit?id=" + id;
+            redirectAttributes.addFlashAttribute(SUBSCRIPTION_ATTRIBUTE_NAME, subscription);
+            return EDIT_REDIRECT_PATH + id;
         }
 
         subscriptionService.updateSubscription(subscription, id);
-        return "redirect:/subscription";
+        return LIST_REDIRECT_PATH;
     }
 
     @GetMapping("/delete")
     public String deleteSubscription(@RequestParam UUID id) {
         subscriptionService.deleteSubscription(id);
-        return "redirect:/subscription";
+        return LIST_REDIRECT_PATH;
     }
 }

@@ -3,7 +3,9 @@ package com.senla.config.modelmapper;
 import com.senla.dto.vote.VoteGetDto;
 import com.senla.model.Vote;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class VoteMappingsConfigurator implements ModelMapperConfigurator {
 
     @Override

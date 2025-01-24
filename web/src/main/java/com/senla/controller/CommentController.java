@@ -26,6 +26,16 @@ import java.util.UUID;
 @RequestMapping("/comment")
 @RequiredArgsConstructor
 public class CommentController {
+    private static final String LIST_PATH = "comment/list";
+    private static final String CREATE_PATH = "comment/create";
+    private static final String EDIT_PATH = "comment/edit";
+    private static final String LIST_REDIRECT_PATH = "redirect:/comment";
+    private static final String CREATE_REDIRECT_PATH = "redirect:/comment/new";
+    private static final String EDIT_REDIRECT_PATH = "redirect:/comment/edit?id=";
+    private static final String COMMENT_ATTRIBUTE_NAME = "comment";
+    private static final String COMMENTS_ATTRIBUTE_NAME = "comments";
+    private static final String POSTS_ATTRIBUTE_NAME = "posts";
+    private static final String AUTHORS_ATTRIBUTE_NAME = "authors";
 
     private final CommentService commentService;
 
@@ -38,68 +48,68 @@ public class CommentController {
     @GetMapping
     public String showListForm(Model model) {
         List<CommentGetDto> comments = commentService.getAllComments();
-        model.addAttribute("comments", comments);
+        model.addAttribute(COMMENT_ATTRIBUTE_NAME, comments);
 
-        return "comment/list";
+        return LIST_PATH;
     }
 
     @GetMapping("/new")
     public String showNewForm(Model model) {
-        if (!model.containsAttribute("comment")) {
-            model.addAttribute("comment", new CommentCreateDto());
+        if (!model.containsAttribute(COMMENT_ATTRIBUTE_NAME)) {
+            model.addAttribute(COMMENT_ATTRIBUTE_NAME, new CommentCreateDto());
         }
-        model.addAttribute("posts", postService.getAllPosts());
-        model.addAttribute("authors", userService.getAllUsers());
-        model.addAttribute("comments", commentService.getAllComments());
+        model.addAttribute(POSTS_ATTRIBUTE_NAME, postService.getAllPosts());
+        model.addAttribute(AUTHORS_ATTRIBUTE_NAME, userService.getAllUsers());
+        model.addAttribute(COMMENTS_ATTRIBUTE_NAME, commentService.getAllComments());
 
-        return "comment/create";
+        return CREATE_PATH;
     }
 
     @PostMapping("/insert")
-    public String createComment(@Valid @ModelAttribute("comment") CommentCreateDto comment,
-                                 BindingResult bindingResult,
-                                 RedirectAttributes redirectAttributes) {
+    public String createComment(@Valid @ModelAttribute(COMMENT_ATTRIBUTE_NAME) CommentCreateDto comment,
+                                BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.comment", bindingResult);
-            redirectAttributes.addFlashAttribute("comment", comment);
-            return "redirect:/comment/new";
+            redirectAttributes.addFlashAttribute(COMMENTS_ATTRIBUTE_NAME, comment);
+            return CREATE_REDIRECT_PATH;
         }
 
         if (comment.getParentComment().getId() == null) comment.setParentComment(null);
 
         commentService.createComment(comment);
-        return "redirect:/comment";
+        return LIST_REDIRECT_PATH;
     }
 
     @GetMapping("/edit")
     public String showEditForm(@RequestParam UUID id, Model model) {
-        if (!model.containsAttribute("comment")) {
+        if (!model.containsAttribute(COMMENT_ATTRIBUTE_NAME)) {
             CommentUpdateDto comment = modelMapper.map(commentService.getCommentById(id), CommentUpdateDto.class);
-            model.addAttribute("comment", comment);
+            model.addAttribute(COMMENT_ATTRIBUTE_NAME, comment);
         }
         model.addAttribute("id", id);
 
-        return "comment/edit";
+        return EDIT_PATH;
     }
 
     @PostMapping("/update")
     public String updateComment(@RequestParam UUID id,
-                                @Valid @ModelAttribute("comment") CommentUpdateDto comment,
+                                @Valid @ModelAttribute(COMMENT_ATTRIBUTE_NAME) CommentUpdateDto comment,
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.comment", bindingResult);
-            redirectAttributes.addFlashAttribute("comment", comment);
-            return "redirect:/comment/edit?id=" + id;
+            redirectAttributes.addFlashAttribute(COMMENT_ATTRIBUTE_NAME, comment);
+            return EDIT_REDIRECT_PATH + id;
         }
 
         commentService.updateComment(comment, id);
-        return "redirect:/comment";
+        return LIST_REDIRECT_PATH;
     }
 
     @GetMapping("/delete")
     public String deleteComment(@RequestParam UUID id) {
         commentService.deleteComment(id);
-        return "redirect:/comment";
+        return LIST_REDIRECT_PATH;
     }
 }

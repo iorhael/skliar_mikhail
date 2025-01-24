@@ -3,7 +3,9 @@ package com.senla.config.modelmapper;
 import com.senla.dto.post.PostGetDto;
 import com.senla.model.Post;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PostMappingsConfigurator implements ModelMapperConfigurator {
 
     @Override

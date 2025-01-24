@@ -26,6 +26,16 @@ import java.util.UUID;
 @RequestMapping("/poll")
 @RequiredArgsConstructor
 public class PollController {
+    private static final String LIST_PATH = "poll/list";
+    private static final String CREATE_PATH = "poll/create";
+    private static final String EDIT_PATH = "poll/edit";
+    private static final String LIST_REDIRECT_PATH = "redirect:/poll";
+    private static final String CREATE_REDIRECT_PATH = "redirect:/poll/new";
+    private static final String EDIT_REDIRECT_PATH = "redirect:/poll/edit?id=";
+    private static final String POLL_ATTRIBUTE_NAME = "poll";
+    private static final String POLLS_ATTRIBUTE_NAME = "polls";
+    private static final String POSTS_ATTRIBUTE_NAME = "posts";
+    private static final String AUTHORS_ATTRIBUTE_NAME = "authors";
 
     private final PollService pollService;
 
@@ -38,66 +48,66 @@ public class PollController {
     @GetMapping
     public String showListForm(Model model) {
         List<PollGetDto> polls = pollService.getAllPolls();
-        model.addAttribute("polls", polls);
+        model.addAttribute(POLLS_ATTRIBUTE_NAME, polls);
 
-        return "poll/list";
+        return LIST_PATH;
     }
 
     @GetMapping("/new")
     public String showNewForm(Model model) {
-        if (!model.containsAttribute("poll")) {
-            model.addAttribute("poll", new PollCreateDto());
+        if (!model.containsAttribute(POLL_ATTRIBUTE_NAME)) {
+            model.addAttribute(POLL_ATTRIBUTE_NAME, new PollCreateDto());
         }
-        model.addAttribute("posts", postService.getAllPosts());
-        model.addAttribute("authors", userService.getAllUsers());
-        model.addAttribute("polls", pollService.getAllPolls());
+        model.addAttribute(POSTS_ATTRIBUTE_NAME, postService.getAllPosts());
+        model.addAttribute(AUTHORS_ATTRIBUTE_NAME, userService.getAllUsers());
+        model.addAttribute(POLLS_ATTRIBUTE_NAME, pollService.getAllPolls());
 
-        return "poll/create";
+        return CREATE_PATH;
     }
 
     @PostMapping("/insert")
-    public String createPoll(@Valid @ModelAttribute("poll") PollCreateDto poll,
-                                BindingResult bindingResult,
-                                RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.poll", bindingResult);
-            redirectAttributes.addFlashAttribute("poll", poll);
-            return "redirect:/poll/new";
-        }
-
-        pollService.createPoll(poll);
-        return "redirect:/poll";
-    }
-
-    @GetMapping("/edit")
-    public String showEditForm(@RequestParam UUID id, Model model) {
-        if (!model.containsAttribute("poll")) {
-            PollUpdateDto poll = modelMapper.map(pollService.getPollById(id), PollUpdateDto.class);
-            model.addAttribute("poll", poll);
-        }
-        model.addAttribute("id", id);
-
-        return "poll/edit";
-    }
-
-    @PostMapping("/update")
-    public String updatePoll(@RequestParam UUID id,
-                             @Valid @ModelAttribute("poll") PollUpdateDto poll,
+    public String createPoll(@Valid @ModelAttribute(POLL_ATTRIBUTE_NAME) PollCreateDto poll,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.poll", bindingResult);
-            redirectAttributes.addFlashAttribute("poll", poll);
-            return "redirect:/poll/edit?id=" + id;
+            redirectAttributes.addFlashAttribute(POLL_ATTRIBUTE_NAME, poll);
+            return CREATE_REDIRECT_PATH;
+        }
+
+        pollService.createPoll(poll);
+        return LIST_REDIRECT_PATH;
+    }
+
+    @GetMapping("/edit")
+    public String showEditForm(@RequestParam UUID id, Model model) {
+        if (!model.containsAttribute(POLL_ATTRIBUTE_NAME)) {
+            PollUpdateDto poll = modelMapper.map(pollService.getPollById(id), PollUpdateDto.class);
+            model.addAttribute(POLL_ATTRIBUTE_NAME, poll);
+        }
+        model.addAttribute("id", id);
+
+        return EDIT_PATH;
+    }
+
+    @PostMapping("/update")
+    public String updatePoll(@RequestParam UUID id,
+                             @Valid @ModelAttribute(POLL_ATTRIBUTE_NAME) PollUpdateDto poll,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.poll", bindingResult);
+            redirectAttributes.addFlashAttribute(POLL_ATTRIBUTE_NAME, poll);
+            return EDIT_REDIRECT_PATH + id;
         }
 
         pollService.updatePoll(poll, id);
-        return "redirect:/poll";
+        return LIST_REDIRECT_PATH;
     }
 
     @GetMapping("/delete")
     public String deletePoll(@RequestParam UUID id) {
         pollService.deletePoll(id);
-        return "redirect:/poll";
+        return LIST_REDIRECT_PATH;
     }
 }

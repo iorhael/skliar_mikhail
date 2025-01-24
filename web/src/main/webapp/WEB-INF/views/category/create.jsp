@@ -8,12 +8,12 @@
 <h1>Create Category</h1>
 <form:form action="insert" method="post" modelAttribute="category">
     Name:
-    <form:input path="name" />
-    <form:errors path="name" />
+    <form:input path="name"/>
+    <form:errors path="name"/>
     <br/>
     Description:
-    <form:input path="description" />
-    <form:errors path="description" />
+    <form:input path="description"/>
+    <form:errors path="description"/>
     <br/>
     Parent Category:
     <form:select path="parentCategory.id">

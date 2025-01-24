@@ -3,8 +3,10 @@ package com.senla.config.modelmapper;
 import com.senla.dto.poll.PollGetDto;
 import com.senla.model.Poll;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class PollMappingsConfigurator implements ModelMapperConfigurator {
 
     @Override

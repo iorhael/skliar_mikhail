@@ -23,6 +23,14 @@ import java.util.UUID;
 @RequestMapping("/category")
 @RequiredArgsConstructor
 public class CategoryController {
+    private static final String LIST_PATH = "category/list";
+    private static final String CREATE_PATH = "category/create";
+    private static final String EDIT_PATH = "category/edit";
+    private static final String LIST_REDIRECT_PATH = "redirect:/category";
+    private static final String CREATE_REDIRECT_PATH = "redirect:/category/new";
+    private static final String EDIT_REDIRECT_PATH = "redirect:/category/edit?id=";
+    private static final String CATEGORY_ATTRIBUTE_NAME = "category";
+    private static final String CATEGORIES_ATTRIBUTE_NAME = "categories";
 
     private final CategoryService categoryService;
 
@@ -31,69 +39,69 @@ public class CategoryController {
     @GetMapping
     public String showListForm(Model model) {
         List<CategoryGetDto> categories = categoryService.getAllCategories();
-        model.addAttribute("categories", categories);
+        model.addAttribute(CATEGORIES_ATTRIBUTE_NAME, categories);
 
-        return "category/list";
+        return LIST_PATH;
     }
 
     @GetMapping("/new")
     public String showNewForm(Model model) {
-        if (!model.containsAttribute("category")) {
-            model.addAttribute("category", new CategoryCreateDto());
+        if (!model.containsAttribute(CATEGORY_ATTRIBUTE_NAME)) {
+            model.addAttribute(CATEGORY_ATTRIBUTE_NAME, new CategoryCreateDto());
         }
-        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute(CATEGORIES_ATTRIBUTE_NAME, categoryService.getAllCategories());
 
-        return "category/create";
+        return CREATE_PATH;
     }
 
     @PostMapping("/insert")
-    public String createCategory(@Valid @ModelAttribute("category") CategoryCreateDto category,
+    public String createCategory(@Valid @ModelAttribute(CATEGORY_ATTRIBUTE_NAME) CategoryCreateDto category,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.category", bindingResult);
-            redirectAttributes.addFlashAttribute("category", category);
-            return "redirect:/category/new";
+            redirectAttributes.addFlashAttribute(CATEGORY_ATTRIBUTE_NAME, category);
+            return CREATE_REDIRECT_PATH;
         }
 
         if (category.getParentCategory().getId() == null) category.setParentCategory(null);
 
         categoryService.createCategory(category);
-        return "redirect:/category";
+        return LIST_REDIRECT_PATH;
     }
 
     @GetMapping("/edit")
     public String showEditForm(@RequestParam UUID id, Model model) {
-        if (!model.containsAttribute("category")) {
+        if (!model.containsAttribute(CATEGORY_ATTRIBUTE_NAME)) {
             CategoryCreateDto category = modelMapper.map(categoryService.getCategoryById(id), CategoryCreateDto.class);
-            model.addAttribute("category", category);
+            model.addAttribute(CATEGORY_ATTRIBUTE_NAME, category);
         }
         model.addAttribute("id", id);
-        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute(CATEGORIES_ATTRIBUTE_NAME, categoryService.getAllCategories());
 
-        return "category/edit";
+        return EDIT_PATH;
     }
 
     @PostMapping("/update")
     public String updateCategory(@RequestParam UUID id,
-                                 @Valid @ModelAttribute("category") CategoryCreateDto category,
+                                 @Valid @ModelAttribute(CATEGORY_ATTRIBUTE_NAME) CategoryCreateDto category,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.category", bindingResult);
-            redirectAttributes.addFlashAttribute("category", category);
-            return "redirect:/category/edit?id=" + id;
+            redirectAttributes.addFlashAttribute(CATEGORY_ATTRIBUTE_NAME, category);
+            return EDIT_REDIRECT_PATH + id;
         }
 
         if (category.getParentCategory().getId() == null) category.setParentCategory(null);
 
         categoryService.updateCategory(category, id);
-        return "redirect:/category";
+        return LIST_REDIRECT_PATH;
     }
 
     @GetMapping("/delete")
     public String deleteCategory(@RequestParam UUID id) {
         categoryService.deleteCategory(id);
-        return "redirect:/category";
+        return LIST_REDIRECT_PATH;
     }
 }

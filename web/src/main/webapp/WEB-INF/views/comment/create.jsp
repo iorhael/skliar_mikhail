@@ -9,8 +9,8 @@
 <h1>Create New Comment</h1>
 <form:form action="insert" method="post" modelAttribute="comment">
     Content:
-    <form:input path="content" />
-    <form:errors path="content" />
+    <form:input path="content"/>
+    <form:errors path="content"/>
     <br/>
     Post:
     <form:select path="post.id">

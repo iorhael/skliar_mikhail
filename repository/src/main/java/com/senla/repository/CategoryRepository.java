@@ -1,7 +1,6 @@
 package com.senla.repository;
 
 import com.senla.model.Category;
-import com.senla.model.Comment;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

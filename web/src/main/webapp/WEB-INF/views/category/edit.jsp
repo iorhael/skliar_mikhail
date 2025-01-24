@@ -10,12 +10,12 @@
 <form:form action="update" method="post" modelAttribute="category">
     <input type="hidden" name="id" value="${id}"/>
     Name:
-    <form:input path="name" />
-    <form:errors path="name" />
+    <form:input path="name"/>
+    <form:errors path="name"/>
     <br/>
     Description:
-    <form:input path="description" />
-    <form:errors path="description" />
+    <form:input path="description"/>
+    <form:errors path="description"/>
     <br/>
     Parent Category:
     <form:select path="parentCategory.id">

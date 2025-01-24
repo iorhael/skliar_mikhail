@@ -9,8 +9,8 @@
 <h1>Create New Poll</h1>
 <form:form action="insert" method="post" modelAttribute="poll">
     Content:
-    <form:input path="description" />
-    <form:errors path="description" />
+    <form:input path="description"/>
+    <form:errors path="description"/>
     <br/>
     Post:
     <form:select path="post.id">
