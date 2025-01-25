@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,19 +7,22 @@
 </head>
 <body>
 <h1>Edit User</h1>
-<form action="update" method="post">
-    <input type="hidden" name="id" value="${user.id}"/>
-    <label for="username">Name</label>
-    <input type="text" id="username" name="username" value="${user.username}" required/>
+<form:form action="update" method="post" modelAttribute="user">
+    <input type="hidden" name="id" value="${id}"/>
+    Name:
+    <form:input path="username"/>
+    <form:errors path="username"/>
     <br/>
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" value="${user.email}" required/>
+    Email:
+    <form:input path="email" type="email"/>
+    <form:errors path="email"/>
     <br/>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required/>
+    Password:
+    <form:password path="password"/>
+    <form:errors path="password"/>
     <br/>
-    <button type="submit">Update</button>
-</form>
+    <button type="submit">Submit</button>
+</form:form>
 <a href="<c:url value='/user'/>">Cancel</a>
 </body>
 </html>

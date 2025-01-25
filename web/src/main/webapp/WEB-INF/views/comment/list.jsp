@@ -17,7 +17,7 @@
             <th>Created Date</th>
             <th>Actions</th>
         </tr>
-        <c:forEach var="comment" items="${listComments}">
+        <c:forEach var="comment" items="${comments}">
             <tr>
                 <td><c:out value="${comment.id}"/></td>
                 <td><c:out value="${comment.authorName}"/></td>

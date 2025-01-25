@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,21 +7,29 @@
 </head>
 <body>
 <h1>Create New Comment</h1>
-<form action="insert" method="post">
-    <label for="postId">Post Id</label>
-    <input type="text" id="postId" name="postId" required/>
+<form:form action="insert" method="post" modelAttribute="comment">
+    Content:
+    <form:input path="content"/>
+    <form:errors path="content"/>
     <br/>
-    <label for="authorId">Author Id</label>
-    <input type="text" id="authorId" name="authorId" required/>
+    Post:
+    <form:select path="post.id">
+        <form:options items="${posts}" itemValue="id" itemLabel="title"/>
+    </form:select>
     <br/>
-    <label for="content">Content</label>
-    <input type="text" id="content" name="content" required/>
+    Author:
+    <form:select path="author.id">
+        <form:options items="${authors}" itemValue="id" itemLabel="username"/>
+    </form:select>
     <br/>
-    <label for="parentId">Parent Id</label>
-    <input type="text" id="parentId" name="parentId"/>
+    Parent Comment:
+    <form:select path="parentComment.id">
+        <form:option value="">&nbsp;</form:option>
+        <form:options items="${comments}" itemValue="id" itemLabel="content"/>
+    </form:select>
     <br/>
     <button type="submit">Create</button>
-</form>
+</form:form>
 <a href="<c:url value='/comment'/>">Cancel</a>
 </body>
 </html>

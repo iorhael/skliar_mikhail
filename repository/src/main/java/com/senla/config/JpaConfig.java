@@ -16,7 +16,6 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 public class JpaConfig {
-
     private static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     private static final String HIBERNATE_GENERATE_STATISTICS = "hibernate.generate_statistics";
     private static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";

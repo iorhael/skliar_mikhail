@@ -1,7 +1,6 @@
 package com.senla.repository;
 
 import com.senla.model.Category;
-import com.senla.model.Comment;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -33,6 +32,7 @@ public class CategoryRepository extends BaseRepository<Category, UUID> {
         if (existingCategory != null) {
             existingCategory.setName(category.getName());
             existingCategory.setDescription(category.getDescription());
+            existingCategory.setParentCategory(category.getParentCategory());
         }
 
         return Optional.ofNullable(existingCategory);

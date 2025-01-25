@@ -9,7 +9,7 @@
 <body>
 <div>
     <h1>400 - Bad Request</h1>
-    <p>Sorry, your request is invalid. Please check your input and try again.</p>
+    <p>${message}</p>
     <a href="<c:url value='/'/>">Go to Home Page</a>
 </div>
 </body>

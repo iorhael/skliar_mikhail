@@ -16,7 +16,7 @@
             <th>Description</th>
             <th>Actions</th>
         </tr>
-        <c:forEach var="category" items="${listCategories}">
+        <c:forEach var="category" items="${categories}">
             <tr>
                 <td><c:out value="${category.id}"/></td>
                 <td><c:out value="${category.name}"/></td>
