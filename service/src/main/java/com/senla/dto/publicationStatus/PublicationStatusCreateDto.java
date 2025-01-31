@@ -1,6 +1,5 @@
 package com.senla.dto.publicationStatus;
 
-import com.senla.model.Post;
 import com.senla.model.PostStatus;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +18,7 @@ import java.time.Instant;
 public class PublicationStatusCreateDto {
 
     @NotNull
-    private Post post;
+    private UUID postId;
 
     @NotNull
     private PostStatus statusName;

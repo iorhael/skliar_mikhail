@@ -4,12 +4,15 @@ import com.senla.dto.subscription.SubscriptionCreateDto;
 import com.senla.dto.subscription.SubscriptionGetDto;
 import com.senla.dto.subscription.SubscriptionUpdateDto;
 import com.senla.model.Subscription;
+import com.senla.model.SubscriptionPlan;
+import com.senla.model.User;
+import com.senla.repository.SubscriptionPlanRepository;
 import com.senla.repository.SubscriptionRepository;
+import com.senla.repository.UserRepository;
 import com.senla.service.SubscriptionService;
-import com.senla.service.exception.ServiceException;
-import com.senla.service.exception.subscription.SubscriptionDeleteException;
-import com.senla.service.exception.subscription.SubscriptionUpdateException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,55 +20,70 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
+    public static final String SUBSCRIPTION_NOT_FOUND = "Subscription not found";
 
     private final SubscriptionRepository subscriptionRepository;
 
+    private final UserRepository userRepository;
+
+    private final SubscriptionPlanRepository subscriptionPlanRepository;
+
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
-    public SubscriptionGetDto createSubscription(SubscriptionCreateDto subscription) {
-        Subscription subscriptionEntity = modelMapper.map(subscription, Subscription.class);
+    @Transactional
+    public SubscriptionGetDto createSubscription(SubscriptionCreateDto subscriptionCreateDto) {
+        Subscription subscription = modelMapper.map(subscriptionCreateDto, Subscription.class);
 
-        Subscription createdSubscription = subscriptionRepository.create(subscriptionEntity);
+        User user = userRepository.getReferenceById(subscriptionCreateDto.getUserId());
+        SubscriptionPlan subscriptionPlan = subscriptionPlanRepository.getReferenceById(subscriptionCreateDto.getSubscriptionPlanId());
 
-        return modelMapper.map(createdSubscription, SubscriptionGetDto.class);
+        subscription.setUser(user);
+        subscription.setSubscriptionPlan(subscriptionPlan);
+
+        log.info("Trying to create subscription with user id {} and subscription plan id {}",
+                user.getId(),
+                subscriptionPlan.getId());
+
+        subscriptionRepository.save(subscription);
+
+        log.info("Subscription with id {} created successfully", subscription.getId());
+
+        return modelMapper.map(subscription, SubscriptionGetDto.class);
     }
 
-    @Transactional
     @Override
     public SubscriptionGetDto getSubscriptionById(UUID id) {
         return subscriptionRepository.findById(id)
                 .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
-                .orElseThrow(() -> new ServiceException("Subscription not found"));
+                .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public List<SubscriptionGetDto> getAllSubscriptions() {
-        return subscriptionRepository.findAll().stream()
+        return subscriptionRepository.findAll()
+                .stream()
                 .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
                 .toList();
     }
 
-    @Transactional
     @Override
-    public SubscriptionGetDto updateSubscription(SubscriptionUpdateDto subscription, UUID id) {
-        Subscription subscriptionEntity = modelMapper.map(subscription, Subscription.class);
+    @Transactional
+    public SubscriptionGetDto updateSubscription(SubscriptionUpdateDto subscriptionUpdateDto, UUID id) {
+        Subscription subscription = subscriptionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_NOT_FOUND));
 
-        return subscriptionRepository.update(subscriptionEntity, id)
-                .map(s -> modelMapper.map(s, SubscriptionGetDto.class))
-                .orElseThrow(() -> new SubscriptionUpdateException("Can't update subscription"));
+        subscription.setExpiresDate(subscriptionUpdateDto.getExpiresDate());
+
+        return modelMapper.map(subscription, SubscriptionGetDto.class);
     }
 
-    @Transactional
     @Override
-    public SubscriptionGetDto deleteSubscription(UUID id) {
-        return subscriptionRepository.deleteById(id)
-                .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
-                .orElseThrow(() -> new SubscriptionDeleteException("Can't delete subscription"));
+    public void deleteSubscription(UUID id) {
+        subscriptionRepository.deleteById(id);
     }
 }

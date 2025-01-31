@@ -16,5 +16,5 @@ public interface PostService {
 
     PostGetDto updatePost(PostUpdateDto post, UUID id);
 
-    PostGetDto deletePost(UUID id);
+    void deletePost(UUID id);
 }

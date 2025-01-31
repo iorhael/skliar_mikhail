@@ -16,5 +16,5 @@ public interface VoteService {
 
     VoteGetDto updateVote(VoteUpdateDto vote, VoteId id);
 
-    VoteGetDto deleteVote(VoteId id);
+    void deleteVote(VoteId id);
 }

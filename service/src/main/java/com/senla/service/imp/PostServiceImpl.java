@@ -4,12 +4,15 @@ import com.senla.dto.post.PostCreateDto;
 import com.senla.dto.post.PostGetDto;
 import com.senla.dto.post.PostUpdateDto;
 import com.senla.model.Post;
+import com.senla.model.SubscriptionPlan;
+import com.senla.model.User;
 import com.senla.repository.PostRepository;
+import com.senla.repository.SubscriptionPlanRepository;
+import com.senla.repository.UserRepository;
 import com.senla.service.PostService;
-import com.senla.service.exception.ServiceException;
-import com.senla.service.exception.post.PostDeleteException;
-import com.senla.service.exception.post.PostUpdateException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,56 +20,72 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
+    public static final String POST_NOT_FOUND = "Post not found";
 
     private final PostRepository postRepository;
 
+    private final UserRepository userRepository;
+
+    private final SubscriptionPlanRepository subscriptionPlanRepository;
+
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
-    public PostGetDto createPost(PostCreateDto post) {
-        Post postEntity = modelMapper.map(post, Post.class);
+    @Transactional
+    public PostGetDto createPost(PostCreateDto postCreateDto) {
+        Post post = modelMapper.map(postCreateDto, Post.class);
 
-        Post createdPost = postRepository.create(postEntity);
+        User author = userRepository.getReferenceById(postCreateDto.getAuthorId());
+        SubscriptionPlan subscriptionPlan = subscriptionPlanRepository.getReferenceById(postCreateDto.getSubscriptionPlanId());
 
-        return modelMapper.map(createdPost, PostGetDto.class);
+        post.setAuthor(author);
+        post.setSubscriptionPlan(subscriptionPlan);
+
+        log.info("Trying to create post with user id {} and subscription plan id {}",
+                author.getId(),
+                subscriptionPlan.getId());
+
+        postRepository.save(post);
+
+        log.info("Post with id {} created successfully", post.getId());
+
+        return modelMapper.map(post, PostGetDto.class);
     }
 
-    @Transactional
     @Override
     public PostGetDto getPostById(UUID id) {
         return postRepository.findById(id)
                 .map(post -> modelMapper.map(post, PostGetDto.class))
-                .orElseThrow(() -> new ServiceException("No post found"));
+                .orElseThrow(() -> new EntityNotFoundException(POST_NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public List<PostGetDto> getAllPosts() {
-        return postRepository.findAll().stream()
+        return postRepository.findAll()
+                .stream()
                 .map(post -> modelMapper.map(post, PostGetDto.class))
                 .toList();
     }
 
-    @Transactional
     @Override
-    public PostGetDto updatePost(PostUpdateDto post, UUID id) {
-        Post postEntity = modelMapper.map(post, Post.class);
-        postEntity.setViewsTotal(0L); // Update when the post views functionality will be added
+    @Transactional
+    public PostGetDto updatePost(PostUpdateDto postUpdateDto, UUID id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(POST_NOT_FOUND));
 
-        return postRepository.update(postEntity, id)
-                .map(p -> modelMapper.map(p, PostGetDto.class))
-                .orElseThrow(() -> new PostUpdateException("Can't update post"));
+        post.setTitle(postUpdateDto.getTitle());
+        post.setContent(postUpdateDto.getContent());
+        post.setPublicationDate(postUpdateDto.getPublicationDate());
+
+        return modelMapper.map(post, PostGetDto.class);
     }
 
-    @Transactional
     @Override
-    public PostGetDto deletePost(UUID id) {
-        return postRepository.deleteById(id)
-                .map(post -> modelMapper.map(post, PostGetDto.class))
-                .orElseThrow(() -> new PostDeleteException("Can't delete post"));
+    public void deletePost(UUID id) {
+        postRepository.deleteById(id);
     }
 }

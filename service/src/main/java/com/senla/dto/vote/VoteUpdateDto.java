@@ -1,11 +1,12 @@
 package com.senla.dto.vote;
 
-import com.senla.model.PollOption;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,5 +15,5 @@ import lombok.Setter;
 public class VoteUpdateDto {
 
     @NotNull
-    private PollOption pollOption;
+    private UUID pollOptionId;
 }

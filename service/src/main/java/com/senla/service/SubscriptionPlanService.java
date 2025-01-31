@@ -14,5 +14,5 @@ public interface SubscriptionPlanService {
 
     SubscriptionPlanDto updateSubscriptionPlan(SubscriptionPlanDto subscriptionPlan, UUID id);
 
-    SubscriptionPlanDto deleteSubscriptionPlan(UUID id);
+    void deleteSubscriptionPlan(UUID id);
 }
