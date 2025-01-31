@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequestMapping("/api/subscriptions")
 @RequiredArgsConstructor
 public class SubscriptionController {
-    private static final String SUBSCRIPTION_DELETION_MESSAGE = "Subscription deleted successfully";
+    private static final String SUBSCRIPTION_DELETION_MESSAGE = "Subscription with id %s deleted successfully";
 
     private final SubscriptionService subscriptionService;
 
@@ -60,7 +60,7 @@ public class SubscriptionController {
         subscriptionService.deleteSubscription(id);
 
         return ResponseInfoDto.builder()
-                .message(SUBSCRIPTION_DELETION_MESSAGE)
+                .message(String.format(SUBSCRIPTION_DELETION_MESSAGE, id))
                 .build();
     }
 }

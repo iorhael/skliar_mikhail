@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequestMapping("/api/polls")
 @RequiredArgsConstructor
 public class PollController {
-    private static final String POLL_DELETION_MESSAGE = "Poll deleted successfully";
+    private static final String POLL_DELETION_MESSAGE = "Poll with id %s deleted successfully";
 
     private final PollService pollService;
 
@@ -60,7 +60,7 @@ public class PollController {
         pollService.deletePoll(id);
 
         return ResponseInfoDto.builder()
-                .message(POLL_DELETION_MESSAGE)
+                .message(String.format(POLL_DELETION_MESSAGE, id))
                 .build();
     }
 }

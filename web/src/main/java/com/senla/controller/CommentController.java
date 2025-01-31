@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor
 public class CommentController {
-    private static final String COMMENT_DELETION_MESSAGE = "Comment deleted successfully";
+    private static final String COMMENT_DELETION_MESSAGE = "Comment with id %s deleted successfully";
 
     private final CommentServiceImpl commentService;
 
@@ -60,7 +60,7 @@ public class CommentController {
         commentService.deleteComment(id);
 
         return ResponseInfoDto.builder()
-                .message(COMMENT_DELETION_MESSAGE)
+                .message(String.format(COMMENT_DELETION_MESSAGE, id))
                 .build();
     }
 }

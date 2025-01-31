@@ -24,7 +24,7 @@ import java.util.UUID;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
-    private static final String CATEGORY_DELETION_MESSAGE = "Category deleted successfully";
+    private static final String CATEGORY_DELETION_MESSAGE = "Category deleted with id %s successfully";
 
     private final CategoryService categoryService;
 
@@ -59,7 +59,7 @@ public class CategoryController {
         categoryService.deleteCategory(id);
 
         return ResponseInfoDto.builder()
-                .message(CATEGORY_DELETION_MESSAGE)
+                .message(String.format(CATEGORY_DELETION_MESSAGE, id))
                 .build();
     }
 }

@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostController {
-    private static final String POST_DELETION_MESSAGE = "Post deleted successfully";
+    private static final String POST_DELETION_MESSAGE = "Post with id %s deleted successfully";
 
     private final PostService postService;
 
@@ -60,7 +60,7 @@ public class PostController {
         postService.deletePost(id);
 
         return ResponseInfoDto.builder()
-                .message(POST_DELETION_MESSAGE)
+                .message(String.format(POST_DELETION_MESSAGE, id))
                 .build();
     }
 }

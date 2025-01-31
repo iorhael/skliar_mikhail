@@ -26,7 +26,7 @@ import java.util.UUID;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private static final String USER_DELETION_MESSAGE = "User deleted successfully";
+    private static final String USER_DELETION_MESSAGE = "User with id %s deleted successfully";
 
     private final UserService userService;
 
@@ -65,7 +65,7 @@ public class UserController {
         log.info("Farewell {}", id);
 
         return ResponseInfoDto.builder()
-                .message(USER_DELETION_MESSAGE)
+                .message(String.format(USER_DELETION_MESSAGE, id))
                 .build();
     }
 }
