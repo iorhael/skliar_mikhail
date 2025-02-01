@@ -5,10 +5,9 @@ import com.senla.dto.user.UserGetDto;
 import com.senla.model.User;
 import com.senla.repository.UserRepository;
 import com.senla.service.UserService;
-import com.senla.service.exception.ServiceException;
-import com.senla.service.exception.user.UserDeleteException;
-import com.senla.service.exception.user.UserUpdateException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,55 +15,59 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    public static final String USER_NOT_FOUND = "User not found";
 
     private final UserRepository userRepository;
 
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
-    public UserGetDto createUser(UserCreateDto user) {
-        User userEntity = modelMapper.map(user, User.class);
+    public UserGetDto createUser(UserCreateDto userCreateDto) {
+        User user = modelMapper.map(userCreateDto, User.class);
 
-        User createdUser = userRepository.create(userEntity);
+        log.info("Trying to create user with email {}", user.getEmail());
 
-        return modelMapper.map(createdUser, UserGetDto.class);
+        userRepository.save(user);
+
+        log.info("User with id {} created successfully", user.getId());
+
+        return modelMapper.map(user, UserGetDto.class);
     }
 
-    @Transactional
     @Override
     public UserGetDto getUserById(UUID id) {
         return userRepository.findById(id)
                 .map(user -> modelMapper.map(user, UserGetDto.class))
-                .orElseThrow(() -> new ServiceException("No user found"));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public List<UserGetDto> getAllUsers() {
-        return userRepository.findAll().stream()
+        return userRepository.findAll()
+                .stream()
                 .map(user -> modelMapper.map(user, UserGetDto.class))
                 .toList();
     }
 
-    @Transactional
     @Override
-    public UserGetDto updateUser(UserCreateDto user, UUID id) {
-        User userEntity = modelMapper.map(user, User.class);
+    @Transactional
+    public UserGetDto updateUser(UserCreateDto userCreateDto, UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        return userRepository.update(userEntity, id)
-                .map(u -> modelMapper.map(u, UserGetDto.class))
-                .orElseThrow(() -> new UserUpdateException("Can't update user"));
+        user.setUsername(userCreateDto.getUsername());
+        user.setEmail(userCreateDto.getEmail());
+        user.setPassword(userCreateDto.getPassword());
+
+        return modelMapper.map(user, UserGetDto.class);
     }
 
-    @Transactional
     @Override
-    public UserGetDto deleteUser(UUID id) {
-        return userRepository.deleteById(id)
-                .map(user -> modelMapper.map(user, UserGetDto.class))
-                .orElseThrow(() -> new UserDeleteException("Can't delete user"));
+    public void deleteUser(UUID id) {
+        userRepository.deleteById(id);
     }
 }

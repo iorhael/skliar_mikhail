@@ -23,6 +23,6 @@ public class UserCreateDto {
     private String email;
 
     @NotBlank
-    @Length(min = 5)
+    @Length(min = 5, max = 32)
     private String password;
 }

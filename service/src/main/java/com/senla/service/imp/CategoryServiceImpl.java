@@ -5,66 +5,72 @@ import com.senla.dto.category.CategoryGetDto;
 import com.senla.model.Category;
 import com.senla.repository.CategoryRepository;
 import com.senla.service.CategoryService;
-import com.senla.service.exception.ServiceException;
-import com.senla.service.exception.category.CategoryDeleteException;
-import com.senla.service.exception.category.CategoryUpdateException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
+    public static final String CATEGORY_NOT_FOUND = "Category not found";
 
     private final CategoryRepository categoryRepository;
 
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
-    public CategoryGetDto createCategory(CategoryCreateDto category) {
-        Category categoryEntity = modelMapper.map(category, Category.class);
+    @Transactional
+    public CategoryGetDto createCategory(CategoryCreateDto categoryCreateDto) {
+        Category category = modelMapper.map(categoryCreateDto, Category.class);
 
-        Category createdCategory = categoryRepository.create(categoryEntity);
+        Optional.ofNullable(categoryCreateDto.getParentId())
+                .map(categoryRepository::getReferenceById)
+                .ifPresent(category::setParentCategory);
 
-        return modelMapper.map(createdCategory, CategoryGetDto.class);
+        categoryRepository.save(category);
+
+        return modelMapper.map(category, CategoryGetDto.class);
     }
 
-    @Transactional
     @Override
     public CategoryGetDto getCategoryById(UUID id) {
         return categoryRepository.findById(id)
                 .map(category -> modelMapper.map(category, CategoryGetDto.class))
-                .orElseThrow(() -> new ServiceException("No category found"));
+                .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public List<CategoryGetDto> getAllCategories() {
-        return categoryRepository.findAll().stream()
+        return categoryRepository.findAll()
+                .stream()
                 .map(category -> modelMapper.map(category, CategoryGetDto.class))
                 .toList();
     }
 
-    @Transactional
     @Override
-    public CategoryGetDto updateCategory(CategoryCreateDto category, UUID id) {
-        Category categoryEntity = modelMapper.map(category, Category.class);
+    @Transactional
+    public CategoryGetDto updateCategory(CategoryCreateDto categoryCreateDto, UUID id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
 
-        return categoryRepository.update(categoryEntity, id)
-                .map(c -> modelMapper.map(c, CategoryGetDto.class))
-                .orElseThrow(() -> new CategoryUpdateException("Can't update category"));
+        Optional.ofNullable(categoryCreateDto.getParentId())
+                .map(categoryRepository::getReferenceById)
+                .ifPresent(category::setParentCategory);
+
+        category.setName(categoryCreateDto.getName());
+        category.setDescription(categoryCreateDto.getDescription());
+
+        return modelMapper.map(category, CategoryGetDto.class);
     }
 
-    @Transactional
     @Override
-    public CategoryGetDto deleteCategory(UUID id) {
-        return categoryRepository.deleteById(id)
-                .map(category -> modelMapper.map(category, CategoryGetDto.class))
-                .orElseThrow(() -> new CategoryDeleteException("Can't delete category"));
+    public void deleteCategory(UUID id) {
+        categoryRepository.deleteById(id);
     }
 }

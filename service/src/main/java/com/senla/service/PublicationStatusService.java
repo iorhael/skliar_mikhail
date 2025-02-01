@@ -13,7 +13,7 @@ public interface PublicationStatusService {
 
     List<PublicationStatusGetDto> getAllPublicationStatuses();
 
-    PublicationStatusGetDto updatePublicationStatus(PublicationStatusGetDto publicationStatus, UUID id);
+    PublicationStatusGetDto updatePublicationStatus(PublicationStatusCreateDto publicationStatus, UUID id);
 
-    PublicationStatusGetDto deletePublicationStatus(UUID id);
+    void deletePublicationStatus(UUID id);
 }

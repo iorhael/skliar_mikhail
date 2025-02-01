@@ -1,13 +1,13 @@
 package com.senla.dto.poll;
 
-import com.senla.model.Post;
-import com.senla.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,10 +16,10 @@ import lombok.Setter;
 public class PollCreateDto {
 
     @NotNull
-    private Post post;
+    private UUID postId;
 
     @NotNull
-    private User author;
+    private UUID authorId;
 
     @NotBlank
     private String description;

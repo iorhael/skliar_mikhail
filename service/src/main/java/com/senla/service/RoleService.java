@@ -13,7 +13,7 @@ public interface RoleService {
 
     List<RoleGetDto> getAllRoles();
 
-    RoleGetDto updateRole(RoleGetDto role, UUID id);
+    RoleGetDto updateRole(RoleCreateDto role, UUID id);
 
-    RoleGetDto deleteRole(UUID id);
+    void deleteRole(UUID id);
 }

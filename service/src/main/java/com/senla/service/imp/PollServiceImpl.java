@@ -4,11 +4,13 @@ import com.senla.dto.poll.PollCreateDto;
 import com.senla.dto.poll.PollGetDto;
 import com.senla.dto.poll.PollUpdateDto;
 import com.senla.model.Poll;
+import com.senla.model.Post;
+import com.senla.model.User;
 import com.senla.repository.PollRepository;
+import com.senla.repository.PostRepository;
+import com.senla.repository.UserRepository;
 import com.senla.service.PollService;
-import com.senla.service.exception.ServiceException;
-import com.senla.service.exception.poll.PollDeleteException;
-import com.senla.service.exception.poll.PollUpdateException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -20,52 +22,60 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PollServiceImpl implements PollService {
+    public static final String POLL_NOT_FOUND = "Poll not found";
 
     private final PollRepository pollRepository;
 
+    private final UserRepository userRepository;
+
+    private final PostRepository postRepository;
+
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
-    public PollGetDto createPoll(PollCreateDto poll) {
-        Poll pollEntity = modelMapper.map(poll, Poll.class);
+    @Transactional
+    public PollGetDto createPoll(PollCreateDto pollCreateDto) {
+        Poll poll = modelMapper.map(pollCreateDto, Poll.class);
 
-        Poll createdPoll = pollRepository.create(pollEntity);
+        User author = userRepository.getReferenceById(pollCreateDto.getAuthorId());
+        Post post = postRepository.getReferenceById(pollCreateDto.getPostId());
 
-        return modelMapper.map(createdPoll, PollGetDto.class);
+        poll.setAuthor(author);
+        poll.setPost(post);
+
+        pollRepository.save(poll);
+
+        return modelMapper.map(poll, PollGetDto.class);
     }
 
-    @Transactional
     @Override
     public PollGetDto getPollById(UUID id) {
         return pollRepository.findById(id)
                 .map(poll -> modelMapper.map(poll, PollGetDto.class))
-                .orElseThrow(() -> new ServiceException("No poll found"));
+                .orElseThrow(() -> new EntityNotFoundException(POLL_NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public List<PollGetDto> getAllPolls() {
-        return pollRepository.findAll().stream()
-                .map(poll -> modelMapper.map(poll, PollGetDto.class))
+        return pollRepository.findAll()
+                .stream()
+                .map(post -> modelMapper.map(post, PollGetDto.class))
                 .toList();
     }
 
-    @Transactional
     @Override
-    public PollGetDto updatePoll(PollUpdateDto poll, UUID id) {
-        Poll pollEntity = modelMapper.map(poll, Poll.class);
+    @Transactional
+    public PollGetDto updatePoll(PollUpdateDto postUpdateDto, UUID id) {
+        Poll post = pollRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(POLL_NOT_FOUND));
 
-        return pollRepository.update(pollEntity, id)
-                .map(p -> modelMapper.map(p, PollGetDto.class))
-                .orElseThrow(() -> new PollUpdateException("Can't update poll"));
+        post.setDescription(postUpdateDto.getDescription());
+
+        return modelMapper.map(post, PollGetDto.class);
     }
 
-    @Transactional
     @Override
-    public PollGetDto deletePoll(UUID id) {
-        return pollRepository.deleteById(id)
-                .map(category -> modelMapper.map(category, PollGetDto.class))
-                .orElseThrow(() -> new PollDeleteException("Can't delete poll"));
+    public void deletePoll(UUID id) {
+        pollRepository.deleteById(id);
     }
 }

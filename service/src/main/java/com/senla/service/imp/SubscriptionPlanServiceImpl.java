@@ -4,9 +4,7 @@ import com.senla.dto.subscriptionPlan.SubscriptionPlanDto;
 import com.senla.model.SubscriptionPlan;
 import com.senla.repository.SubscriptionPlanRepository;
 import com.senla.service.SubscriptionPlanService;
-import com.senla.service.exception.ServiceException;
-import com.senla.service.exception.subscriptionPlan.SubscriptionPlanDeleteException;
-import com.senla.service.exception.subscriptionPlan.SubscriptionPlanUpdateException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,52 +16,50 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
+    public static final String SUBSCRIPTION_PLAN_NOT_FOUND = "SubscriptionPlan not found";
 
     private final SubscriptionPlanRepository subscriptionPlanRepository;
 
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
-    public SubscriptionPlanDto createSubscriptionPlan(SubscriptionPlanDto subscriptionPlan) {
-        SubscriptionPlan subscriptionPlanEntity = modelMapper.map(subscriptionPlan, SubscriptionPlan.class);
+    public SubscriptionPlanDto createSubscriptionPlan(SubscriptionPlanDto subscriptionPlanDto) {
+        SubscriptionPlan subscriptionPlan = modelMapper.map(subscriptionPlanDto, SubscriptionPlan.class);
 
-        SubscriptionPlan createdSubscriptionPlan = subscriptionPlanRepository.create(subscriptionPlanEntity);
+        subscriptionPlanRepository.save(subscriptionPlan);
 
-        return modelMapper.map(createdSubscriptionPlan, SubscriptionPlanDto.class);
+        return modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class);
     }
 
-    @Transactional
     @Override
     public SubscriptionPlanDto getSubscriptionPlanById(UUID id) {
         return subscriptionPlanRepository.findById(id)
                 .map(subscriptionPlan -> modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class))
-                .orElseThrow(() -> new ServiceException("No subscription plan found"));
+                .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_PLAN_NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public List<SubscriptionPlanDto> getAllSubscriptionPlans() {
-        return subscriptionPlanRepository.findAll().stream()
-                .map(subscriptionPlan -> modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class))
+        return subscriptionPlanRepository.findAll()
+                .stream()
+                .map(publicationStatus -> modelMapper.map(publicationStatus, SubscriptionPlanDto.class))
                 .toList();
     }
 
-    @Transactional
     @Override
-    public SubscriptionPlanDto updateSubscriptionPlan(SubscriptionPlanDto role, UUID id) {
-        SubscriptionPlan roleEntity = modelMapper.map(role, SubscriptionPlan.class);
+    @Transactional
+    public SubscriptionPlanDto updateSubscriptionPlan(SubscriptionPlanDto subscriptionPlanDto, UUID id) {
+        SubscriptionPlan subscriptionPlan = subscriptionPlanRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_PLAN_NOT_FOUND));
 
-        return subscriptionPlanRepository.update(roleEntity, id)
-                .map(s -> modelMapper.map(s, SubscriptionPlanDto.class))
-                .orElseThrow(() -> new SubscriptionPlanUpdateException("Can't update subscription plan"));
+        subscriptionPlan.setName(subscriptionPlanDto.getName());
+        subscriptionPlan.setPricePerMonth(subscriptionPlanDto.getPricePerMonth());
+
+        return modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class);
     }
 
-    @Transactional
     @Override
-    public SubscriptionPlanDto deleteSubscriptionPlan(UUID id) {
-        return subscriptionPlanRepository.deleteById(id)
-                .map(pollOption -> modelMapper.map(pollOption, SubscriptionPlanDto.class))
-                .orElseThrow(() -> new SubscriptionPlanDeleteException("Can't delete subscription plan"));
+    public void deleteSubscriptionPlan(UUID id) {
+        subscriptionPlanRepository.deleteById(id);
     }
 }

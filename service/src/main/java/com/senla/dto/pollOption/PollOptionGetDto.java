@@ -1,6 +1,5 @@
 package com.senla.dto.pollOption;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,5 @@ public class PollOptionGetDto {
 
     private UUID id;
 
-    @NotBlank
     private String description;
 }

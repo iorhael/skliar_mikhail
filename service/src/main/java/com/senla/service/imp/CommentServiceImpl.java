@@ -4,68 +4,91 @@ import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
 import com.senla.model.Comment;
+import com.senla.model.Post;
+import com.senla.model.User;
 import com.senla.repository.CommentRepository;
+import com.senla.repository.PostRepository;
+import com.senla.repository.UserRepository;
 import com.senla.service.CommentService;
-import com.senla.service.exception.ServiceException;
-import com.senla.service.exception.comment.CommentDeleteException;
-import com.senla.service.exception.comment.CommentUpdateException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
+    public static final String COMMENT_NOT_FOUND = "Comment not found";
 
     private final CommentRepository commentRepository;
 
+    private final UserRepository userRepository;
+
+    private final PostRepository postRepository;
+
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
-    public CommentGetDto createComment(CommentCreateDto comment) {
-        Comment commentEntity = modelMapper.map(comment, Comment.class);
+    @Transactional
+    public CommentGetDto createComment(CommentCreateDto commentCreateDto) {
+        Comment comment = modelMapper.map(commentCreateDto, Comment.class);
 
-        Comment createdComment = commentRepository.create(commentEntity);
+        User author = userRepository.getReferenceById(commentCreateDto.getAuthorId());
+        Post post = postRepository.getReferenceById(commentCreateDto.getPostId());
 
-        return modelMapper.map(createdComment, CommentGetDto.class);
+        Optional.ofNullable(commentCreateDto.getParentId())
+                .map(commentRepository::getReferenceById)
+                .ifPresent(comment::setParentComment);
+
+        comment.setAuthor(author);
+        comment.setPost(post);
+
+        log.info("Trying to create comment with user id {} and post id {}",
+                author.getId(),
+                post.getId());
+
+        commentRepository.save(comment);
+
+        log.info("Comment with id {} created successfully", comment.getId());
+
+        return modelMapper.map(comment, CommentGetDto.class);
     }
 
-    @Transactional
     @Override
     public CommentGetDto getCommentById(UUID id) {
         return commentRepository.findById(id)
-                .map(post -> modelMapper.map(post, CommentGetDto.class))
-                .orElseThrow(() -> new ServiceException("No post found"));
+                .map(comment -> modelMapper.map(comment, CommentGetDto.class))
+                .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public List<CommentGetDto> getAllComments() {
-        return commentRepository.findAll().stream()
+        return commentRepository.findAll()
+                .stream()
                 .map(comment -> modelMapper.map(comment, CommentGetDto.class))
                 .toList();
     }
 
-    @Transactional
     @Override
-    public CommentGetDto updateComment(CommentUpdateDto comment, UUID id) {
-        Comment commentEntity = modelMapper.map(comment, Comment.class);
+    @Transactional
+    public CommentGetDto updateComment(CommentUpdateDto commentUpdateDto, UUID id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_FOUND));
 
-        return commentRepository.update(commentEntity, id)
-                .map(p -> modelMapper.map(p, CommentGetDto.class))
-                .orElseThrow(() -> new CommentUpdateException("Can't update comment"));
+        comment.setContent(commentUpdateDto.getContent());
+
+        return modelMapper.map(comment, CommentGetDto.class);
     }
 
-    @Transactional
     @Override
-    public CommentGetDto deleteComment(UUID id) {
-        return commentRepository.deleteById(id)
-                .map(comment -> modelMapper.map(comment, CommentGetDto.class))
-                .orElseThrow(() -> new CommentDeleteException("Can't delete comment"));
+    public void deleteComment(UUID id) {
+        commentRepository.deleteById(id);
     }
 }

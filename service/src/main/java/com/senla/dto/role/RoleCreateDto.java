@@ -1,12 +1,13 @@
 package com.senla.dto.role;
 
 import com.senla.model.RoleName;
-import com.senla.model.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +16,7 @@ import lombok.Setter;
 public class RoleCreateDto {
 
     @NotNull
-    private User user;
+    private UUID userId;
 
     @NotNull
     private RoleName name;

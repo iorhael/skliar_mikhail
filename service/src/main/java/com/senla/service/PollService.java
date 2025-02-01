@@ -16,5 +16,5 @@ public interface PollService {
 
     PollGetDto updatePoll(PollUpdateDto poll, UUID id);
 
-    PollGetDto deletePoll(UUID id);
+    void deletePoll(UUID id);
 }

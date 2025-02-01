@@ -2,12 +2,12 @@ package com.senla.service.imp;
 
 import com.senla.dto.pollOption.PollOptionCreateDto;
 import com.senla.dto.pollOption.PollOptionGetDto;
+import com.senla.model.Poll;
 import com.senla.model.PollOption;
 import com.senla.repository.PollOptionRepository;
+import com.senla.repository.PollRepository;
 import com.senla.service.PollOptionService;
-import com.senla.service.exception.ServiceException;
-import com.senla.service.exception.pollOption.PollOptionDeleteException;
-import com.senla.service.exception.pollOption.PollOptionUpdateException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,52 +19,57 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PollOptionServiceImpl implements PollOptionService {
+    public static final String POLL_OPTION_NOT_FOUND = "PollOption not found";
 
     private final PollOptionRepository pollOptionRepository;
 
+    private final PollRepository pollRepository;
+
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
-    public PollOptionGetDto createPollOption(PollOptionCreateDto pollOption) {
-        PollOption pollOptionEntity = modelMapper.map(pollOption, PollOption.class);
+    @Transactional
+    public PollOptionGetDto createPollOption(PollOptionCreateDto pollOptionCreateDto) {
+        PollOption pollOption = modelMapper.map(pollOptionCreateDto, PollOption.class);
 
-        PollOption createdPoll = pollOptionRepository.create(pollOptionEntity);
+        Poll poll = pollRepository.getReferenceById(pollOptionCreateDto.getPollId());
+        pollOption.setPoll(poll);
 
-        return modelMapper.map(createdPoll, PollOptionGetDto.class);
+        pollOptionRepository.save(pollOption);
+
+        return modelMapper.map(pollOption, PollOptionGetDto.class);
     }
 
-    @Transactional
     @Override
     public PollOptionGetDto getPollOptionById(UUID id) {
         return pollOptionRepository.findById(id)
                 .map(pollOption -> modelMapper.map(pollOption, PollOptionGetDto.class))
-                .orElseThrow(() -> new ServiceException("No poll option found"));
+                .orElseThrow(() -> new EntityNotFoundException(POLL_OPTION_NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public List<PollOptionGetDto> getAllPollOptions() {
-        return pollOptionRepository.findAll().stream()
+        return pollOptionRepository.findAll()
+                .stream()
                 .map(pollOption -> modelMapper.map(pollOption, PollOptionGetDto.class))
                 .toList();
     }
 
-    @Transactional
     @Override
-    public PollOptionGetDto updatePollOption(PollOptionGetDto pollOption, UUID id) {
-        PollOption pollOptionEntity = modelMapper.map(pollOption, PollOption.class);
+    @Transactional
+    public PollOptionGetDto updatePollOption(PollOptionCreateDto pollOptionCreateDto, UUID id) {
+        PollOption pollOption = pollOptionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(POLL_OPTION_NOT_FOUND));
 
-        return pollOptionRepository.update(pollOptionEntity, id)
-                .map(p -> modelMapper.map(p, PollOptionGetDto.class))
-                .orElseThrow(() -> new PollOptionUpdateException("Can't update poll option"));
+        Poll poll = pollRepository.getReferenceById(pollOptionCreateDto.getPollId());
+        pollOption.setPoll(poll);
+
+        pollOption.setDescription(pollOptionCreateDto.getDescription());
+
+        return modelMapper.map(pollOption, PollOptionGetDto.class);
     }
 
-    @Transactional
-    @Override
-    public PollOptionGetDto deletePollOption(UUID id) {
-        return pollOptionRepository.deleteById(id)
-                .map(pollOption -> modelMapper.map(pollOption, PollOptionGetDto.class))
-                .orElseThrow(() -> new PollOptionDeleteException("Can't delete poll option"));
+    public void deletePollOption(UUID id) {
+        pollOptionRepository.deleteById(id);
     }
 }

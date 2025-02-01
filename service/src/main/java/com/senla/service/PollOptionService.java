@@ -13,7 +13,7 @@ public interface PollOptionService {
 
     List<PollOptionGetDto> getAllPollOptions();
 
-    PollOptionGetDto updatePollOption(PollOptionGetDto pollOption, UUID id);
+    PollOptionGetDto updatePollOption(PollOptionCreateDto pollOption, UUID id);
 
-    PollOptionGetDto deletePollOption(UUID id);
+    void deletePollOption(UUID id);
 }

@@ -1,7 +1,6 @@
 package com.senla.dto.role;
 
 import com.senla.model.RoleName;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +16,5 @@ public class RoleGetDto {
 
     private UUID id;
 
-    @NotNull
     private RoleName name;
 }
