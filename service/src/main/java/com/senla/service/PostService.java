@@ -1,20 +1,21 @@
 package com.senla.service;
 
 import com.senla.dto.post.PostCreateDto;
-import com.senla.dto.post.PostGetDto;
+import com.senla.dto.post.PostDetailedDto;
+import com.senla.dto.post.PostPreviewDto;
 import com.senla.dto.post.PostUpdateDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface PostService {
-    PostGetDto createPost(PostCreateDto post);
+    PostPreviewDto createPost(PostCreateDto post);
 
-    PostGetDto getPostById(UUID id);
+    PostDetailedDto getPostBy(UUID id);
 
-    List<PostGetDto> getAllPosts();
+    List<PostPreviewDto> getAllPosts();
 
-    PostGetDto updatePost(PostUpdateDto post, UUID id);
+    PostPreviewDto updatePost(PostUpdateDto post, UUID id);
 
     void deletePost(UUID id);
 }

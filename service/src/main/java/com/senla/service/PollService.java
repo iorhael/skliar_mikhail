@@ -10,9 +10,11 @@ import java.util.UUID;
 public interface PollService {
     PollGetDto createPoll(PollCreateDto poll);
 
-    PollGetDto getPollById(UUID id);
+    PollGetDto getPollBy(UUID id);
 
     List<PollGetDto> getAllPolls();
+
+    List<PollGetDto> getAllPollsForPost(UUID postId);
 
     PollGetDto updatePoll(PollUpdateDto poll, UUID id);
 

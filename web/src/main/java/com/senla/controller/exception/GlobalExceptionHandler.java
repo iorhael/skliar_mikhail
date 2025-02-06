@@ -3,8 +3,8 @@ package com.senla.controller.exception;
 import com.senla.controller.dto.ErrorMessageDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,9 +17,7 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    public static final String MESSAGE = "message";
     private static final String VALIDATION_ERROR = "Validation Error";
-    private static final String ENTITY_NOT_FOUND = "Entity not found";
     private static final String DATA_INTEGRITY_VIOLATION_ERROR = "Data integrity violation error";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -47,13 +45,12 @@ public class GlobalExceptionHandler {
 
         return ErrorMessageDto.builder()
                 .status(HttpStatus.NOT_FOUND)
-                .error(ENTITY_NOT_FOUND)
-                .details(Map.of(MESSAGE, exception.getMessage()))
+                .error(exception.getMessage())
                 .path(request.getRequestURI())
                 .build();
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessageDto handleSQLExceptions(Exception exception, HttpServletRequest request) {
         log.error(exception.getMessage());

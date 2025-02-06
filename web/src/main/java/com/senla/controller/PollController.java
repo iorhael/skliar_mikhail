@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,15 +31,18 @@ public class PollController {
     private final PollService pollService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<PollGetDto> findAllPolls() {
         return pollService.getAllPolls();
     }
 
+    @GetMapping(params = "postId")
+    public List<PollGetDto> findAllPollsForPost(@RequestParam UUID postId) {
+        return pollService.getAllPollsForPost(postId);
+    }
+
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public PollGetDto findPollById(@PathVariable UUID id) {
-        return pollService.getPollById(id);
+        return pollService.getPollBy(id);
     }
 
     @PostMapping
@@ -48,14 +52,12 @@ public class PollController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public PollGetDto updatePoll(@Valid @RequestBody PollUpdateDto poll,
                                  @PathVariable UUID id) {
         return pollService.updatePoll(poll, id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseInfoDto deletePoll(@PathVariable UUID id) {
         pollService.deletePoll(id);
 

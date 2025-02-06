@@ -9,9 +9,9 @@ import java.util.UUID;
 public interface PollOptionService {
     PollOptionGetDto createPollOption(PollOptionCreateDto pollOption);
 
-    PollOptionGetDto getPollOptionById(UUID id);
+    PollOptionGetDto getPollOptionBy(UUID id);
 
-    List<PollOptionGetDto> getAllPollOptions();
+    List<PollOptionGetDto> getAllPollOptions(UUID pollId);
 
     PollOptionGetDto updatePollOption(PollOptionCreateDto pollOption, UUID id);
 

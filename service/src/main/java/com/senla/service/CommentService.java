@@ -10,9 +10,9 @@ import java.util.UUID;
 public interface CommentService {
     CommentGetDto createComment(CommentCreateDto comment);
 
-    CommentGetDto getCommentById(UUID id);
+    CommentGetDto getCommentBy(UUID id);
 
-    List<CommentGetDto> getAllComments();
+    List<CommentGetDto> getAllComments(UUID postId);
 
     CommentGetDto updateComment(CommentUpdateDto comment, UUID id);
 

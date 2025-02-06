@@ -30,15 +30,13 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<SubscriptionGetDto> findAllSubscriptions() {
         return subscriptionService.getAllSubscriptions();
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public SubscriptionGetDto findSubscriptionById(@PathVariable UUID id) {
-        return subscriptionService.getSubscriptionById(id);
+        return subscriptionService.getSubscriptionBy(id);
     }
 
     @PostMapping
@@ -48,14 +46,12 @@ public class SubscriptionController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public SubscriptionGetDto updateSubscription(@Valid @RequestBody SubscriptionUpdateDto subscription,
                                                  @PathVariable UUID id) {
         return subscriptionService.updateSubscription(subscription, id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseInfoDto deleteSubscription(@PathVariable UUID id) {
         subscriptionService.deleteSubscription(id);
 

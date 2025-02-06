@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface SubscriptionService {
     SubscriptionGetDto createSubscription(SubscriptionCreateDto subscription);
 
-    SubscriptionGetDto getSubscriptionById(UUID id);
+    SubscriptionGetDto getSubscriptionBy(UUID id);
 
     List<SubscriptionGetDto> getAllSubscriptions();
 

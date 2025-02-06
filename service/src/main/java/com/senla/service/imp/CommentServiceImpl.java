@@ -52,7 +52,8 @@ public class CommentServiceImpl implements CommentService {
 
         log.info("Trying to create comment with user id {} and post id {}",
                 author.getId(),
-                post.getId());
+                post.getId()
+        );
 
         commentRepository.save(comment);
 
@@ -62,15 +63,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentGetDto getCommentById(UUID id) {
-        return commentRepository.findById(id)
+    public CommentGetDto getCommentBy(UUID id) {
+        return commentRepository.findWithAuthorById(id)
                 .map(comment -> modelMapper.map(comment, CommentGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_FOUND));
     }
 
     @Override
-    public List<CommentGetDto> getAllComments() {
-        return commentRepository.findAll()
+    public List<CommentGetDto> getAllComments(UUID postId) {
+        return commentRepository.findAllByPostId(postId)
                 .stream()
                 .map(comment -> modelMapper.map(comment, CommentGetDto.class))
                 .toList();
@@ -79,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentGetDto updateComment(CommentUpdateDto commentUpdateDto, UUID id) {
-        Comment comment = commentRepository.findById(id)
+        Comment comment = commentRepository.findWithAuthorById(id)
                 .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_FOUND));
 
         comment.setContent(commentUpdateDto.getContent());

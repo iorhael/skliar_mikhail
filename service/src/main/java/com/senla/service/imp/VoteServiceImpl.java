@@ -48,7 +48,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public VoteGetDto getVoteById(VoteId id) {
+    public VoteGetDto getVoteBy(VoteId id) {
         return voteRepository.findById(id)
                 .map(vote -> modelMapper.map(vote, VoteGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(VOTE_NOT_FOUND));

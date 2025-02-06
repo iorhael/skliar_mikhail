@@ -23,7 +23,6 @@ public class TagServiceImpl implements TagService {
     private final ModelMapper modelMapper;
 
     @Override
-    @Transactional
     public TagDto createTag(TagDto tagDto) {
         Tag tag = modelMapper.map(tagDto, Tag.class);
 
@@ -33,7 +32,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto getTagById(UUID id) {
+    public TagDto getTagBy(UUID id) {
         return tagRepository.findById(id)
                 .map(tag -> modelMapper.map(tag, TagDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(TAG_NOT_FOUND));

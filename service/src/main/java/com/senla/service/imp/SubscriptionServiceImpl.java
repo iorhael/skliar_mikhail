@@ -57,15 +57,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public SubscriptionGetDto getSubscriptionById(UUID id) {
-        return subscriptionRepository.findById(id)
+    public SubscriptionGetDto getSubscriptionBy(UUID id) {
+        return subscriptionRepository.findWithUserById(id)
                 .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_NOT_FOUND));
     }
 
     @Override
     public List<SubscriptionGetDto> getAllSubscriptions() {
-        return subscriptionRepository.findAll()
+        return subscriptionRepository.findWithUserBy()
                 .stream()
                 .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
                 .toList();
@@ -74,10 +74,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public SubscriptionGetDto updateSubscription(SubscriptionUpdateDto subscriptionUpdateDto, UUID id) {
-        Subscription subscription = subscriptionRepository.findById(id)
+        Subscription subscription = subscriptionRepository.findWithUserById(id)
                 .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_NOT_FOUND));
 
-        subscription.setExpiresDate(subscriptionUpdateDto.getExpiresDate());
+        modelMapper.map(subscriptionUpdateDto, subscription);
 
         return modelMapper.map(subscription, SubscriptionGetDto.class);
     }

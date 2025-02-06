@@ -39,8 +39,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryGetDto getCategoryById(UUID id) {
+    public CategoryGetDto getCategoryBy(UUID id) {
         return categoryRepository.findById(id)
+                .map(category -> modelMapper.map(category, CategoryGetDto.class))
+                .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
+    }
+
+    @Override
+    public CategoryGetDto getCategoryByName(String name) {
+        return categoryRepository.findByName(name)
                 .map(category -> modelMapper.map(category, CategoryGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
     }
@@ -59,12 +66,11 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
 
+        modelMapper.map(categoryCreateDto, category);
+
         Optional.ofNullable(categoryCreateDto.getParentId())
                 .map(categoryRepository::getReferenceById)
                 .ifPresent(category::setParentCategory);
-
-        category.setName(categoryCreateDto.getName());
-        category.setDescription(categoryCreateDto.getDescription());
 
         return modelMapper.map(category, CategoryGetDto.class);
     }

@@ -28,7 +28,6 @@ public class RoleServiceImpl implements RoleService {
     private final ModelMapper modelMapper;
 
     @Override
-    @Transactional
     public RoleGetDto createRole(RoleCreateDto roleCreateDto) {
         Role role = modelMapper.map(roleCreateDto, Role.class);
 
@@ -41,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleGetDto getRoleById(UUID id) {
+    public RoleGetDto getRoleBy(UUID id) {
         return roleRepository.findById(id)
                 .map(publicationStatus -> modelMapper.map(publicationStatus, RoleGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(ROLE_NOT_FOUND));

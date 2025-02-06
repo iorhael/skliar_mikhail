@@ -4,7 +4,7 @@ import com.senla.controller.dto.ResponseInfoDto;
 import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
-import com.senla.service.imp.CommentServiceImpl;
+import com.senla.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,18 +28,16 @@ import java.util.UUID;
 public class CommentController {
     private static final String COMMENT_DELETION_MESSAGE = "Comment with id %s deleted successfully";
 
-    private final CommentServiceImpl commentService;
+    private final CommentService commentService;
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<CommentGetDto> findAllComments() {
-        return commentService.getAllComments();
+    @GetMapping(params = "postId")
+    public List<CommentGetDto> findAllComments(@RequestParam UUID postId) {
+        return commentService.getAllComments(postId);
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public CommentGetDto findCommentById(@PathVariable UUID id) {
-        return commentService.getCommentById(id);
+        return commentService.getCommentBy(id);
     }
 
     @PostMapping
@@ -48,14 +47,12 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public CommentGetDto updateComment(@Valid @RequestBody CommentUpdateDto comment,
                                        @PathVariable UUID id) {
         return commentService.updateComment(comment, id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseInfoDto deleteComment(@PathVariable UUID id) {
         commentService.deleteComment(id);
 

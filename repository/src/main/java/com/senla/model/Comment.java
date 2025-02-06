@@ -9,9 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,8 +27,14 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "comments")
+@NamedEntityGraph(name = "comment-with-author",
+        attributeNodes = @NamedAttributeNode("author"))
+@NamedEntityGraph(name = "comment-with-author-and-children",
+        attributeNodes = {
+                @NamedAttributeNode("author"),
+                @NamedAttributeNode("childrenComments")
+        })
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -53,7 +60,7 @@ public class Comment {
     @ToString.Exclude
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     @ToString.Exclude
     private User author;

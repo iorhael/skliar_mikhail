@@ -2,6 +2,7 @@ package com.senla.service.imp;
 
 import com.senla.dto.publicationStatus.PublicationStatusCreateDto;
 import com.senla.dto.publicationStatus.PublicationStatusGetDto;
+import com.senla.dto.publicationStatus.PublicationStatusUpdateDto;
 import com.senla.model.Post;
 import com.senla.model.PublicationStatus;
 import com.senla.repository.PostRepository;
@@ -41,15 +42,15 @@ public class PublicationStatusServiceImpl implements PublicationStatusService {
     }
 
     @Override
-    public PublicationStatusGetDto getPublicationStatusById(UUID id) {
-        return publicationStatusRepository.findById(id)
+    public PublicationStatusGetDto getPublicationStatusBy(UUID id) {
+        return publicationStatusRepository.findWithPostById(id)
                 .map(publicationStatus -> modelMapper.map(publicationStatus, PublicationStatusGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(PUBLICATION_STATUS_NOT_FOUND));
     }
 
     @Override
     public List<PublicationStatusGetDto> getAllPublicationStatuses() {
-        return publicationStatusRepository.findAll()
+        return publicationStatusRepository.findWithPostBy()
                 .stream()
                 .map(publicationStatus -> modelMapper.map(publicationStatus, PublicationStatusGetDto.class))
                 .toList();
@@ -57,15 +58,11 @@ public class PublicationStatusServiceImpl implements PublicationStatusService {
 
     @Override
     @Transactional
-    public PublicationStatusGetDto updatePublicationStatus(PublicationStatusCreateDto publicationStatusCreateDto, UUID id) {
-        PublicationStatus publicationStatus = publicationStatusRepository.findById(id)
+    public PublicationStatusGetDto updatePublicationStatus(PublicationStatusUpdateDto publicationStatusUpdateDto, UUID id) {
+        PublicationStatus publicationStatus = publicationStatusRepository.findWithPostById(id)
                 .orElseThrow(() -> new EntityNotFoundException(PUBLICATION_STATUS_NOT_FOUND));
 
-        Post post = postRepository.getReferenceById(publicationStatusCreateDto.getPostId());
-
-        publicationStatus.setPost(post);
-        publicationStatus.setStatusName(publicationStatusCreateDto.getStatusName());
-        publicationStatus.setScheduledDate(publicationStatusCreateDto.getScheduledDate());
+        modelMapper.map(publicationStatusUpdateDto, publicationStatus);
 
         return modelMapper.map(publicationStatus, PublicationStatusGetDto.class);
     }

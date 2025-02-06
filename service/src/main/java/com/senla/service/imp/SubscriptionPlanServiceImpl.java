@@ -32,7 +32,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     }
 
     @Override
-    public SubscriptionPlanDto getSubscriptionPlanById(UUID id) {
+    public SubscriptionPlanDto getSubscriptionPlanBy(UUID id) {
         return subscriptionPlanRepository.findById(id)
                 .map(subscriptionPlan -> modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_PLAN_NOT_FOUND));
@@ -52,8 +52,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
         SubscriptionPlan subscriptionPlan = subscriptionPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_PLAN_NOT_FOUND));
 
-        subscriptionPlan.setName(subscriptionPlanDto.getName());
-        subscriptionPlan.setPricePerMonth(subscriptionPlanDto.getPricePerMonth());
+        modelMapper.map(subscriptionPlanDto, subscriptionPlan);
 
         return modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class);
     }

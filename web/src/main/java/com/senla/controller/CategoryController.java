@@ -24,20 +24,18 @@ import java.util.UUID;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
-    private static final String CATEGORY_DELETION_MESSAGE = "Category deleted with id %s successfully";
+    private static final String CATEGORY_DELETION_MESSAGE = "Category with id %s deleted successfully";
 
     private final CategoryService categoryService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<CategoryGetDto> findAllCategories() {
         return categoryService.getAllCategories();
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public CategoryGetDto findCategoryById(@PathVariable UUID id) {
-        return categoryService.getCategoryById(id);
+        return categoryService.getCategoryBy(id);
     }
 
     @PostMapping
@@ -47,14 +45,12 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public CategoryGetDto updateCategory(@Valid @RequestBody CategoryCreateDto category,
                                          @PathVariable UUID id) {
         return categoryService.updateCategory(category, id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseInfoDto deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategory(id);
 

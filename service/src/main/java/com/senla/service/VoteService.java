@@ -10,7 +10,7 @@ import java.util.List;
 public interface VoteService {
     VoteGetDto createVote(VoteCreateDto vote);
 
-    VoteGetDto getVoteById(VoteId id);
+    VoteGetDto getVoteBy(VoteId id);
 
     List<VoteGetDto> getAllVotes();
 

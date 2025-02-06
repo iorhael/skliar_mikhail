@@ -7,10 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +22,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -48,11 +44,6 @@ public class User {
     @CreationTimestamp
     private Instant createdDate;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    @Setter(AccessLevel.NONE)
-    @ToString.Exclude
-    private Subscription subscription;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author", orphanRemoval = true)
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
@@ -72,11 +63,6 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     @ToString.Exclude
     private List<Role> roles = new ArrayList<>();
-
-    public void setSubscription(Subscription subscription) {
-        subscription.setUser(this);
-        this.subscription = subscription;
-    }
 
     public void addPost(Post post) {
         post.setAuthor(this);

@@ -1,6 +1,5 @@
 package com.senla.dto.pollOption;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +7,6 @@ import lombok.Setter;
 import java.util.UUID;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class PollOptionGetDto {
@@ -16,4 +14,6 @@ public class PollOptionGetDto {
     private UUID id;
 
     private String description;
+
+    private int votesCount;
 }
