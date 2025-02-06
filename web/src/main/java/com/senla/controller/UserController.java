@@ -3,7 +3,6 @@ package com.senla.controller;
 import com.senla.controller.dto.ResponseInfoDto;
 import com.senla.dto.user.UserCreateDto;
 import com.senla.dto.user.UserGetDto;
-import com.senla.service.PollOptionService;
 import com.senla.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +28,6 @@ public class UserController {
     private static final String USER_DELETION_MESSAGE = "User with id %s deleted successfully";
 
     private final UserService userService;
-
-    private final PollOptionService pollOptionService;
 
     @GetMapping
     public List<UserGetDto> findAllUsers() {

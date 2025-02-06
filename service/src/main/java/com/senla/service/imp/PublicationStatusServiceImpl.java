@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.publicationStatus.PublicationStatusCreateDto;
 import com.senla.dto.publicationStatus.PublicationStatusGetDto;
 import com.senla.dto.publicationStatus.PublicationStatusUpdateDto;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class PublicationStatusServiceImpl implements PublicationStatusService {
     public static final String PUBLICATION_STATUS_NOT_FOUND = "PublicationStatus not found";

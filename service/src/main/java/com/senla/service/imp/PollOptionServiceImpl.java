@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.pollOption.PollOptionCreateDto;
 import com.senla.dto.pollOption.PollOptionGetDto;
 import com.senla.model.Poll;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class PollOptionServiceImpl implements PollOptionService {
     public static final String POLL_OPTION_NOT_FOUND = "PollOption not found";

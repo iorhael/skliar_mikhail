@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.subscriptionPlan.SubscriptionPlanDto;
 import com.senla.model.SubscriptionPlan;
 import com.senla.repository.SubscriptionPlanRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     public static final String SUBSCRIPTION_PLAN_NOT_FOUND = "SubscriptionPlan not found";

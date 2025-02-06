@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.subscription.SubscriptionCreateDto;
 import com.senla.dto.subscription.SubscriptionGetDto;
 import com.senla.dto.subscription.SubscriptionUpdateDto;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
     public static final String SUBSCRIPTION_NOT_FOUND = "Subscription not found";

@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.vote.VoteCreateDto;
 import com.senla.dto.vote.VoteGetDto;
 import com.senla.dto.vote.VoteUpdateDto;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class VoteServiceImpl implements VoteService {
     public static final String VOTE_NOT_FOUND = "Vote not found";

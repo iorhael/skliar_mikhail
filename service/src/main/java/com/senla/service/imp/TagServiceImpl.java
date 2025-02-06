@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.tag.TagDto;
 import com.senla.model.Tag;
 import com.senla.repository.TagRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
     public static final String TAG_NOT_FOUND = "Tag not found";

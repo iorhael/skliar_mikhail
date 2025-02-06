@@ -18,7 +18,4 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     @EntityGraph("post-with-tags")
     Optional<Post> findWithTagsById(UUID id);
-
-    // Criteria Api???
-//    List<Post> findByAuthorUsernameAndCategoriesNameIn(String username, List<String> categoryNames);
 }

@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.user.UserCreateDto;
 import com.senla.dto.user.UserGetDto;
 import com.senla.model.User;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     public static final String USER_NOT_FOUND = "User not found";

@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.role.RoleCreateDto;
 import com.senla.dto.role.RoleGetDto;
 import com.senla.model.Role;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
     public static final String ROLE_NOT_FOUND = "Role not found";

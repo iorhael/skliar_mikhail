@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     public static final String COMMENT_NOT_FOUND = "Comment not found";

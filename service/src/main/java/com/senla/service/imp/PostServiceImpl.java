@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.post.PostCreateDto;
 import com.senla.dto.post.PostDetailedDto;
 import com.senla.dto.post.PostPreviewDto;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
     public static final String POST_NOT_FOUND = "Post not found";

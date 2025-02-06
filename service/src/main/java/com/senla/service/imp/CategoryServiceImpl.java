@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.category.CategoryCreateDto;
 import com.senla.dto.category.CategoryGetDto;
 import com.senla.model.Category;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     public static final String CATEGORY_NOT_FOUND = "Category not found";
