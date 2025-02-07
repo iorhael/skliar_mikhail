@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,8 +31,9 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping
-    public List<SubscriptionGetDto> findAllSubscriptions() {
-        return subscriptionService.getAllSubscriptions();
+    public List<SubscriptionGetDto> findAllSubscriptions(@RequestParam(defaultValue = "0") int pageNo,
+                                                         @RequestParam(defaultValue = "15") int pageSize) {
+        return subscriptionService.getAllSubscriptions(pageNo, pageSize);
     }
 
     @GetMapping("/{id}")

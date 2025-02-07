@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,14 +50,7 @@ public class PostServiceImpl implements PostService {
         post.setAuthor(author);
         post.setSubscriptionPlan(subscriptionPlan);
 
-        log.info("Trying to create post with user id {} and subscription plan id {}",
-                author.getId(),
-                subscriptionPlan.getId()
-        );
-
         postRepository.save(post);
-
-        log.info("Post with id {} created successfully", post.getId());
 
         return modelMapper.map(post, PostPreviewDto.class);
     }
@@ -73,8 +67,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostPreviewDto> getAllPosts() {
-        return postRepository.findWithSimpleViewBy()
+    public List<PostPreviewDto> getAllPosts(int pageNo, int pageSize) {
+        return postRepository.findWithSimpleViewBy(PageRequest.of(pageNo, pageSize))
                 .stream()
                 .map(post -> modelMapper.map(post, PostPreviewDto.class))
                 .toList();

@@ -12,7 +12,7 @@ public interface SubscriptionService {
 
     SubscriptionGetDto getSubscriptionBy(UUID id);
 
-    List<SubscriptionGetDto> getAllSubscriptions();
+    List<SubscriptionGetDto> getAllSubscriptions(int pageNo, int pageSize);
 
     SubscriptionGetDto updateSubscription(SubscriptionUpdateDto subscription, UUID id);
 

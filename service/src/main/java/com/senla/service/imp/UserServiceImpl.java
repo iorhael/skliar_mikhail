@@ -10,6 +10,7 @@ import com.senla.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +53,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserGetDto> getAllUsers() {
-        return userRepository.findAll()
+    public List<UserGetDto> getAllUsers(int pageNo, int pageSize) {
+        return userRepository.findAll(PageRequest.of(pageNo, pageSize))
                 .stream()
                 .map(user -> modelMapper.map(user, UserGetDto.class))
                 .toList();
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserGetDto> getUsersBy(String username) {
-        return userRepository.findByUsernameContainingIgnoreCase(username)
+        return userRepository.findByUsernameContainingIgnoreCase(username, PageRequest.of(1, 10))
                 .stream()
                 .map(user -> modelMapper.map(user, UserGetDto.class))
                 .toList();

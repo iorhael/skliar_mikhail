@@ -30,8 +30,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserGetDto> findAllUsers() {
-        return userService.getAllUsers();
+    public List<UserGetDto> findAllUsers(@RequestParam(defaultValue = "0") int pageNo,
+                                         @RequestParam(defaultValue = "15") int pageSize) {
+        return userService.getAllUsers(pageNo, pageSize);
+    }
+
+    @GetMapping(params = "username")
+    public List<UserGetDto> findUsersByUsername(@RequestParam String username) {
+        return userService.getUsersBy(username);
     }
 
     @GetMapping("/{id}")
@@ -42,11 +48,6 @@ public class UserController {
     @GetMapping(params = "email")
     public UserGetDto findUserByEmail(@RequestParam String email) {
         return userService.getUserBy(email);
-    }
-
-    @GetMapping(params = "username")
-    public List<UserGetDto> findUsersByUsername(@RequestParam String username) {
-        return userService.getUsersBy(username);
     }
 
     @PostMapping

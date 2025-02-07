@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -20,6 +19,4 @@ public class CommentGetDto {
     private String content;
 
     private Instant createdDate;
-
-    private List<CommentGetDto> childrenComments;
 }

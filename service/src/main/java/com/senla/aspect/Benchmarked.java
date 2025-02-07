@@ -11,5 +11,6 @@ public @interface Benchmarked {
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
-    @interface Off {}
+    @interface Off {
+    }
 }

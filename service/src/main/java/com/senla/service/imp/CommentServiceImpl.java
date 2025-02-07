@@ -52,14 +52,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setAuthor(author);
         comment.setPost(post);
 
-        log.info("Trying to create comment with user id {} and post id {}",
-                author.getId(),
-                post.getId()
-        );
-
         commentRepository.save(comment);
-
-        log.info("Comment with id {} created successfully", comment.getId());
 
         return modelMapper.map(comment, CommentGetDto.class);
     }

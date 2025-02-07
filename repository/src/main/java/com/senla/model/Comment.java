@@ -29,11 +29,6 @@ import java.util.UUID;
 @Table(name = "comments")
 @NamedEntityGraph(name = "comment-with-author",
         attributeNodes = @NamedAttributeNode("author"))
-@NamedEntityGraph(name = "comment-with-author-and-children",
-        attributeNodes = {
-                @NamedAttributeNode("author"),
-                @NamedAttributeNode("childrenComments")
-        })
 @NoArgsConstructor
 @Getter
 @Setter

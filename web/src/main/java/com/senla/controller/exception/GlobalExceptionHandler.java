@@ -3,8 +3,8 @@ package com.senla.controller.exception;
 import com.senla.controller.dto.ErrorMessageDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,19 +44,29 @@ public class GlobalExceptionHandler {
         log.error(exception.getMessage());
 
         return ErrorMessageDto.builder()
-                .status(HttpStatus.NOT_FOUND)
                 .error(exception.getMessage())
                 .path(request.getRequestURI())
                 .build();
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessageDto handleSQLExceptions(Exception exception, HttpServletRequest request) {
         log.error(exception.getMessage());
 
         return ErrorMessageDto.builder()
                 .error(DATA_INTEGRITY_VIOLATION_ERROR)
+                .path(request.getRequestURI())
+                .build();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessageDto handleBadRequest(Exception exception, HttpServletRequest request) {
+        log.error(exception.getMessage());
+
+        return ErrorMessageDto.builder()
+                .error(exception.getMessage())
                 .path(request.getRequestURI())
                 .build();
     }

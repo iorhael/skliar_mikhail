@@ -13,7 +13,7 @@ public interface UserService {
 
     UserGetDto getUserBy(String email);
 
-    List<UserGetDto> getAllUsers();
+    List<UserGetDto> getAllUsers(int pageNo, int pageSize);
 
     List<UserGetDto> getUsersBy(String username);
 

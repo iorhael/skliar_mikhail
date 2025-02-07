@@ -1,6 +1,7 @@
 package com.senla.repository;
 
 import com.senla.model.Subscription;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,5 +15,5 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, UUID
     Optional<Subscription> findWithUserById(UUID uuid);
 
     @EntityGraph("subscription-with-user")
-    List<Subscription> findWithUserBy();
+    List<Subscription> findWithUserBy(Pageable pageable);
 }

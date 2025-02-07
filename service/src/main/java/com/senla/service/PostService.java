@@ -13,7 +13,7 @@ public interface PostService {
 
     PostDetailedDto getPostBy(UUID id);
 
-    List<PostPreviewDto> getAllPosts();
+    List<PostPreviewDto> getAllPosts(int pageNo, int pageSize);
 
     PostPreviewDto updatePost(PostUpdateDto post, UUID id);
 

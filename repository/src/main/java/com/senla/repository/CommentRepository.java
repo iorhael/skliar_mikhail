@@ -13,6 +13,6 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
     @EntityGraph("comment-with-author")
     Optional<Comment> findWithAuthorById(UUID id);
 
-    @EntityGraph("comment-with-author-and-children")
+    @EntityGraph("comment-with-author")
     List<Comment> findAllByPostId(UUID postId);
 }

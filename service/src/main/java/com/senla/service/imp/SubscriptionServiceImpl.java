@@ -15,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,8 +67,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<SubscriptionGetDto> getAllSubscriptions() {
-        return subscriptionRepository.findWithUserBy()
+    public List<SubscriptionGetDto> getAllSubscriptions(int pageNo, int pageSize) {
+        return subscriptionRepository.findWithUserBy(PageRequest.of(pageNo, pageSize))
                 .stream()
                 .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
                 .toList();
