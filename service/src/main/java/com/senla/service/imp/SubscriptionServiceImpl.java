@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.subscription.SubscriptionCreateDto;
 import com.senla.dto.subscription.SubscriptionGetDto;
 import com.senla.dto.subscription.SubscriptionUpdateDto;
@@ -14,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
     public static final String SUBSCRIPTION_NOT_FOUND = "Subscription not found";
@@ -57,15 +60,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public SubscriptionGetDto getSubscriptionById(UUID id) {
-        return subscriptionRepository.findById(id)
+    public SubscriptionGetDto getSubscriptionBy(UUID id) {
+        return subscriptionRepository.findWithUserById(id)
                 .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_NOT_FOUND));
     }
 
     @Override
-    public List<SubscriptionGetDto> getAllSubscriptions() {
-        return subscriptionRepository.findAll()
+    public List<SubscriptionGetDto> getAllSubscriptions(int pageNo, int pageSize) {
+        return subscriptionRepository.findWithUserBy(PageRequest.of(pageNo, pageSize))
                 .stream()
                 .map(subscription -> modelMapper.map(subscription, SubscriptionGetDto.class))
                 .toList();
@@ -74,10 +77,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public SubscriptionGetDto updateSubscription(SubscriptionUpdateDto subscriptionUpdateDto, UUID id) {
-        Subscription subscription = subscriptionRepository.findById(id)
+        Subscription subscription = subscriptionRepository.findWithUserById(id)
                 .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_NOT_FOUND));
 
-        subscription.setExpiresDate(subscriptionUpdateDto.getExpiresDate());
+        modelMapper.map(subscriptionUpdateDto, subscription);
 
         return modelMapper.map(subscription, SubscriptionGetDto.class);
     }

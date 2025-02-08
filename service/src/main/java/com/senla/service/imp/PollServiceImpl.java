@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.poll.PollCreateDto;
 import com.senla.dto.poll.PollGetDto;
 import com.senla.dto.poll.PollUpdateDto;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class PollServiceImpl implements PollService {
     public static final String POLL_NOT_FOUND = "Poll not found";
@@ -49,24 +51,32 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public PollGetDto getPollById(UUID id) {
-        return pollRepository.findById(id)
+    public PollGetDto getPollBy(UUID id) {
+        return pollRepository.findWithPostAndAuthorById(id)
                 .map(poll -> modelMapper.map(poll, PollGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(POLL_NOT_FOUND));
     }
 
     @Override
     public List<PollGetDto> getAllPolls() {
-        return pollRepository.findAll()
+        return pollRepository.findWithPostAndAuthorBy()
                 .stream()
-                .map(post -> modelMapper.map(post, PollGetDto.class))
+                .map(poll -> modelMapper.map(poll, PollGetDto.class))
+                .toList();
+    }
+
+    @Override
+    public List<PollGetDto> getAllPollsForPost(UUID postId) {
+        return pollRepository.findByPostId(postId)
+                .stream()
+                .map(poll -> modelMapper.map(poll, PollGetDto.class))
                 .toList();
     }
 
     @Override
     @Transactional
     public PollGetDto updatePoll(PollUpdateDto postUpdateDto, UUID id) {
-        Poll post = pollRepository.findById(id)
+        Poll post = pollRepository.findWithPostAndAuthorById(id)
                 .orElseThrow(() -> new EntityNotFoundException(POLL_NOT_FOUND));
 
         post.setDescription(postUpdateDto.getDescription());

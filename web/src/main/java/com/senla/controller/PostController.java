@@ -2,7 +2,8 @@ package com.senla.controller;
 
 import com.senla.controller.dto.ResponseInfoDto;
 import com.senla.dto.post.PostCreateDto;
-import com.senla.dto.post.PostGetDto;
+import com.senla.dto.post.PostDetailedDto;
+import com.senla.dto.post.PostPreviewDto;
 import com.senla.dto.post.PostUpdateDto;
 import com.senla.service.PostService;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,32 +32,29 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<PostGetDto> findAllPosts() {
-        return postService.getAllPosts();
+    public List<PostPreviewDto> findAllPosts(@RequestParam(defaultValue = "0") int pageNo,
+                                             @RequestParam(defaultValue = "15") int pageSize) {
+        return postService.getAllPosts(pageNo, pageSize);
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public PostGetDto findPostById(@PathVariable UUID id) {
-        return postService.getPostById(id);
+    public PostDetailedDto findPostById(@PathVariable UUID id) {
+        return postService.getPostBy(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostGetDto createPost(@Valid @RequestBody PostCreateDto post) {
+    public PostPreviewDto createPost(@Valid @RequestBody PostCreateDto post) {
         return postService.createPost(post);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public PostGetDto updatePost(@Valid @RequestBody PostUpdateDto post,
-                                 @PathVariable UUID id) {
+    public PostPreviewDto updatePost(@Valid @RequestBody PostUpdateDto post,
+                                     @PathVariable UUID id) {
         return postService.updatePost(post, id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseInfoDto deletePost(@PathVariable UUID id) {
         postService.deletePost(id);
 

@@ -10,9 +10,9 @@ import java.util.UUID;
 public interface SubscriptionService {
     SubscriptionGetDto createSubscription(SubscriptionCreateDto subscription);
 
-    SubscriptionGetDto getSubscriptionById(UUID id);
+    SubscriptionGetDto getSubscriptionBy(UUID id);
 
-    List<SubscriptionGetDto> getAllSubscriptions();
+    List<SubscriptionGetDto> getAllSubscriptions(int pageNo, int pageSize);
 
     SubscriptionGetDto updateSubscription(SubscriptionUpdateDto subscription, UUID id);
 

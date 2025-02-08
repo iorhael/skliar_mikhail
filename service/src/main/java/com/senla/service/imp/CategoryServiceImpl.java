@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.category.CategoryCreateDto;
 import com.senla.dto.category.CategoryGetDto;
 import com.senla.model.Category;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     public static final String CATEGORY_NOT_FOUND = "Category not found";
@@ -39,8 +41,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryGetDto getCategoryById(UUID id) {
+    public CategoryGetDto getCategoryBy(UUID id) {
         return categoryRepository.findById(id)
+                .map(category -> modelMapper.map(category, CategoryGetDto.class))
+                .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
+    }
+
+    @Override
+    public CategoryGetDto getCategoryByName(String name) {
+        return categoryRepository.findByName(name)
                 .map(category -> modelMapper.map(category, CategoryGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
     }
@@ -59,12 +68,11 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
 
+        modelMapper.map(categoryCreateDto, category);
+
         Optional.ofNullable(categoryCreateDto.getParentId())
                 .map(categoryRepository::getReferenceById)
                 .ifPresent(category::setParentCategory);
-
-        category.setName(categoryCreateDto.getName());
-        category.setDescription(categoryCreateDto.getDescription());
 
         return modelMapper.map(category, CategoryGetDto.class);
     }

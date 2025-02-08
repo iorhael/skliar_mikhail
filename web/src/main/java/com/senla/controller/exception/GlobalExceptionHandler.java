@@ -17,9 +17,7 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    public static final String MESSAGE = "message";
     private static final String VALIDATION_ERROR = "Validation Error";
-    private static final String ENTITY_NOT_FOUND = "Entity not found";
     private static final String DATA_INTEGRITY_VIOLATION_ERROR = "Data integrity violation error";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -46,9 +44,7 @@ public class GlobalExceptionHandler {
         log.error(exception.getMessage());
 
         return ErrorMessageDto.builder()
-                .status(HttpStatus.NOT_FOUND)
-                .error(ENTITY_NOT_FOUND)
-                .details(Map.of(MESSAGE, exception.getMessage()))
+                .error(exception.getMessage())
                 .path(request.getRequestURI())
                 .build();
     }
@@ -60,6 +56,17 @@ public class GlobalExceptionHandler {
 
         return ErrorMessageDto.builder()
                 .error(DATA_INTEGRITY_VIOLATION_ERROR)
+                .path(request.getRequestURI())
+                .build();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessageDto handleBadRequest(Exception exception, HttpServletRequest request) {
+        log.error(exception.getMessage());
+
+        return ErrorMessageDto.builder()
+                .error(exception.getMessage())
                 .path(request.getRequestURI())
                 .build();
     }

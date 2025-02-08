@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.role.RoleCreateDto;
 import com.senla.dto.role.RoleGetDto;
 import com.senla.model.Role;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
     public static final String ROLE_NOT_FOUND = "Role not found";
@@ -28,7 +30,6 @@ public class RoleServiceImpl implements RoleService {
     private final ModelMapper modelMapper;
 
     @Override
-    @Transactional
     public RoleGetDto createRole(RoleCreateDto roleCreateDto) {
         Role role = modelMapper.map(roleCreateDto, Role.class);
 
@@ -41,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleGetDto getRoleById(UUID id) {
+    public RoleGetDto getRoleBy(UUID id) {
         return roleRepository.findById(id)
                 .map(publicationStatus -> modelMapper.map(publicationStatus, RoleGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(ROLE_NOT_FOUND));

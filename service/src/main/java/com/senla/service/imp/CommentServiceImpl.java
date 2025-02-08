@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     public static final String COMMENT_NOT_FOUND = "Comment not found";
@@ -50,27 +52,21 @@ public class CommentServiceImpl implements CommentService {
         comment.setAuthor(author);
         comment.setPost(post);
 
-        log.info("Trying to create comment with user id {} and post id {}",
-                author.getId(),
-                post.getId());
-
         commentRepository.save(comment);
-
-        log.info("Comment with id {} created successfully", comment.getId());
 
         return modelMapper.map(comment, CommentGetDto.class);
     }
 
     @Override
-    public CommentGetDto getCommentById(UUID id) {
-        return commentRepository.findById(id)
+    public CommentGetDto getCommentBy(UUID id) {
+        return commentRepository.findWithAuthorById(id)
                 .map(comment -> modelMapper.map(comment, CommentGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_FOUND));
     }
 
     @Override
-    public List<CommentGetDto> getAllComments() {
-        return commentRepository.findAll()
+    public List<CommentGetDto> getAllComments(UUID postId) {
+        return commentRepository.findAllByPostId(postId)
                 .stream()
                 .map(comment -> modelMapper.map(comment, CommentGetDto.class))
                 .toList();
@@ -79,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentGetDto updateComment(CommentUpdateDto commentUpdateDto, UUID id) {
-        Comment comment = commentRepository.findById(id)
+        Comment comment = commentRepository.findWithAuthorById(id)
                 .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_FOUND));
 
         comment.setContent(commentUpdateDto.getContent());

@@ -8,7 +8,7 @@ import java.util.UUID;
 public interface SubscriptionPlanService {
     SubscriptionPlanDto createSubscriptionPlan(SubscriptionPlanDto subscriptionPlan);
 
-    SubscriptionPlanDto getSubscriptionPlanById(UUID id);
+    SubscriptionPlanDto getSubscriptionPlanBy(UUID id);
 
     List<SubscriptionPlanDto> getAllSubscriptionPlans();
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,15 +31,14 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<SubscriptionGetDto> findAllSubscriptions() {
-        return subscriptionService.getAllSubscriptions();
+    public List<SubscriptionGetDto> findAllSubscriptions(@RequestParam(defaultValue = "0") int pageNo,
+                                                         @RequestParam(defaultValue = "15") int pageSize) {
+        return subscriptionService.getAllSubscriptions(pageNo, pageSize);
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public SubscriptionGetDto findSubscriptionById(@PathVariable UUID id) {
-        return subscriptionService.getSubscriptionById(id);
+        return subscriptionService.getSubscriptionBy(id);
     }
 
     @PostMapping
@@ -48,14 +48,12 @@ public class SubscriptionController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public SubscriptionGetDto updateSubscription(@Valid @RequestBody SubscriptionUpdateDto subscription,
                                                  @PathVariable UUID id) {
         return subscriptionService.updateSubscription(subscription, id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseInfoDto deleteSubscription(@PathVariable UUID id) {
         subscriptionService.deleteSubscription(id);
 

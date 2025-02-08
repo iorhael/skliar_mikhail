@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.pollOption.PollOptionCreateDto;
 import com.senla.dto.pollOption.PollOptionGetDto;
 import com.senla.model.Poll;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class PollOptionServiceImpl implements PollOptionService {
     public static final String POLL_OPTION_NOT_FOUND = "PollOption not found";
@@ -28,7 +30,6 @@ public class PollOptionServiceImpl implements PollOptionService {
     private final ModelMapper modelMapper;
 
     @Override
-    @Transactional
     public PollOptionGetDto createPollOption(PollOptionCreateDto pollOptionCreateDto) {
         PollOption pollOption = modelMapper.map(pollOptionCreateDto, PollOption.class);
 
@@ -41,15 +42,15 @@ public class PollOptionServiceImpl implements PollOptionService {
     }
 
     @Override
-    public PollOptionGetDto getPollOptionById(UUID id) {
-        return pollOptionRepository.findById(id)
+    public PollOptionGetDto getPollOptionBy(UUID id) {
+        return pollOptionRepository.findWithVotesById(id)
                 .map(pollOption -> modelMapper.map(pollOption, PollOptionGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(POLL_OPTION_NOT_FOUND));
     }
 
     @Override
-    public List<PollOptionGetDto> getAllPollOptions() {
-        return pollOptionRepository.findAll()
+    public List<PollOptionGetDto> getAllPollOptions(UUID pollId) {
+        return pollOptionRepository.findByPollId(pollId)
                 .stream()
                 .map(pollOption -> modelMapper.map(pollOption, PollOptionGetDto.class))
                 .toList();
@@ -58,7 +59,7 @@ public class PollOptionServiceImpl implements PollOptionService {
     @Override
     @Transactional
     public PollOptionGetDto updatePollOption(PollOptionCreateDto pollOptionCreateDto, UUID id) {
-        PollOption pollOption = pollOptionRepository.findById(id)
+        PollOption pollOption = pollOptionRepository.findWithVotesById(id)
                 .orElseThrow(() -> new EntityNotFoundException(POLL_OPTION_NOT_FOUND));
 
         Poll poll = pollRepository.getReferenceById(pollOptionCreateDto.getPollId());

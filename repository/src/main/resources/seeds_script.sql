@@ -13,7 +13,7 @@ VALUES ('FREE', 0.0),
        ('PREMIUM', 9.99),
        ('PREMIUM_PLUS', 19.99);
 
-INSERT INTO subscriptions (user_id, subscription_plan_id, expires_date)
+INSERT INTO subscriptions (id, subscription_plan_id, expires_date)
 VALUES ((SELECT id FROM users WHERE username = 'user1'), (SELECT id FROM subscription_plans WHERE name = 'FREE'), NULL),
        ((SELECT id FROM users WHERE username = 'user2'), (SELECT id FROM subscription_plans WHERE name = 'PREMIUM'),
         now() + INTERVAL '1 month');
@@ -47,7 +47,7 @@ VALUES ((SELECT id FROM users WHERE username = 'user1'), 'How to Start Programmi
         'PostgreSQL is a powerful, open source object-relational database system with over 35 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.',
         now(), (SELECT id FROM subscription_plans WHERE name = 'PREMIUM_PLUS'));
 
-INSERT INTO publication_statuses (post_id, status_name, scheduled_date)
+INSERT INTO publication_statuses (id, status_name, scheduled_date)
 VALUES ((SELECT id FROM posts WHERE title = 'How to Start Programming'), 'SCHEDULED', now() + INTERVAL '1 day'),
        ((SELECT id FROM posts WHERE title = 'How to Play Guitar'), 'PUBLISHED', NULL),
        ((SELECT id FROM posts WHERE title = 'Top 5 AI Trends in 2024'), 'DRAFT', NULL),

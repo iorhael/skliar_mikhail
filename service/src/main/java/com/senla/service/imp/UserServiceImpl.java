@@ -1,27 +1,31 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.user.UserCreateDto;
 import com.senla.dto.user.UserGetDto;
 import com.senla.model.User;
+import com.senla.repository.SubscriptionRepository;
 import com.senla.repository.UserRepository;
 import com.senla.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     public static final String USER_NOT_FOUND = "User not found";
 
     private final UserRepository userRepository;
+
+    private final SubscriptionRepository subscriptionRepository;
 
     private final ModelMapper modelMapper;
 
@@ -29,25 +33,36 @@ public class UserServiceImpl implements UserService {
     public UserGetDto createUser(UserCreateDto userCreateDto) {
         User user = modelMapper.map(userCreateDto, User.class);
 
-        log.info("Trying to create user with email {}", user.getEmail());
-
         userRepository.save(user);
-
-        log.info("User with id {} created successfully", user.getId());
 
         return modelMapper.map(user, UserGetDto.class);
     }
 
     @Override
-    public UserGetDto getUserById(UUID id) {
+    public UserGetDto getUserBy(UUID id) {
         return userRepository.findById(id)
                 .map(user -> modelMapper.map(user, UserGetDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
     }
 
     @Override
-    public List<UserGetDto> getAllUsers() {
-        return userRepository.findAll()
+    public UserGetDto getUserBy(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> modelMapper.map(user, UserGetDto.class))
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
+    }
+
+    @Override
+    public List<UserGetDto> getAllUsers(int pageNo, int pageSize) {
+        return userRepository.findAll(PageRequest.of(pageNo, pageSize))
+                .stream()
+                .map(user -> modelMapper.map(user, UserGetDto.class))
+                .toList();
+    }
+
+    @Override
+    public List<UserGetDto> getUsersBy(String username) {
+        return userRepository.findByUsernameContainingIgnoreCase(username, PageRequest.of(1, 10))
                 .stream()
                 .map(user -> modelMapper.map(user, UserGetDto.class))
                 .toList();
@@ -59,9 +74,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        user.setUsername(userCreateDto.getUsername());
-        user.setEmail(userCreateDto.getEmail());
-        user.setPassword(userCreateDto.getPassword());
+        modelMapper.map(userCreateDto, user);
 
         return modelMapper.map(user, UserGetDto.class);
     }

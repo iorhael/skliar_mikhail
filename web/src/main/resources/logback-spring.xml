@@ -2,7 +2,6 @@
 <configuration>
 
     <property name="LOGS" value="./logs"/>
-    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
 
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
@@ -15,7 +14,7 @@
 
     <appender name="ProblemsFile"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS}/problems-logger-${bySecond}.log</file>
+        <file>${LOGS}/problems-logger.log</file>
         <encoder
                 class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d %p %C{1} [%t] %m%n</Pattern>
@@ -23,13 +22,10 @@
 
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOGS}/archived/problems-logger-%d{yyyy-MM-dd}.%i.log
+            <fileNamePattern>${LOGS}/archived/problems-logger-%d.log
             </fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>30</maxHistory>
+            <totalSizeCap>20MB</totalSizeCap>
+            <maxHistory>10</maxHistory>
         </rollingPolicy>
 
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">

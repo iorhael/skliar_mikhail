@@ -1,5 +1,6 @@
 package com.senla.service.imp;
 
+import com.senla.aspect.Benchmarked;
 import com.senla.dto.subscriptionPlan.SubscriptionPlanDto;
 import com.senla.model.SubscriptionPlan;
 import com.senla.repository.SubscriptionPlanRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Benchmarked
 @RequiredArgsConstructor
 public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     public static final String SUBSCRIPTION_PLAN_NOT_FOUND = "SubscriptionPlan not found";
@@ -32,7 +34,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
     }
 
     @Override
-    public SubscriptionPlanDto getSubscriptionPlanById(UUID id) {
+    public SubscriptionPlanDto getSubscriptionPlanBy(UUID id) {
         return subscriptionPlanRepository.findById(id)
                 .map(subscriptionPlan -> modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_PLAN_NOT_FOUND));
@@ -52,8 +54,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
         SubscriptionPlan subscriptionPlan = subscriptionPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(SUBSCRIPTION_PLAN_NOT_FOUND));
 
-        subscriptionPlan.setName(subscriptionPlanDto.getName());
-        subscriptionPlan.setPricePerMonth(subscriptionPlanDto.getPricePerMonth());
+        modelMapper.map(subscriptionPlanDto, subscriptionPlan);
 
         return modelMapper.map(subscriptionPlan, SubscriptionPlanDto.class);
     }

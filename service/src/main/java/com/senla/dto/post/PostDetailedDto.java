@@ -1,31 +1,29 @@
 package com.senla.dto.post;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
 @Setter
-public class PostCreateDto {
+public class PostDetailedDto {
 
-    @NotNull
-    private UUID authorId;
+    private UUID id;
 
-    @NotBlank
+    private String authorName;
+
     private String title;
 
-    @NotBlank
     private String content;
 
-    @NotNull
     private Instant publicationDate;
 
-    @NotNull
-    private UUID subscriptionPlanId;
+    private List<String> categories;
+
+    private List<String> tags;
 }

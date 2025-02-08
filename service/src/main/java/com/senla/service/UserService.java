@@ -9,9 +9,13 @@ import java.util.UUID;
 public interface UserService {
     UserGetDto createUser(UserCreateDto user);
 
-    UserGetDto getUserById(UUID id);
+    UserGetDto getUserBy(UUID id);
 
-    List<UserGetDto> getAllUsers();
+    UserGetDto getUserBy(String email);
+
+    List<UserGetDto> getAllUsers(int pageNo, int pageSize);
+
+    List<UserGetDto> getUsersBy(String username);
 
     UserGetDto updateUser(UserCreateDto user, UUID id);
 

@@ -30,8 +30,7 @@ CREATE TABLE subscription_plans
 
 CREATE TABLE subscriptions
 (
-    id                   UUID PRIMARY KEY   DEFAULT gen_random_uuid(),
-    user_id              UUID      NOT NULL UNIQUE REFERENCES users ON DELETE CASCADE,
+    id                   UUID PRIMARY KEY REFERENCES users ON DELETE CASCADE,
     subscription_plan_id UUID      NOT NULL REFERENCES subscription_plans,
     started_date         TIMESTAMP NOT NULL DEFAULT now(),
     expires_date         TIMESTAMP
@@ -68,8 +67,7 @@ CREATE TYPE post_status AS ENUM ('DRAFT', 'PUBLISHED', 'SCHEDULED');
 
 CREATE TABLE publication_statuses
 (
-    id             UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
-    post_id        UUID        NOT NULL UNIQUE REFERENCES posts ON DELETE CASCADE,
+    id             UUID PRIMARY KEY REFERENCES posts ON DELETE CASCADE,
     status_name    post_status NOT NULL DEFAULT 'PUBLISHED',
     scheduled_date TIMESTAMP
 );

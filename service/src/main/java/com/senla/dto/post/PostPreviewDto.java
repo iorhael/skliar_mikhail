@@ -1,18 +1,17 @@
 package com.senla.dto.post;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class PostGetDto {
+public class PostPreviewDto {
 
     private UUID id;
 
@@ -23,5 +22,7 @@ public class PostGetDto {
     private String content;
 
     private Instant publicationDate;
+
+    private List<String> categories;
 }
 
