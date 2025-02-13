@@ -31,9 +31,9 @@ CREATE TABLE subscription_plans
 CREATE TABLE subscriptions
 (
     id                   UUID PRIMARY KEY REFERENCES users ON DELETE CASCADE,
-    subscription_plan_id UUID      NOT NULL REFERENCES subscription_plans,
-    started_date         TIMESTAMP NOT NULL DEFAULT now(),
-    expires_date         TIMESTAMP
+    subscription_plan_id UUID        NOT NULL REFERENCES subscription_plans,
+    started_date         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    expires_date         TIMESTAMPTZ
 );
 
 CREATE TABLE tags
@@ -56,9 +56,9 @@ CREATE TABLE posts
     author_id            UUID         REFERENCES users ON DELETE SET NULL,
     title                VARCHAR(255) NOT NULL,
     content              TEXT         NOT NULL,
-    created_date         TIMESTAMP    NOT NULL DEFAULT now(),
-    updated_date         TIMESTAMP    NOT NULL DEFAULT now(),
-    publication_date     TIMESTAMP             DEFAULT now(),
+    created_date         TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    updated_date         TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    publication_date     TIMESTAMPTZ           DEFAULT now(),
     subscription_plan_id UUID         NOT NULL REFERENCES subscription_plans,
     views_total          BIGINT       NOT NULL DEFAULT '0'
 );
@@ -88,13 +88,13 @@ CREATE TABLE post_tags
 
 CREATE TABLE comments
 (
-    id           UUID PRIMARY KEY   DEFAULT gen_random_uuid(),
-    post_id      UUID      NOT NULL REFERENCES posts ON DELETE CASCADE,
-    author_id    UUID      REFERENCES users ON DELETE SET NULL,
-    content      TEXT      NOT NULL,
-    created_date TIMESTAMP NOT NULL DEFAULT now(),
-    updated_date TIMESTAMP NOT NULL DEFAULT now(),
-    parent_id    UUID      REFERENCES comments ON DELETE SET NULL
+    id           UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
+    post_id      UUID        NOT NULL REFERENCES posts ON DELETE CASCADE,
+    author_id    UUID        REFERENCES users ON DELETE SET NULL,
+    content      TEXT        NOT NULL,
+    created_date TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_date TIMESTAMPTZ NOT NULL DEFAULT now(),
+    parent_id    UUID        REFERENCES comments ON DELETE SET NULL
 );
 
 CREATE TABLE polls
@@ -114,8 +114,8 @@ CREATE TABLE poll_options
 
 CREATE TABLE votes
 (
-    poll_option_id UUID      NOT NULL REFERENCES poll_options ON DELETE CASCADE,
-    user_id        UUID      REFERENCES users ON DELETE SET NULL,
-    vote_date      TIMESTAMP NOT NULL DEFAULT now(),
+    poll_option_id UUID        NOT NULL REFERENCES poll_options ON DELETE CASCADE,
+    user_id        UUID        REFERENCES users ON DELETE SET NULL,
+    vote_date      TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (user_id, poll_option_id)
 );

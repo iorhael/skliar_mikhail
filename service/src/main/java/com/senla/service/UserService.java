@@ -15,7 +15,7 @@ public interface UserService {
 
     List<UserGetDto> getAllUsers(int pageNo, int pageSize);
 
-    List<UserGetDto> getUsersBy(String username);
+    List<UserGetDto> getUsersBy(String username, int pageNo, int pageSize);
 
     UserGetDto updateUser(UserCreateDto user, UUID id);
 

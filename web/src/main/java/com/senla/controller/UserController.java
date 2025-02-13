@@ -36,8 +36,10 @@ public class UserController {
     }
 
     @GetMapping(params = "username")
-    public List<UserGetDto> findUsersByUsername(@RequestParam String username) {
-        return userService.getUsersBy(username);
+    public List<UserGetDto> findUsersByUsername(@RequestParam(defaultValue = "0") int pageNo,
+                                                @RequestParam(defaultValue = "15") int pageSize,
+                                                @RequestParam String username) {
+        return userService.getUsersBy(username, pageNo, pageSize);
     }
 
     @GetMapping("/{id}")
@@ -45,7 +47,7 @@ public class UserController {
         return userService.getUserBy(id);
     }
 
-    @GetMapping(params = "email")
+    @GetMapping(path = "/search", params = "email")
     public UserGetDto findUserByEmail(@RequestParam String email) {
         return userService.getUserBy(email);
     }

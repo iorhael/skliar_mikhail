@@ -1,6 +1,7 @@
 package com.senla.controller;
 
 import com.senla.controller.dto.ResponseInfoDto;
+import com.senla.dto.TopCommentDto;
 import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
@@ -31,8 +32,17 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping(params = "postId")
-    public List<CommentGetDto> findAllComments(@RequestParam UUID postId) {
-        return commentService.getAllComments(postId);
+    public List<TopCommentDto> findAllComments(@RequestParam(defaultValue = "0") int pageNo,
+                                               @RequestParam(defaultValue = "15") int pageSize,
+                                               @RequestParam UUID postId) {
+        return commentService.getTopLevelComments(postId, pageNo, pageSize);
+    }
+
+    @GetMapping(path = "/replies", params = "parentId")
+    public List<CommentGetDto> findAllReplyComments(@RequestParam(defaultValue = "0") int pageNo,
+                                                    @RequestParam(defaultValue = "15") int pageSize,
+                                                    @RequestParam UUID parentId) {
+        return commentService.getReplyComments(parentId, pageNo, pageSize);
     }
 
     @GetMapping("/{id}")

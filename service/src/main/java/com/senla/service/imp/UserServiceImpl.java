@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserGetDto> getUsersBy(String username) {
-        return userRepository.findByUsernameContainingIgnoreCase(username, PageRequest.of(1, 10))
+    public List<UserGetDto> getUsersBy(String username, int pageNo, int pageSize) {
+        return userRepository.findByUsernameContainingIgnoreCase(username, PageRequest.of(pageNo, pageSize))
                 .stream()
                 .map(user -> modelMapper.map(user, UserGetDto.class))
                 .toList();
