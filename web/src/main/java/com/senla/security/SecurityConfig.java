@@ -60,8 +60,7 @@ public class SecurityConfig {
 
     @Bean
     public RoleHierarchy roleHierarchy() {
-        String hierarchy =
-                """
+        String hierarchy = """
                 ROLE_ADMIN > ROLE_AUTHOR
                 ROLE_AUTHOR > ROLE_READER
                 """;

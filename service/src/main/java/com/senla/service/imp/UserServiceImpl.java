@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(String password, String userIdentifier) {
         User user = userRepository.findByUsernameOrEmail(userIdentifier, userIdentifier)
-                        .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
         checkPasswordMatch(password, user.getPassword());
 
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkPasswordMatch(String clientPassword, String realPassword) {
-       if (!passwordEncoder.matches(clientPassword, realPassword))
-           throw new IllegalStateException(PASSWORD_MISMATCH);
+        if (!passwordEncoder.matches(clientPassword, realPassword))
+            throw new IllegalStateException(PASSWORD_MISMATCH);
     }
 }

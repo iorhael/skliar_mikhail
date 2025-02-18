@@ -20,11 +20,11 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public AuthenticationResponseDto login(@Valid @RequestBody LoginDto loginDto) {
-       return authenticationService.login(loginDto);
+        return authenticationService.login(loginDto);
     }
 
     @PostMapping("/signup")
     public AuthenticationResponseDto signUp(@Valid @RequestBody UserCreateDto userCreateDto) {
-       return authenticationService.signUp(userCreateDto);
+        return authenticationService.signUp(userCreateDto);
     }
 }
