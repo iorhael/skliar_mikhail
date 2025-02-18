@@ -17,7 +17,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
@@ -43,7 +42,6 @@ import java.util.UUID;
                 @NamedAttributeNode("tags"),
         })
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString

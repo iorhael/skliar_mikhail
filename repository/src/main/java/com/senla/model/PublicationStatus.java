@@ -11,7 +11,6 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcType;
@@ -24,7 +23,6 @@ import java.util.UUID;
 @Table(name = "publication_statuses")
 @NamedEntityGraph(name = "publicationStatus-with-post",
         attributeNodes = @NamedAttributeNode("post"))
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString

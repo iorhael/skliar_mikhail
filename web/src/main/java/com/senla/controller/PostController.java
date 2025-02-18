@@ -9,6 +9,7 @@ import com.senla.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,18 +44,21 @@ public class PostController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.CREATED)
     public PostPreviewDto createPost(@Valid @RequestBody PostCreateDto post) {
         return postService.createPost(post);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('AUTHOR')")
     public PostPreviewDto updatePost(@Valid @RequestBody PostUpdateDto post,
                                      @PathVariable UUID id) {
         return postService.updatePost(post, id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('AUTHOR')")
     public ResponseInfoDto deletePost(@PathVariable UUID id) {
         postService.deletePost(id);
 

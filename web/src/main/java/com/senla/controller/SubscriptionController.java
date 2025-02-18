@@ -8,6 +8,7 @@ import com.senla.service.SubscriptionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,12 +32,14 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<SubscriptionGetDto> findAllSubscriptions(@RequestParam(defaultValue = "0") int pageNo,
                                                          @RequestParam(defaultValue = "15") int pageSize) {
         return subscriptionService.getAllSubscriptions(pageNo, pageSize);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public SubscriptionGetDto findSubscriptionById(@PathVariable UUID id) {
         return subscriptionService.getSubscriptionBy(id);
     }

@@ -5,8 +5,8 @@ CREATE TABLE users
     id           UUID PRIMARY KEY      DEFAULT gen_random_uuid(),
     username     VARCHAR(30)  NOT NULL UNIQUE,
     email        VARCHAR(255) NOT NULL UNIQUE,
-    password     VARCHAR(32)  NOT NULL,
-    created_date TIMESTAMP    NOT NULL DEFAULT now()
+    password     VARCHAR(60)  NOT NULL,
+    created_date TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 
 CREATE TYPE role_name AS ENUM ('READER', 'AUTHOR', 'ADMIN');

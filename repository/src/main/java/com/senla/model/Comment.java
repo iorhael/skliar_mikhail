@@ -14,7 +14,6 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,7 +28,6 @@ import java.util.UUID;
 @Table(name = "comments")
 @NamedEntityGraph(name = "comment-with-author",
         attributeNodes = @NamedAttributeNode("author"))
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString

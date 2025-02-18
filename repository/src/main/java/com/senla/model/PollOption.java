@@ -14,7 +14,6 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -26,7 +25,6 @@ import java.util.UUID;
 @Table(name = "poll_options")
 @NamedEntityGraph(name = "pollOption-with-votes",
         attributeNodes = @NamedAttributeNode("votes"))
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString

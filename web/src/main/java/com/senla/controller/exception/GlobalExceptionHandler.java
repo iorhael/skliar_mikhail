@@ -63,6 +63,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             IllegalArgumentException.class,
+            IllegalStateException.class,
             CommentReplyException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)

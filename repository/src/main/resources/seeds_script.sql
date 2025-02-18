@@ -1,7 +1,7 @@
 INSERT INTO users (username, email, password)
-VALUES ('user1', 'user1@example.com', 'password_hash_1'),
-       ('user2', 'user2@example.com', 'password_hash_2'),
-       ('admin', 'admin@example.com', 'password_hash_3');
+VALUES ('user1', 'user1@example.com', '$2a$10$cqlnYuvLmxcBvN8ckr9ApuNLUFT542yuLNRljM4zjlxNGLcdCB7zG'),
+       ('user2', 'user2@example.com', '$2a$10$.38MVudNYWrzlBmOctM/POyaSfV7BUF7uNGCNDpzoilKUhxe/C6rO'),
+       ('admin', 'admin@example.com', '$2a$10$owtWxERNxpGw2Sza4Xit7.2pUgt6PblUg/zgt8zHbLXhcNnX8XUpW');
 
 INSERT INTO roles (user_id, name)
 VALUES ((SELECT id FROM users WHERE username = 'user1'), 'READER'),

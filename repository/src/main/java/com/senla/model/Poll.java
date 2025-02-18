@@ -14,7 +14,6 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -30,7 +29,6 @@ import java.util.UUID;
                 @NamedAttributeNode("author")
         }
 )
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString

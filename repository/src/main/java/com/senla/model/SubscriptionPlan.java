@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcType;
@@ -22,7 +21,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "subscription_plans")
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString

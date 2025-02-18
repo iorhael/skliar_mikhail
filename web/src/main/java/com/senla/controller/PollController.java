@@ -8,6 +8,7 @@ import com.senla.service.PollService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,18 +47,21 @@ public class PollController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.CREATED)
     public PollGetDto createPoll(@Valid @RequestBody PollCreateDto poll) {
         return pollService.createPoll(poll);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('AUTHOR')")
     public PollGetDto updatePoll(@Valid @RequestBody PollUpdateDto poll,
                                  @PathVariable UUID id) {
         return pollService.updatePoll(poll, id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('AUTHOR')")
     public ResponseInfoDto deletePoll(@PathVariable UUID id) {
         pollService.deletePoll(id);
 

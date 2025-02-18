@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -18,7 +17,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tags")
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString

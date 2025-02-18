@@ -7,6 +7,7 @@ import com.senla.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,18 +40,21 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryGetDto createCategory(@Valid @RequestBody CategoryCreateDto category) {
         return categoryService.createCategory(category);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('AUTHOR')")
     public CategoryGetDto updateCategory(@Valid @RequestBody CategoryCreateDto category,
                                          @PathVariable UUID id) {
         return categoryService.updateCategory(category, id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('AUTHOR')")
     public ResponseInfoDto deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategory(id);
 
