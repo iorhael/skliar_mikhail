@@ -12,7 +12,6 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,7 +24,6 @@ import java.util.UUID;
 @NamedEntityGraph(name = "subscription-with-user",
         attributeNodes = @NamedAttributeNode("user")
 )
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString

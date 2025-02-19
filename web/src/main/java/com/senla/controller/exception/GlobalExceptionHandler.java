@@ -1,6 +1,7 @@
 package com.senla.controller.exception;
 
 import com.senla.controller.dto.ErrorMessageDto;
+import com.senla.service.exception.CommentReplyException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,11 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            IllegalStateException.class,
+            CommentReplyException.class
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessageDto handleBadRequest(Exception exception, HttpServletRequest request) {
         log.error(exception.getMessage());

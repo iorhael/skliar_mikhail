@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.dto.TopCommentDto;
 import com.senla.dto.comment.CommentCreateDto;
 import com.senla.dto.comment.CommentGetDto;
 import com.senla.dto.comment.CommentUpdateDto;
@@ -12,7 +13,9 @@ public interface CommentService {
 
     CommentGetDto getCommentBy(UUID id);
 
-    List<CommentGetDto> getAllComments(UUID postId);
+    List<TopCommentDto> getTopLevelComments(UUID postId, int pageNo, int pageSize);
+
+    List<CommentGetDto> getReplyComments(UUID parentId, int pageNo, int pageSize);
 
     CommentGetDto updateComment(CommentUpdateDto comment, UUID id);
 
