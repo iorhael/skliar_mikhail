@@ -1,4 +1,16 @@
 spring:
+  application:
+    name: blog-platform
+
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    config:
+      username: config-server
+      password: password
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/blog_platform
