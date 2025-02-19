@@ -4,14 +4,15 @@ import io.jsonwebtoken.Claims;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Set;
+import java.util.UUID;
 
 public interface JwtService {
 
-    String generateToken(String subject, Set<String> roles);
+    String generateToken(UUID userId, Set<String> roles);
 
     Claims extractClaims(String token);
 
-    String getPrincipal(Claims claims);
+    UUID getUserId(Claims claims);
 
     Set<GrantedAuthority> getRoles(Claims claims);
 }

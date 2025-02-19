@@ -1,7 +1,6 @@
 package com.senla.service.imp;
 
 import com.senla.aspect.Benchmarked;
-import com.senla.dto.user.PasswordUpdateDto;
 import com.senla.dto.user.UserCreateDto;
 import com.senla.dto.user.UserGetDto;
 import com.senla.dto.user.UserUpdateDto;
@@ -27,7 +26,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     public static final String USER_NOT_FOUND = "User not found";
-    public static final String PASSWORD_MISMATCH = "Wrong password";
 
     private final UserRepository userRepository;
 
@@ -76,8 +74,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserGetDto updateUser(UserUpdateDto userUpdateDto, String userIdentifier) {
-        User user = userRepository.findByUsernameOrEmail(userIdentifier, userIdentifier)
+    public UserGetDto updateUser(UserUpdateDto userUpdateDto, UUID id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
         modelMapper.map(userUpdateDto, user);
@@ -86,29 +84,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
-    public void updatePassword(PasswordUpdateDto passwordUpdateDto, String userIdentifier) {
-        User user = userRepository.findByUsernameOrEmail(userIdentifier, userIdentifier)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
-
-        checkPasswordMatch(passwordUpdateDto.getOldPassword(), user.getPassword());
-
-        user.setPassword(passwordEncoder.encode(passwordUpdateDto.getNewPassword()));
+    public void updatePassword(String newPassword, UUID id) {
+        userRepository.updatePasswordById(id, passwordEncoder.encode(newPassword));
     }
 
     @Override
-    @Transactional
-    public void deleteUser(String password, String userIdentifier) {
-        User user = userRepository.findByUsernameOrEmail(userIdentifier, userIdentifier)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
-
-        checkPasswordMatch(password, user.getPassword());
-
-        userRepository.deleteById(user.getId());
-    }
-
-    private void checkPasswordMatch(String clientPassword, String realPassword) {
-        if (!passwordEncoder.matches(clientPassword, realPassword))
-            throw new IllegalStateException(PASSWORD_MISMATCH);
+    public void deleteUser(UUID id) {
+        userRepository.deleteById(id);
     }
 }

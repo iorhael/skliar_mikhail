@@ -1,6 +1,5 @@
 package com.senla.service;
 
-import com.senla.dto.user.PasswordUpdateDto;
 import com.senla.dto.user.UserCreateDto;
 import com.senla.dto.user.UserGetDto;
 import com.senla.dto.user.UserUpdateDto;
@@ -18,9 +17,9 @@ public interface UserService {
 
     List<UserGetDto> getUsersBy(String username, int pageNo, int pageSize);
 
-    UserGetDto updateUser(UserUpdateDto user, String userIdentifier);
+    UserGetDto updateUser(UserUpdateDto user, UUID id);
 
-    void updatePassword(PasswordUpdateDto passwordUpdateDto, String userIdentifier);
+    void updatePassword(String newPassword, UUID id);
 
-    void deleteUser(String password, String userIdentifier);
+    void deleteUser(UUID id);
 }

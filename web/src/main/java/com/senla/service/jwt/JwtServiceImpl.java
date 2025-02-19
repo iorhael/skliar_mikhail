@@ -28,10 +28,10 @@ public class JwtServiceImpl implements JwtService {
     private Long expiration;
 
     @Override
-    public String generateToken(String subject, Set<String> roles) {
+    public String generateToken(UUID userId, Set<String> roles) {
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
-                .subject(subject)
+                .subject(userId.toString())
                 .claim(ROLES_CLAIM_NAME, roles)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
@@ -49,8 +49,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String getPrincipal(Claims claims) {
-        return claims.getSubject();
+    public UUID getUserId(Claims claims) {
+        return UUID.fromString(claims.getSubject());
     }
 
     @Override

@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User user = userRepository.findWithRolesByUsernameOrEmail(login, login)
+        User user = userRepository.findByUsernameOrEmail(login, login)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE));
 
         Set<GrantedAuthority> authorities = user.getRoles()
@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .collect(Collectors.toSet());
 
         return new org.springframework.security.core.userdetails.User(
-                login,
+                user.getId().toString(),
                 user.getPassword(),
                 authorities
         );

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserWithRolesDto dto = userService.createUser(user);
 
         return new AuthenticationResponseDto(jwtService.generateToken(
-                dto.getUsername(),
+                dto.getId(),
                 dto.getRoles())
         );
     }
@@ -47,7 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
 
         return new AuthenticationResponseDto(jwtService.generateToken(
-                authentication.getName(),
+                UUID.fromString(authentication.getName()),
                 getAuthorities(authentication))
         );
     }
