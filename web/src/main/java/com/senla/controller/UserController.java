@@ -1,5 +1,6 @@
 package com.senla.controller;
 
+import com.senla.aspect.passwordVerifier.VerifyPassword;
 import com.senla.controller.dto.ResponseInfoDto;
 import com.senla.dto.user.PasswordDto;
 import com.senla.dto.user.PasswordUpdateDto;
@@ -61,7 +62,7 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    @PreAuthorize("@passwordChecker.isPasswordConfirmed(#dto.oldPassword, #principal)")
+    @VerifyPassword(password = "#dto.oldPassword")
     public ResponseInfoDto updatePassword(@Valid @RequestBody PasswordUpdateDto dto,
                                           Principal principal) {
         userService.updatePassword(
@@ -75,7 +76,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    @PreAuthorize("@passwordChecker.isPasswordConfirmed(#dto.password, #principal)")
+    @VerifyPassword(password = "#dto.password")
     public ResponseInfoDto deleteUser(@Valid @RequestBody PasswordDto dto,
                                       Principal principal) {
         userService.deleteUser(UUID.fromString(principal.getName()));
