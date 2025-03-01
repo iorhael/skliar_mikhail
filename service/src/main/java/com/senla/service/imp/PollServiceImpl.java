@@ -76,12 +76,12 @@ public class PollServiceImpl implements PollService {
     @Override
     @Transactional
     public PollGetDto updatePoll(PollUpdateDto postUpdateDto, UUID id) {
-        Poll post = pollRepository.findWithPostAndAuthorById(id)
+        Poll poll = pollRepository.findWithPostAndAuthorById(id)
                 .orElseThrow(() -> new EntityNotFoundException(POLL_NOT_FOUND));
 
-        post.setDescription(postUpdateDto.getDescription());
+        poll.setDescription(postUpdateDto.getDescription());
 
-        return modelMapper.map(post, PollGetDto.class);
+        return modelMapper.map(poll, PollGetDto.class);
     }
 
     @Override

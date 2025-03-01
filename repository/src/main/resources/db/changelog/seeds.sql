@@ -1,3 +1,6 @@
+--liquibase formatted sql
+
+--changeset iorhael:1740479230000 labels:seed
 INSERT INTO users (username, email, password)
 VALUES ('user1', 'user1@example.com', '$2a$10$cqlnYuvLmxcBvN8ckr9ApuNLUFT542yuLNRljM4zjlxNGLcdCB7zG'),
        ('user2', 'user2@example.com', '$2a$10$.38MVudNYWrzlBmOctM/POyaSfV7BUF7uNGCNDpzoilKUhxe/C6rO'),
@@ -116,3 +119,10 @@ VALUES ((SELECT id FROM poll_options WHERE description = 'Generative AI'),
         (SELECT id FROM users WHERE username = 'admin')),
        ((SELECT id FROM poll_options WHERE description = 'Yes'), (SELECT id FROM users WHERE username = 'user1')),
        ((SELECT id FROM poll_options WHERE description = 'No'), (SELECT id FROM users WHERE username = 'user2'));
+
+/* liquibase rollback
+   rollback TRUNCATE users CASCADE
+   rollback TRUNCATE tags CASCADE
+   rollback TRUNCATE categories CASCADE
+   rollback TRUNCATE subscription_plans CASCADE
+ */

@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/enums/
+  - includeAll:
+      path: db/changelog/tables/
+  - include:
+      file: db/changelog/seeds.sql
